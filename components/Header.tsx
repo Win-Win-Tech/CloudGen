@@ -1,0 +1,77 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { nav, site } from "@/lib/site";
+
+export function Header() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-white/90 backdrop-blur">
+      <div className="shell flex h-16 items-center justify-between gap-4">
+        <Link href="/" className="min-w-0">
+          <div className="display text-lg font-extrabold uppercase tracking-wide text-[var(--ink)]">
+            {site.name}
+          </div>
+          <div className="truncate text-[11px] font-medium text-[var(--steel)]">
+            {site.company}
+          </div>
+        </Link>
+
+        <nav className="hidden items-center gap-5 md:flex">
+          {nav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-sm font-semibold text-[var(--navy)] hover:text-[var(--teal-deep)]"
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link href="/checkout" className="btn-primary">
+            Subscribe
+          </Link>
+        </nav>
+
+        <button
+          type="button"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-[var(--line)] md:hidden"
+          aria-expanded={open}
+          aria-label="Toggle menu"
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span className="sr-only">Menu</span>
+          <div className="space-y-1.5">
+            <span className="block h-0.5 w-5 bg-[var(--ink)]" />
+            <span className="block h-0.5 w-5 bg-[var(--ink)]" />
+          </div>
+        </button>
+      </div>
+
+      {open ? (
+        <div className="border-t border-[var(--line)] bg-white md:hidden">
+          <div className="shell flex flex-col gap-1 py-3">
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-md px-2 py-2 text-sm font-semibold"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link
+              href="/checkout"
+              className="btn-primary mt-2"
+              onClick={() => setOpen(false)}
+            >
+              Subscribe
+            </Link>
+          </div>
+        </div>
+      ) : null}
+    </header>
+  );
+}

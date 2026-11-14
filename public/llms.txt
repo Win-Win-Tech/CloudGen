@@ -1,0 +1,28 @@
+# SmartPatrol by CloudGen Technologies
+
+> AI-powered smart patrol solutions for workforce management, QR checkpoint patrolling, incident management, visitor & vehicle access, and enterprise security operations.
+
+Site: https://smartpatrol.asia
+Company: https://cloudgentechnologies.com/
+App: https://play.google.com/store/apps/details?id=com.guards.app
+
+## Product modules
+- Smart Patrol: geofence & face biometric workforce attendance
+- Smart Patrolling: QR checkpoint scans, digital checklists, WhatsApp/IVR incident tickets
+- Smart Gate: visitor/vehicle ID capture, QR passes, blacklist/whitelist, SOS
+- Enterprise Suite: centralized multi-site operations, CCTV AI options, audit reporting
+
+## Commercial
+- Plans: Base, Pro, Gold (EUR pricing model aligned with standard guard-tour packages)
+- From 2.64 / 5.07 / 9.53 EUR per guard / month
+- Guard slider 1–100; >100 requires quote
+- Annual billing includes about 15% off
+- Checkout via Razorpay (INR)
+
+## Key pages
+- / pricing comparison and subscription calculator
+- /app Play Store-style app download page
+- /register organization registration
+- /demo book a live demo
+- /demo/test free demo test access
+- /checkout Razorpay subscription payment
