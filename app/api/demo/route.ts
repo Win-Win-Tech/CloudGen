@@ -159,8 +159,9 @@ export async function POST(request: Request) {
             "Use the password from your earlier demo email. Request again after expiry for a new password.",
           ].join("\n");
 
+    let mailed = false;
     try {
-      await sendLeadEmail({
+      const mail = await sendLeadEmail({
         id: account.id,
         kind: "demo-test",
         fullName: body.fullName,
@@ -170,9 +171,9 @@ export async function POST(request: Request) {
         interest: body.interest,
         message: instructions,
       });
+      mailed = mail.sent;
     } catch (mailError) {
       console.error("[mail] demo credentials", mailError);
-      // Still return credentials on-screen if mail fails.
     }
 
     return NextResponse.json({
@@ -180,7 +181,9 @@ export async function POST(request: Request) {
       id: account.id,
       message:
         passwordPlain != null
-          ? `Demo account created for ${DEMO_DURATION_DAYS} days. Credentials are shown below and emailed to ${body.email}.`
+          ? mailed
+            ? `Demo account created for ${DEMO_DURATION_DAYS} days. Credentials are shown below and emailed to ${body.email}.`
+            : `Demo account created for ${DEMO_DURATION_DAYS} days. Credentials are shown below (copy them now).`
           : `Your existing demo is still active until ${formatDemoExpiry(account.expires_at)} IST.`,
       demo: {
         username: account.username,
