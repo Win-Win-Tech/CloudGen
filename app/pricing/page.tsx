@@ -99,7 +99,8 @@ export default function PricingPage() {
       <section className="shell pt-12">
         <h2 className="display text-3xl font-extrabold">Guard plan comparison</h2>
         <p className="mt-2 max-w-2xl text-[var(--steel)]">
-          Feature matrix for the per-guard Base / Pro / Gold subscriptions.
+          How the fifteen CloudGen solutions map onto per-guard Base, Pro and Gold —
+          workforce, security ops, command centre, CCTV AI, industry apps and reporting.
         </p>
         <div className="mt-8 space-y-8">
           {COMPARISON.map((group) => (

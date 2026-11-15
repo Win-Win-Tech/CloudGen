@@ -31,7 +31,11 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - Enterprise Suite — $799/mo · $8,159/yr · setup $1,499 (all 15 solutions + custom builds)
 
 ## Guard-tour subscriptions (EUR / INR)
-- Plans: Base, Pro, Gold
+- Plans: Base, Pro, Gold — mapped to CloudGen solutions
+- Base: QR patrol, GPS, schedules, daily reports (visitor add-on)
+- Pro: Face attendance, visitors, vehicles, WhatsApp command centre, OCR, API
+- Gold: Pro + CCTV attendance/counting/ANPR, trails, BI reports, priority support
+- Industry apps & custom builds: add-on / quote on Pro–Gold
 - From 2.64 / 5.07 / 9.53 EUR per guard / month
 - Guard slider 1–100; >100 requires quote
 - Annual billing includes about 15% off
