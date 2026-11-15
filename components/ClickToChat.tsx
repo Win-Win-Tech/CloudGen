@@ -1,28 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { openTawkChat } from "@/components/TawkTo";
 import { site } from "@/lib/site";
-
-declare global {
-  interface Window {
-    Tawk_API?: {
-      maximize?: () => void;
-      toggle?: () => void;
-    };
-  }
-}
 
 export function ClickToChat() {
   const [open, setOpen] = useState(false);
+  const [openingTawk, setOpeningTawk] = useState(false);
 
-  function openTawk() {
-    if (typeof window !== "undefined" && window.Tawk_API?.maximize) {
-      window.Tawk_API.maximize();
+  async function openTawk() {
+    setOpeningTawk(true);
+    try {
+      await openTawkChat();
       setOpen(false);
-      return;
+    } finally {
+      setOpeningTawk(false);
     }
-    // Widget still loading — keep panel open so WhatsApp remains available.
-    setOpen(true);
   }
 
   return (
@@ -50,13 +43,14 @@ export function ClickToChat() {
             </a>
             <button
               type="button"
-              onClick={openTawk}
-              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm font-semibold text-[var(--ink)] hover:bg-[#eef6ff]"
+              onClick={() => void openTawk()}
+              disabled={openingTawk}
+              className="flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm font-semibold text-[var(--ink)] hover:bg-[#eef6ff] disabled:opacity-60"
             >
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--teal)] text-white">
                 <ChatIcon />
               </span>
-              Live chat (Tawk.to)
+              {openingTawk ? "Opening chat…" : "Live chat (Tawk.to)"}
             </button>
             <a
               href={`mailto:${site.email}`}

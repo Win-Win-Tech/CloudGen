@@ -2,28 +2,47 @@ import type { Metadata } from "next";
 import { CheckoutClient } from "@/components/CheckoutClient";
 import { BillingCycle, PlanId } from "@/lib/pricing";
 import { getRazorpayKeyId, razorpayConfigured } from "@/lib/razorpay";
+import { SolutionPackageId } from "@/lib/solutions";
 
 export const metadata: Metadata = {
   title: "Checkout",
   description: "Subscribe to SmartPatrol and pay securely online with Razorpay.",
 };
 
+const PACKAGE_IDS: SolutionPackageId[] = [
+  "essentials",
+  "operations",
+  "vision-ai",
+  "industry",
+  "enterprise",
+];
+
 export default async function CheckoutPage({
   searchParams,
 }: {
-  searchParams: Promise<{ plan?: string; guards?: string; billing?: string }>;
+  searchParams: Promise<{
+    plan?: string;
+    package?: string;
+    guards?: string;
+    billing?: string;
+  }>;
 }) {
   const params = await searchParams;
+  const billing = (params.billing === "annual" ? "annual" : "monthly") as BillingCycle;
+  const packageId = PACKAGE_IDS.includes(params.package as SolutionPackageId)
+    ? (params.package as SolutionPackageId)
+    : null;
   const plan = (["base", "pro", "gold"].includes(params.plan || "")
     ? params.plan
     : "pro") as PlanId;
   const guards = Math.min(100, Math.max(1, Number(params.guards || 8) || 8));
-  const billing = (params.billing === "annual" ? "annual" : "monthly") as BillingCycle;
 
   return (
     <div className="shell py-12 pb-16">
       <CheckoutClient
+        mode={packageId ? "package" : "plan"}
         initialPlan={plan}
+        initialPackage={packageId || "operations"}
         initialGuards={guards}
         initialBilling={billing}
         razorpayKeyId={getRazorpayKeyId()}

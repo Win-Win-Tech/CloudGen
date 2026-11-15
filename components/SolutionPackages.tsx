@@ -81,16 +81,16 @@ export function SolutionPackages({ showCatalogHint = true }: Props) {
               </details>
               <div className="mt-5 flex flex-wrap gap-2">
                 <Link
-                  href={`/demo?interest=${encodeURIComponent(pkg.name + " package")}`}
+                  href={`/checkout?package=${pkg.id}&billing=monthly`}
                   className="btn-primary"
                 >
-                  Request demo
+                  Pay with Razorpay
                 </Link>
                 <Link
-                  href={`/register?interest=${encodeURIComponent(pkg.name + " package")}`}
+                  href={`/demo?interest=${encodeURIComponent(pkg.name + " package")}`}
                   className="btn-outline"
                 >
-                  Register interest
+                  Request demo
                 </Link>
               </div>
             </article>

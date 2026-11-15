@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { sql } from "@/lib/db";
+import { sendLeadEmail } from "@/lib/mail";
 import { verifyPaymentSignature } from "@/lib/razorpay";
 
 const schema = z.object({
@@ -31,6 +32,38 @@ export async function POST(request: Request) {
        WHERE id = $1`,
       [body.subscriptionId, body.razorpay_order_id, body.razorpay_payment_id],
     );
+
+    const rows = await sql<{
+      full_name: string;
+      email: string;
+      phone: string | null;
+      organization: string;
+      plan_id: string;
+      guards: number;
+      billing: string;
+      amount_inr: number;
+    }>(
+      `SELECT full_name, email, phone, organization, plan_id, guards, billing, amount_inr
+       FROM subscriptions WHERE id = $1`,
+      [body.subscriptionId],
+    );
+    const row = rows[0];
+    if (row) {
+      try {
+        await sendLeadEmail({
+          id: body.subscriptionId,
+          kind: "contact",
+          fullName: row.full_name,
+          email: row.email,
+          phone: row.phone,
+          organization: row.organization,
+          interest: `Paid subscription · ${row.plan_id} · ${row.billing}`,
+          message: `Razorpay payment ${body.razorpay_payment_id} · Order ${body.razorpay_order_id} · ₹${row.amount_inr} · guards=${row.guards}`,
+        });
+      } catch (mailError) {
+        console.error("[mail] payment notice failed", mailError);
+      }
+    }
 
     return NextResponse.json({
       ok: true,

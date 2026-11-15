@@ -268,10 +268,20 @@ export const VALUE_PROPS = [
   },
 ] as const;
 
+export type PackageBilling = "monthly" | "annual";
+
+export const USD_TO_INR = Number(process.env.NEXT_PUBLIC_USD_TO_INR || 83);
+
 export function getSolution(id: string) {
   const solution = SOLUTIONS.find((s) => s.id === id);
   if (!solution) throw new Error(`Unknown solution: ${id}`);
   return solution;
+}
+
+export function getPackage(id: SolutionPackageId) {
+  const pkg = SOLUTION_PACKAGES.find((p) => p.id === id);
+  if (!pkg) throw new Error(`Unknown package: ${id}`);
+  return pkg;
 }
 
 export function solutionsForPackage(pkg: SolutionPackage) {
@@ -284,4 +294,20 @@ export function formatUSD(n: number) {
     currency: "USD",
     maximumFractionDigits: n % 1 === 0 ? 0 : 2,
   }).format(n);
+}
+
+/** First Razorpay charge = period price + one-time setup, converted to INR. */
+export function quotePackage(packageId: SolutionPackageId, billing: PackageBilling) {
+  const pkg = getPackage(packageId);
+  const usdPeriod = billing === "monthly" ? pkg.usdMonthly : pkg.usdAnnual;
+  const usdDue = usdPeriod + pkg.usdSetup;
+  const inrDue = Math.round(usdDue * USD_TO_INR);
+  return {
+    pkg,
+    billing,
+    usdPeriod,
+    usdSetup: pkg.usdSetup,
+    usdDue,
+    inrDue,
+  };
 }

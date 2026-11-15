@@ -52,15 +52,23 @@ export default function AppPage() {
               >
                 Install
               </a>
-              <Link href="/register" className="btn-outline">
-                Register for access
+              <Link href="/demo/test" className="btn-outline">
+                Free demo test
               </Link>
               <Link href="/demo" className="btn-outline">
-                Book a demo
+                Book a live demo
               </Link>
             </div>
             <p className="mt-3 text-xs text-[var(--steel)]">
               Package ID: {site.playStoreId} · Requires {site.appRequires}
+            </p>
+            <p className="mt-2 max-w-2xl text-sm text-[var(--navy)]">
+              For a free trial: request demo credentials on{" "}
+              <Link className="font-semibold text-[var(--teal-deep)]" href="/demo/test">
+                Free demo test
+              </Link>
+              , install this app, then sign in. Access lasts a fixed window and is
+              rejected automatically after expiry.
             </p>
           </div>
         </div>

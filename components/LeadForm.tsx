@@ -1,8 +1,19 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { site } from "@/lib/site";
 
 type Kind = "register" | "demo" | "demo-test" | "contact";
+
+type DemoPayload = {
+  username: string;
+  password: string | null;
+  expiresAt: string;
+  expiresAtLabel: string;
+  durationDays: number;
+  playStoreUrl: string;
+  status: string;
+};
 
 const copy: Record<Kind, { title: string; submit: string; endpoint: string }> = {
   register: {
@@ -37,12 +48,14 @@ export function LeadForm({
   const meta = copy[kind];
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [demo, setDemo] = useState<DemoPayload | null>(null);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formEl = e.currentTarget;
     setStatus("loading");
     setMessage("");
+    setDemo(null);
     const form = new FormData(formEl);
     const payload = Object.fromEntries(form.entries());
     try {
@@ -55,6 +68,7 @@ export function LeadForm({
       if (!res.ok) throw new Error(data.error || "Request failed");
       setStatus("done");
       setMessage(data.message || "Submitted successfully.");
+      if (data.demo) setDemo(data.demo as DemoPayload);
       formEl.reset();
     } catch (err) {
       setStatus("error");
@@ -91,6 +105,7 @@ export function LeadForm({
           <label className="block text-sm font-semibold">
             Interest
             <select className="input mt-1" name="interest" defaultValue={defaultInterest}>
+              <option>Free demo test</option>
               <option>Essentials package</option>
               <option>Operations package</option>
               <option>Vision AI package</option>
@@ -131,6 +146,44 @@ export function LeadForm({
         >
           {message}
         </p>
+      ) : null}
+
+      {demo ? (
+        <div className="rounded-lg border border-[var(--line)] bg-[#f8fafc] p-4 text-sm">
+          <p className="font-bold text-[var(--ink)]">Your demo credentials</p>
+          <dl className="mt-3 space-y-2">
+            <div className="flex justify-between gap-3">
+              <dt className="text-[var(--steel)]">Username</dt>
+              <dd className="font-mono font-semibold">{demo.username}</dd>
+            </div>
+            <div className="flex justify-between gap-3">
+              <dt className="text-[var(--steel)]">Password</dt>
+              <dd className="font-mono font-semibold">
+                {demo.password || "Use the password from your earlier email"}
+              </dd>
+            </div>
+            <div className="flex justify-between gap-3">
+              <dt className="text-[var(--steel)]">Expires</dt>
+              <dd className="font-semibold">{demo.expiresAtLabel} IST</dd>
+            </div>
+            <div className="flex justify-between gap-3">
+              <dt className="text-[var(--steel)]">Duration</dt>
+              <dd className="font-semibold">{demo.durationDays} days</dd>
+            </div>
+          </dl>
+          <a
+            href={demo.playStoreUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary mt-4 inline-flex w-full"
+          >
+            Download {site.appName} app & sign in
+          </a>
+          <p className="mt-3 text-xs text-[var(--steel)]">
+            After expiry, login is rejected automatically via{" "}
+            <code>/api/demo/validate</code>. Subscribe on Pricing to continue.
+          </p>
+        </div>
       ) : null}
     </form>
   );

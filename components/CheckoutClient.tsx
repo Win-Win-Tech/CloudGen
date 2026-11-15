@@ -9,16 +9,27 @@ import {
   quotePlan,
 } from "@/lib/pricing";
 import { site } from "@/lib/site";
+import {
+  formatUSD,
+  quotePackage,
+  SolutionPackageId,
+  USD_TO_INR,
+} from "@/lib/solutions";
 
 declare global {
   interface Window {
-    Razorpay?: new (options: Record<string, unknown>) => { open: () => void };
+    Razorpay?: new (options: Record<string, unknown>) => {
+      open: () => void;
+      on: (event: string, handler: (response: Record<string, unknown>) => void) => void;
+    };
   }
 }
 
 type Props = {
-  initialPlan: PlanId;
-  initialGuards: number;
+  mode: "plan" | "package";
+  initialPlan?: PlanId;
+  initialPackage?: SolutionPackageId;
+  initialGuards?: number;
   initialBilling: BillingCycle;
   razorpayKeyId: string;
   razorpayReady: boolean;
@@ -39,13 +50,16 @@ function loadRazorpayScript() {
 }
 
 export function CheckoutClient({
-  initialPlan,
-  initialGuards,
+  mode,
+  initialPlan = "pro",
+  initialPackage = "operations",
+  initialGuards = 8,
   initialBilling,
   razorpayKeyId,
   razorpayReady,
 }: Props) {
   const [planId] = useState<PlanId>(initialPlan);
+  const [packageId] = useState<SolutionPackageId>(initialPackage);
   const [guards] = useState(initialGuards);
   const [billing] = useState<BillingCycle>(initialBilling);
   const [fullName, setFullName] = useState("");
@@ -55,14 +69,40 @@ export function CheckoutClient({
   const [status, setStatus] = useState<"idle" | "paying" | "paid" | "error">("idle");
   const [message, setMessage] = useState("");
 
-  const quote = useMemo(
+  const planQuote = useMemo(
     () => quotePlan(planId, guards, billing),
     [planId, guards, billing],
   );
+  const packageQuote = useMemo(
+    () => quotePackage(packageId, billing),
+    [packageId, billing],
+  );
+
+  const summary =
+    mode === "package"
+      ? {
+          title: packageQuote.pkg.name,
+          subtitle: `${packageQuote.pkg.solutionIds.length} solutions · ${billing}`,
+          listLabel: "USD total (period + setup)",
+          listValue: formatUSD(packageQuote.usdDue),
+          payInr: packageQuote.inrDue,
+          detail: `Period ${formatUSD(packageQuote.usdPeriod)} + setup ${formatUSD(packageQuote.usdSetup)} · FX ≈ ₹${USD_TO_INR}/USD`,
+          canPay: true,
+        }
+      : {
+          title: planQuote.plan.name,
+          subtitle: `${guards} guards · ${billing}`,
+          listLabel: "List price",
+          listValue: planQuote.needsQuote ? "Custom quote" : formatEUR(planQuote.eurDue!),
+          payInr: planQuote.inrDue,
+          detail:
+            "EUR package pricing; INR charged via Razorpay at the configured conversion rate.",
+          canPay: !planQuote.needsQuote && Boolean(planQuote.inrDue),
+        };
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    if (quote.needsQuote || !quote.inrDue) {
+    if (!summary.canPay || !summary.payInr) {
       setStatus("error");
       setMessage("This selection needs a custom quote. Please contact sales.");
       return;
@@ -75,15 +115,26 @@ export function CheckoutClient({
       const orderRes = await fetch("/api/razorpay/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          planId,
-          guards,
-          billing,
-          fullName,
-          email,
-          phone,
-          organization,
-        }),
+        body: JSON.stringify(
+          mode === "package"
+            ? {
+                packageId,
+                billing,
+                fullName,
+                email,
+                phone,
+                organization,
+              }
+            : {
+                planId,
+                guards,
+                billing,
+                fullName,
+                email,
+                phone,
+                organization,
+              },
+        ),
       });
       const orderData = await orderRes.json();
       if (!orderRes.ok) {
@@ -93,7 +144,7 @@ export function CheckoutClient({
       if (orderData.mode === "demo") {
         setStatus("paid");
         setMessage(
-          `Demo checkout recorded for ${quote.plan.name}. Add Razorpay keys to enable live payments. Reference: ${orderData.subscriptionId}`,
+          `Demo checkout recorded for ${summary.title}. Add live Razorpay keys in .env.local / Vercel to enable real payments. Reference: ${orderData.subscriptionId}`,
         );
         return;
       }
@@ -108,7 +159,7 @@ export function CheckoutClient({
         amount: orderData.amount,
         currency: orderData.currency,
         name: site.company,
-        description: `${quote.plan.name} · ${guards} guards · ${billing}`,
+        description: orderData.description || `${summary.title} · ${summary.subtitle}`,
         order_id: orderData.orderId,
         prefill: { name: fullName, email, contact: phone },
         theme: { color: "#0f8f9a" },
@@ -135,10 +186,23 @@ export function CheckoutClient({
           }
           setStatus("paid");
           setMessage(
-            `Payment successful. Subscription ${verifyData.subscriptionId} is active.`,
+            `Payment successful. Subscription ${verifyData.subscriptionId} is active. Payment ID: ${verifyData.paymentId}`,
           );
         },
+        modal: {
+          ondismiss: () => {
+            setStatus("idle");
+            setMessage("Payment window closed. You can try again when ready.");
+          },
+        },
       });
+
+      rzp.on("payment.failed", (response) => {
+        const err = response.error as { description?: string } | undefined;
+        setStatus("error");
+        setMessage(err?.description || "Payment failed. Please try again.");
+      });
+
       rzp.open();
       setStatus("idle");
     } catch (err) {
@@ -154,43 +218,45 @@ export function CheckoutClient({
         <h1 className="display mt-2 text-3xl font-extrabold">Checkout</h1>
         <dl className="mt-6 space-y-3 text-sm">
           <div className="flex justify-between gap-4">
-            <dt className="text-[var(--steel)]">Plan</dt>
-            <dd className="font-semibold">{quote.plan.name}</dd>
+            <dt className="text-[var(--steel)]">
+              {mode === "package" ? "Package" : "Plan"}
+            </dt>
+            <dd className="font-semibold">{summary.title}</dd>
           </div>
           <div className="flex justify-between gap-4">
-            <dt className="text-[var(--steel)]">Guards</dt>
-            <dd className="font-semibold">{guards}</dd>
+            <dt className="text-[var(--steel)]">Details</dt>
+            <dd className="font-semibold capitalize text-right">{summary.subtitle}</dd>
           </div>
-          <div className="flex justify-between gap-4">
-            <dt className="text-[var(--steel)]">Billing</dt>
-            <dd className="font-semibold capitalize">{billing}</dd>
-          </div>
-          {!quote.needsQuote ? (
+          {summary.canPay ? (
             <>
               <div className="flex justify-between gap-4 border-t border-[var(--line)] pt-3">
-                <dt className="text-[var(--steel)]">List price</dt>
-                <dd className="font-semibold">{formatEUR(quote.eurDue!)}</dd>
+                <dt className="text-[var(--steel)]">{summary.listLabel}</dt>
+                <dd className="font-semibold">{summary.listValue}</dd>
               </div>
               <div className="flex justify-between gap-4">
                 <dt className="text-[var(--steel)]">Pay with Razorpay</dt>
                 <dd className="display text-2xl font-extrabold text-[var(--teal-deep)]">
-                  {formatINR(quote.inrDue!)}
+                  {formatINR(summary.payInr!)}
                 </dd>
               </div>
             </>
           ) : null}
         </dl>
         <p className="mt-4 text-xs leading-relaxed text-[var(--steel)]">
-          Online payments are processed by Razorpay for {site.company}. EUR package
-          pricing follows the QR-Patrol-style pricelist; INR is charged at the
-          configured conversion rate for Indian checkout.
+          {summary.detail} Online payments are processed securely by Razorpay for{" "}
+          {site.company}.
         </p>
         {!razorpayReady ? (
           <p className="mt-3 rounded-md bg-amber-50 px-3 py-2 text-xs font-medium text-amber-900">
             Live Razorpay keys are not set yet. Checkout will run in demo mode until
-            secrets are configured.
+            you add <code>RAZORPAY_KEY_ID</code> and <code>RAZORPAY_KEY_SECRET</code> in
+            `.env.local` (and Vercel env for production).
           </p>
-        ) : null}
+        ) : (
+          <p className="mt-3 rounded-md bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-900">
+            Razorpay is connected. You will be charged in INR via UPI / cards / netbanking.
+          </p>
+        )}
       </aside>
 
       <form className="card-panel space-y-4 p-6" onSubmit={onSubmit}>
@@ -206,14 +272,16 @@ export function CheckoutClient({
         </label>
         <label className="block text-sm font-semibold">
           Mobile
-          <input className="input mt-1" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+          <input className="input mt-1" type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} />
         </label>
         <label className="block text-sm font-semibold">
           Organization
           <input className="input mt-1" required value={organization} onChange={(e) => setOrganization(e.target.value)} />
         </label>
-        <button className="btn-primary w-full" type="submit" disabled={status === "paying"}>
-          {status === "paying" ? "Preparing payment…" : "Pay subscription with Razorpay"}
+        <button className="btn-primary w-full" type="submit" disabled={status === "paying" || !summary.canPay}>
+          {status === "paying"
+            ? "Preparing payment…"
+            : `Pay ${summary.payInr ? formatINR(summary.payInr) : ""} with Razorpay`}
         </button>
         {message ? (
           <p

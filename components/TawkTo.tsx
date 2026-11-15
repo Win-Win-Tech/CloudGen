@@ -1,32 +1,123 @@
 "use client";
 
-import Script from "next/script";
+import { useEffect } from "react";
 import { site } from "@/lib/site";
 
+declare global {
+  interface Window {
+    Tawk_API?: {
+      maximize?: () => void;
+      toggle?: () => void;
+      hideWidget?: () => void;
+      showWidget?: () => void;
+      onLoad?: () => void;
+    };
+    Tawk_LoadStart?: Date;
+    __tawkLoading?: boolean;
+    __tawkLoaded?: boolean;
+  }
+}
+
+function embedSrc() {
+  return `https://embed.tawk.to/${site.tawkPropertyId}/${site.tawkWidgetId}`;
+}
+
+/** Load Tawk once (safe for React Strict Mode / route changes). */
+export function loadTawk(): Promise<void> {
+  if (typeof window === "undefined") return Promise.resolve();
+  if (!site.tawkPropertyId || !site.tawkWidgetId) return Promise.resolve();
+
+  if (window.__tawkLoaded && window.Tawk_API?.maximize) {
+    return Promise.resolve();
+  }
+
+  if (window.__tawkLoading) {
+    return new Promise((resolve) => {
+      const check = () => {
+        if (window.__tawkLoaded) resolve();
+        else requestAnimationFrame(check);
+      };
+      check();
+    });
+  }
+
+  window.__tawkLoading = true;
+  window.Tawk_API = window.Tawk_API || {};
+  window.Tawk_LoadStart = new Date();
+
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>(
+      `script[data-tawk-embed="true"]`,
+    );
+    if (existing) {
+      window.__tawkLoaded = true;
+      window.__tawkLoading = false;
+      resolve();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = embedSrc();
+    script.charset = "UTF-8";
+    script.dataset.tawkEmbed = "true";
+    script.setAttribute("crossorigin", "*");
+    script.onload = () => {
+      window.__tawkLoaded = true;
+      window.__tawkLoading = false;
+      resolve();
+    };
+    script.onerror = () => {
+      window.__tawkLoading = false;
+      reject(new Error("Failed to load Tawk.to"));
+    };
+    document.body.appendChild(script);
+  });
+}
+
+export async function openTawkChat() {
+  try {
+    await loadTawk();
+    // Widget API may need a tick after script load.
+    const tryMaximize = (attempts = 0) => {
+      if (window.Tawk_API?.maximize) {
+        window.Tawk_API.maximize();
+        return;
+      }
+      if (attempts < 40) {
+        window.setTimeout(() => tryMaximize(attempts + 1), 150);
+      }
+    };
+    tryMaximize();
+  } catch {
+    // Ignore — WhatsApp remains available from Click to chat.
+  }
+}
+
 /**
- * Loads the same Tawk.to property used on cloudgentechnologies.com.
- * Property: 672866ff2480f5b4f59842aa · Widget: 1ibqt4mc1
+ * Prefetch Tawk in production only (avoids noisy Next.js console overlay in dev).
  */
 export function TawkTo() {
-  if (!site.tawkPropertyId || !site.tawkWidgetId) return null;
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production") return;
+    if (!site.tawkPropertyId || !site.tawkWidgetId) return;
 
-  const src = `https://embed.tawk.to/${site.tawkPropertyId}/${site.tawkWidgetId}`;
+    const idle =
+      "requestIdleCallback" in window
+        ? window.requestIdleCallback(() => {
+            void loadTawk();
+          })
+        : window.setTimeout(() => {
+            void loadTawk();
+          }, 1800);
 
-  return (
-    <Script id="tawk-to" strategy="lazyOnload">
-      {`
-        var Tawk_API = Tawk_API || {};
-        var Tawk_LoadStart = new Date();
-        (function () {
-          var s1 = document.createElement("script");
-          var s0 = document.getElementsByTagName("script")[0];
-          s1.async = true;
-          s1.src = "${src}";
-          s1.charset = "UTF-8";
-          s1.setAttribute("crossorigin", "*");
-          s0.parentNode.insertBefore(s1, s0);
-        })();
-      `}
-    </Script>
-  );
+    return () => {
+      if (typeof idle === "number") window.clearTimeout(idle);
+      else if ("cancelIdleCallback" in window) {
+        window.cancelIdleCallback(idle as number);
+      }
+    };
+  }, []);
+
+  return null;
 }
