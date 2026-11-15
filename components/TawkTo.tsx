@@ -102,20 +102,26 @@ export function TawkTo() {
     if (process.env.NODE_ENV !== "production") return;
     if (!site.tawkPropertyId || !site.tawkWidgetId) return;
 
-    const idle =
-      "requestIdleCallback" in window
-        ? window.requestIdleCallback(() => {
-            void loadTawk();
-          })
-        : window.setTimeout(() => {
-            void loadTawk();
-          }, 1800);
+    let cancelled = false;
+    const run = () => {
+      if (!cancelled) void loadTawk();
+    };
+
+    let idleHandle: number | undefined;
+    let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
+
+    if (typeof window.requestIdleCallback === "function") {
+      idleHandle = window.requestIdleCallback(run);
+    } else {
+      timeoutHandle = setTimeout(run, 1800);
+    }
 
     return () => {
-      if (typeof idle === "number") window.clearTimeout(idle);
-      else if ("cancelIdleCallback" in window) {
-        window.cancelIdleCallback(idle as number);
+      cancelled = true;
+      if (idleHandle != null && typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(idleHandle);
       }
+      if (timeoutHandle != null) clearTimeout(timeoutHandle);
     };
   }, []);
 
