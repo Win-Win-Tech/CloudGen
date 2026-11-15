@@ -8,6 +8,7 @@ function looksLikePlaceholder(value: string) {
     v.includes("xxxxxxxx") ||
     v.includes("your_") ||
     v.includes("replace") ||
+    /^rzp_(live|test)_x+$/i.test(v) ||
     v === "rzp_live_xxx" ||
     v === "rzp_test_xxx"
   );
