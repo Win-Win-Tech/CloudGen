@@ -47,10 +47,11 @@ export async function POST(request: Request) {
       ],
     );
 
-    // Live demo booking / contact — notify sales only.
+    // Live demo booking / contact — save first; email is best-effort.
     if (body.kind !== "demo-test") {
+      let mailed = false;
       try {
-        await sendLeadEmail({
+        const mail = await sendLeadEmail({
           id,
           kind: body.kind,
           fullName: body.fullName,
@@ -60,26 +61,21 @@ export async function POST(request: Request) {
           interest: body.interest,
           message: body.message,
         });
+        mailed = mail.sent;
       } catch (mailError) {
         console.error("[mail]", mailError);
-        return NextResponse.json(
-          {
-            error:
-              mailError instanceof Error
-                ? mailError.message
-                : "Could not send email notification",
-          },
-          { status: 502 },
-        );
       }
 
       return NextResponse.json({
         ok: true,
         id,
-        message:
-          body.kind === "contact"
+        message: mailed
+          ? body.kind === "contact"
             ? "Message received and emailed to sales@cloudgentechnologies.com. We will get back to you shortly."
-            : "Demo request received and emailed to our sales team. We will contact you to schedule a walkthrough.",
+            : "Demo request received and emailed to our sales team. We will contact you to schedule a walkthrough."
+          : body.kind === "contact"
+            ? "Message received and saved. Our team will follow up shortly."
+            : "Demo request received and saved. Our team will contact you to schedule a walkthrough.",
       });
     }
 

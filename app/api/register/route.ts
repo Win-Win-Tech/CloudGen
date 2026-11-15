@@ -28,8 +28,9 @@ export async function POST(request: Request) {
       ],
     );
 
+    let mailed = false;
     try {
-      await sendLeadEmail({
+      const mail = await sendLeadEmail({
         id,
         kind: "register",
         fullName: body.fullName,
@@ -38,24 +39,17 @@ export async function POST(request: Request) {
         organization: body.organization,
         sites: body.sites,
       });
+      mailed = mail.sent;
     } catch (mailError) {
       console.error("[mail]", mailError);
-      return NextResponse.json(
-        {
-          error:
-            mailError instanceof Error
-              ? mailError.message
-              : "Could not send email notification",
-        },
-        { status: 502 },
-      );
     }
 
     return NextResponse.json({
       ok: true,
       id,
-      message:
-        "Registration received and emailed to sales. Our team will share onboarding next steps shortly.",
+      message: mailed
+        ? "Registration received and emailed to sales. Our team will share onboarding next steps shortly."
+        : "Registration received and saved. Our team will share onboarding next steps shortly.",
     });
   } catch (error) {
     return NextResponse.json(

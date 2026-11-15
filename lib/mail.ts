@@ -146,15 +146,14 @@ async function sendWithSmtp(payload: LeadMailPayload) {
   return true;
 }
 
-/** Zero-config fallback — activates after first confirmation email to the inbox. */
+/**
+ * FormSubmit is opt-in only. Server-side calls are often blocked by Cloudflare
+ * ("Just a moment...") so it is unreliable from Next.js API routes.
+ */
 async function sendWithFormSubmit(payload: LeadMailPayload) {
   const enabled =
     process.env.MAIL_PROVIDER === "formsubmit" ||
-    process.env.FORMSUBMIT_ENABLED === "true" ||
-    (!process.env.RESEND_API_KEY &&
-      !process.env.SMTP_HOST &&
-      process.env.FORMSUBMIT_ENABLED !== "false");
-
+    process.env.FORMSUBMIT_ENABLED === "true";
   if (!enabled) return false;
 
   const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(inbox())}`, {
@@ -181,11 +180,21 @@ async function sendWithFormSubmit(payload: LeadMailPayload) {
   });
 
   const detail = await res.text();
+  if (
+    detail.includes("Just a moment") ||
+    detail.includes("cf-chl") ||
+    detail.includes("<!DOCTYPE html")
+  ) {
+    throw new Error(
+      "FormSubmit is blocked by Cloudflare from the server. Disable FORMSUBMIT_ENABLED and use RESEND_API_KEY or SMTP instead.",
+    );
+  }
+
   let parsed: { success?: string | boolean; message?: string } = {};
   try {
     parsed = JSON.parse(detail) as typeof parsed;
   } catch {
-    /* non-JSON error body */
+    throw new Error(`FormSubmit failed: non-JSON response`);
   }
 
   if (!res.ok || parsed.success === "false" || parsed.success === false) {
@@ -199,20 +208,6 @@ async function sendWithFormSubmit(payload: LeadMailPayload) {
   return true;
 }
 
-/**
- * Notify sales inbox about a lead. Tries Resend → SMTP → FormSubmit.
- * Returns which provider was used, or throws if all configured paths fail.
- */
-export async function sendLeadEmail(payload: LeadMailPayload) {
-  if (await sendWithResend(payload)) return { provider: "resend" as const };
-  if (await sendWithSmtp(payload)) return { provider: "smtp" as const };
-  if (await sendWithFormSubmit(payload)) return { provider: "formsubmit" as const };
-
-  throw new Error(
-    "Email is not configured. Set RESEND_API_KEY, or SMTP_HOST/SMTP_USER/SMTP_PASS, or FORMSUBMIT_ENABLED=true.",
-  );
-}
-
 export function mailConfigured() {
   return Boolean(
     process.env.RESEND_API_KEY?.trim() ||
@@ -220,9 +215,31 @@ export function mailConfigured() {
         process.env.SMTP_USER?.trim() &&
         process.env.SMTP_PASS?.trim()) ||
       process.env.MAIL_PROVIDER === "formsubmit" ||
-      process.env.FORMSUBMIT_ENABLED === "true" ||
-      (!process.env.RESEND_API_KEY &&
-        !process.env.SMTP_HOST &&
-        process.env.FORMSUBMIT_ENABLED !== "false"),
+      process.env.FORMSUBMIT_ENABLED === "true",
+  );
+}
+
+/**
+ * Notify sales inbox. Tries Resend → SMTP → (opt-in) FormSubmit.
+ * Returns { sent:false } when no mail provider is configured (request still saved in DB).
+ */
+export async function sendLeadEmail(payload: LeadMailPayload) {
+  if (await sendWithResend(payload)) return { sent: true as const, provider: "resend" as const };
+  if (await sendWithSmtp(payload)) return { sent: true as const, provider: "smtp" as const };
+  if (await sendWithFormSubmit(payload)) {
+    return { sent: true as const, provider: "formsubmit" as const };
+  }
+
+  if (!mailConfigured()) {
+    console.warn(
+      "[mail] No email provider configured. Lead saved to DB only.",
+      payload.id,
+      payload.kind,
+    );
+    return { sent: false as const, provider: "none" as const };
+  }
+
+  throw new Error(
+    "Email provider is configured but failed. Check RESEND_API_KEY or SMTP_* settings.",
   );
 }
