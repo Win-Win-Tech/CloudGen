@@ -1,11 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { COMPANY_SERVICES, site } from "@/lib/site";
+import { site } from "@/lib/site";
+import { SOLUTIONS, type Solution } from "@/lib/solutions";
 
 export const metadata: Metadata = {
   title: "About Us",
   description: `About ${site.company} — builders of the Guards / SmartPatrol workforce and security operations platform in Madurai, India.`,
 };
+
+const CATEGORY_LABELS: Record<Solution["category"], string> = {
+  workforce: "Workforce Management",
+  security: "Security Operations",
+  operations: "Incident & Industry Operations",
+  cctv: "CCTV AI Analytics",
+  custom: "Custom Development",
+};
+
+const CATEGORY_ORDER: Solution["category"][] = [
+  "workforce",
+  "security",
+  "operations",
+  "cctv",
+  "custom",
+];
 
 export default function AboutPage() {
   return (
@@ -23,7 +40,7 @@ export default function AboutPage() {
             We build AI-powered workforce and security products — starting with
             the Guards / {site.product} mobile platform for QR checkpoint
             scanning, guard tour patrolling, and geofence face biometric
-            attendance — plus custom web, mobile, cloud and IoT delivery for
+            attendance — plus the full catalog of fifteen CloudGen solutions for
             organizations across Madurai and India.
           </p>
         </div>
@@ -36,9 +53,9 @@ export default function AboutPage() {
               "Workforce management with QR patrol, face attendance, ticketing and gate control.",
             ],
             [
-              "Delivery",
-              "Web · Mobile · Cloud · AI",
-              "Full-stack builds, Flutter apps, cloud transformation and AI/vision integrations.",
+              "Catalog",
+              `${SOLUTIONS.length} solutions`,
+              "Mobile, web, CCTV AI and custom development offerings in one stack.",
             ],
             [
               "Support",
@@ -59,21 +76,51 @@ export default function AboutPage() {
 
       <section className="border-y border-[var(--line)] bg-[#f7fafc] py-12">
         <div className="shell">
-          <p className="eyebrow">Company services</p>
+          <p className="eyebrow">Product catalog · {SOLUTIONS.length} solutions</p>
           <h2 className="display mt-2 text-3xl font-extrabold">
             What CloudGen delivers
           </h2>
           <p className="mt-2 max-w-2xl text-[var(--steel)]">
-            Service lines published on cloudgentechnologies.com — available as
-            standalone engagements or alongside {site.product} deployments.
+            Every CloudGen offering maps to one of the fifteen SmartPatrol
+            solutions — available individually, in USD packages, or as Base /
+            Pro / Gold guard plans.
           </p>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {COMPANY_SERVICES.map((service) => (
-              <article key={service.title} className="card-panel p-5">
-                <h3 className="font-bold text-[var(--ink)]">{service.title}</h3>
-                <p className="mt-2 text-sm text-[var(--steel)]">{service.body}</p>
-              </article>
-            ))}
+
+          <div className="mt-10 space-y-10">
+            {CATEGORY_ORDER.map((category) => {
+              const items = SOLUTIONS.filter((s) => s.category === category);
+              return (
+                <div key={category}>
+                  <h3 className="text-sm font-bold uppercase tracking-[0.12em] text-[var(--teal-deep)]">
+                    {CATEGORY_LABELS[category]}
+                  </h3>
+                  <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {items.map((solution) => (
+                      <article key={solution.id} className="card-panel p-5">
+                        <p className="text-xs font-bold uppercase tracking-wide text-[var(--teal)]">
+                          {solution.platform}
+                        </p>
+                        <h4 className="mt-2 font-bold text-[var(--ink)]">
+                          {solution.name}
+                        </h4>
+                        <p className="mt-2 text-sm text-[var(--steel)]">
+                          {solution.summary}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Link href="/solutions" className="btn-primary">
+              View full product details
+            </Link>
+            <Link href="/pricing" className="btn-outline">
+              See package pricing
+            </Link>
           </div>
         </div>
       </section>

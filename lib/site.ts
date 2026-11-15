@@ -7,10 +7,18 @@ export const site = {
   description:
     "CloudGen Technologies’ Guards / SmartPatrol workforce platform — QR Code Checkpoint Scanning, Guard Tour Patrolling, Geofence Face Biometric Attendance, CCTV AI analytics, and custom digital solutions.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://cloudgentechnologies.com",
-  email: "ravit@cloudgentechnologies.com",
+  email: "sales@cloudgentechnologies.com",
   supportEmail: "info@smartpatrol.asia",
   phone: "+91 82483 59796",
   phoneHref: "tel:+918248359796",
+  whatsappNumber: "918248359796",
+  whatsappUrl:
+    "https://wa.me/918248359796?text=" +
+    encodeURIComponent("Hi CloudGen, I would like to chat about SmartPatrol solutions."),
+  /** From live cloudgentechnologies.com embed (override via env if needed). */
+  tawkPropertyId:
+    process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID || "672866ff2480f5b4f59842aa",
+  tawkWidgetId: process.env.NEXT_PUBLIC_TAWK_WIDGET_ID || "1ibqt4mc1",
   address:
     "No. 3/634, Kalvi Nagar North, Alampatti, Nagamalai Pudukottai, Madurai, Tamil Nadu, India",
   playStoreUrl: "https://play.google.com/store/apps/details?id=com.guards.app",
@@ -28,69 +36,4 @@ export const nav = [
   { href: "/solutions", label: "Product" },
   { href: "/pricing", label: "Pricing" },
   { href: "/contact", label: "Contact" },
-] as const;
-
-/** Company services listed on cloudgentechnologies.com */
-export const COMPANY_SERVICES = [
-  {
-    title: "Artificial Intelligence",
-    body: "AI services for attendance, vision analytics and intelligent automation.",
-  },
-  {
-    title: "Mobile App Development",
-    body: "Flutter and native mobile apps for workforce and customer operations.",
-  },
-  {
-    title: "Full Stack Web Development",
-    body: "End-to-end web applications for business and public-sector workflows.",
-  },
-  {
-    title: "Cloud Transformation",
-    body: "Cloud hosting, migration and managed infrastructure for Madurai and beyond.",
-  },
-  {
-    title: "IoT Integration",
-    body: "Connected devices, sensors and gate hardware integrated with your apps.",
-  },
-  {
-    title: "UI & UX Design",
-    body: "Product design for clear, usable mobile and web experiences.",
-  },
-  {
-    title: "Automation Testing",
-    body: "Web and mobile test automation to ship reliable releases faster.",
-  },
-  {
-    title: "Mobile App Testing",
-    body: "Functional and regression testing for Android and iOS apps.",
-  },
-] as const;
-
-/** Homepage product pillars from cloudgentechnologies.com */
-export const GUARDS_PILLARS = [
-  {
-    title: "Guard Tour Patrolling System",
-    points: [
-      "Geolocation and GPS monitoring",
-      "Real-time alerts and instant scanning reports",
-      "QR code checkpoint scanning",
-      "Virtual checkpoint scanning",
-      "Auto email scanning reports",
-      "Single / multi-site management",
-      "Shift and checkpoint schedule management",
-      "Dynamic auto shift & checkpoint assignation",
-      "User management with multilevel role access",
-      "Ticket management with auto WhatsApp and IVR alerts",
-    ],
-  },
-  {
-    title: "Geofence Face Biometric Attendance",
-    points: [
-      "Geofence attendance tracking",
-      "Face biometric attendance",
-      "Advanced customized attendance reporting",
-      "Guard photo on reports",
-      "Auto payslip generation",
-    ],
-  },
 ] as const;

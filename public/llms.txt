@@ -51,7 +51,5 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - From 2.64 / 5.07 / 9.53 EUR per guard / month
 - Checkout via Razorpay (INR)
 
-## Company services
-- Artificial Intelligence, Mobile App Development, Full Stack Web Development
-- Cloud Transformation, IoT Integration, UI & UX Design
-- Automation Testing, Mobile App Testing
+## What CloudGen delivers
+- Matches the 15 SmartPatrol solutions above (workforce, security, operations, CCTV AI, custom)

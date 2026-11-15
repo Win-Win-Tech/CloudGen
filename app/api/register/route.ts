@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { sql } from "@/lib/db";
+import { sendLeadEmail } from "@/lib/mail";
 
 const schema = z.object({
   fullName: z.string().min(2),
@@ -26,10 +27,35 @@ export async function POST(request: Request) {
         body.sites || null,
       ],
     );
+
+    try {
+      await sendLeadEmail({
+        id,
+        kind: "register",
+        fullName: body.fullName,
+        email: body.email,
+        phone: body.phone,
+        organization: body.organization,
+        sites: body.sites,
+      });
+    } catch (mailError) {
+      console.error("[mail]", mailError);
+      return NextResponse.json(
+        {
+          error:
+            mailError instanceof Error
+              ? mailError.message
+              : "Could not send email notification",
+        },
+        { status: 502 },
+      );
+    }
+
     return NextResponse.json({
       ok: true,
       id,
-      message: "Registration received. Our team will share onboarding next steps shortly.",
+      message:
+        "Registration received and emailed to sales. Our team will share onboarding next steps shortly.",
     });
   } catch (error) {
     return NextResponse.json(

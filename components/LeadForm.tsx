@@ -40,9 +40,10 @@ export function LeadForm({
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const formEl = e.currentTarget;
     setStatus("loading");
     setMessage("");
-    const form = new FormData(e.currentTarget);
+    const form = new FormData(formEl);
     const payload = Object.fromEntries(form.entries());
     try {
       const res = await fetch(meta.endpoint, {
@@ -54,7 +55,7 @@ export function LeadForm({
       if (!res.ok) throw new Error(data.error || "Request failed");
       setStatus("done");
       setMessage(data.message || "Submitted successfully.");
-      e.currentTarget.reset();
+      formEl.reset();
     } catch (err) {
       setStatus("error");
       setMessage(err instanceof Error ? err.message : "Something went wrong");

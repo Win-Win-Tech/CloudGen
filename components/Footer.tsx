@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { COMPANY_SERVICES, site } from "@/lib/site";
+import { site } from "@/lib/site";
+import { SOLUTIONS } from "@/lib/solutions";
 
 export function Footer() {
   return (
@@ -34,14 +35,17 @@ export function Footer() {
         </div>
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.12em] text-[var(--steel)]">
-            Services
+            Solutions
           </p>
           <div className="mt-3 flex flex-col gap-2 text-sm font-semibold">
-            {COMPANY_SERVICES.slice(0, 6).map((service) => (
-              <Link key={service.title} href="/about">
-                {service.title}
+            {SOLUTIONS.slice(0, 7).map((solution) => (
+              <Link key={solution.id} href="/solutions">
+                {solution.name.replace(/ System$/, "")}
               </Link>
             ))}
+            <Link href="/solutions" className="text-[var(--teal-deep)]">
+              All {SOLUTIONS.length} solutions →
+            </Link>
           </div>
         </div>
         <div>

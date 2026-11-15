@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
+import { OpenTawkButton } from "@/components/OpenTawkButton";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -29,6 +30,25 @@ export default async function ContactPage({
         </p>
 
         <div className="mt-8 space-y-4 text-sm">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wide text-[var(--steel)]">
+              Click to chat
+            </p>
+            <div className="mt-2 flex flex-wrap gap-3">
+              <a
+                href={site.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn bg-[#25D366] text-white hover:bg-[#1ebe57]"
+              >
+                WhatsApp
+              </a>
+              <OpenTawkButton className="btn-primary" />
+            </div>
+            <p className="mt-2 text-xs text-[var(--steel)]">
+              Use the floating Click to chat button anytime, or WhatsApp {site.phone}.
+            </p>
+          </div>
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-[var(--steel)]">
               Phone

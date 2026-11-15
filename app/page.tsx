@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PricingCalculator } from "@/components/PricingCalculator";
 import { SolutionPackages } from "@/components/SolutionPackages";
-import { COMPANY_SERVICES, GUARDS_PILLARS, site } from "@/lib/site";
+import { site } from "@/lib/site";
 import { formatUSD, SOLUTION_PACKAGES, SOLUTIONS } from "@/lib/solutions";
 
 const highlights = [
@@ -55,17 +55,20 @@ export default function HomePage() {
         <div className="shell relative grid gap-10 py-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-20">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#9be7ee]">
-              {site.company}
+              {site.company} · {SOLUTIONS.length} solutions
             </p>
             <h1 className="display mt-3 text-4xl font-extrabold uppercase leading-none sm:text-5xl lg:text-6xl">
-              Mobile App QR Code Checkpoint Scanning and Face Biometric
+              {site.product}
             </h1>
             <p className="mt-4 max-w-xl text-lg text-white/85">
-              The {site.appName} / {site.product} workforce platform — guard tour
-              patrolling, geofence face biometric attendance, and real-time
-              security operations.
+              {site.tagline} AI-powered workforce, security ops, CCTV analytics,
+              industry apps and custom builds — in one CloudGen stack.
             </p>
-            <p className="mt-3 max-w-xl text-sm text-white/70">{site.description}</p>
+            <p className="mt-3 max-w-xl text-sm text-white/70">
+              From face attendance and QR patrol to visitor/vehicle gate, WhatsApp
+              command centre, hospital & pharmacy systems, ANPR/OCR vision AI, and
+              custom web/mobile/website delivery.
+            </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/solutions" className="btn-primary">
                 Explore product
@@ -115,18 +118,26 @@ export default function HomePage() {
 
       <section className="shell py-16">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow">Guards app · as on cloudgentechnologies.com</p>
+          <p className="eyebrow">Full CloudGen catalog · {SOLUTIONS.length} solutions</p>
           <h2 className="display mt-2 text-3xl font-extrabold sm:text-4xl">
-            QR checkpoint scanning & face biometric workforce control
+            {site.tagline}
           </h2>
+          <p className="mt-3 text-[var(--steel)]">
+            Digitize workforce, security ops, CCTV AI, industry workflows and custom
+            apps — with real-time insights and always-on support.
+          </p>
         </div>
-        <div className="mt-10 grid gap-6 lg:grid-cols-2">
-          {GUARDS_PILLARS.map((pillar) => (
-            <article key={pillar.title} className="card-panel p-6 sm:p-8">
-              <h3 className="display text-2xl font-bold">{pillar.title}</h3>
-              <ul className="mt-5 grid gap-2 sm:grid-cols-2">
-                {pillar.points.map((point) => (
-                  <li key={point} className="flex gap-2 text-sm text-[var(--navy)]">
+        <div className="mt-10 grid gap-5 md:grid-cols-2">
+          {highlights.map((item) => (
+            <article key={item.id} className="card-panel p-6">
+              <p className="text-xs font-bold tracking-[0.14em] text-[var(--teal)]">
+                {item.id}
+              </p>
+              <h3 className="display mt-2 text-2xl font-bold">{item.title}</h3>
+              <p className="mt-1 text-sm font-semibold text-[var(--steel)]">{item.tag}</p>
+              <ul className="mt-4 space-y-2 text-sm text-[var(--navy)]">
+                {item.points.map((point) => (
+                  <li key={point} className="flex gap-2">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-sm bg-[var(--orange)]" />
                     <span>{point}</span>
                   </li>
@@ -136,48 +147,9 @@ export default function HomePage() {
           ))}
         </div>
         <div className="mt-8 text-center">
-          <Link href="/about" className="btn-outline">
-            About CloudGen
+          <Link href="/solutions" className="btn-outline">
+            Explore all {SOLUTIONS.length} solutions
           </Link>
-        </div>
-      </section>
-
-      <section className="border-y border-[var(--line)] bg-[#f7fafc] py-16">
-        <div className="shell">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="eyebrow">Full CloudGen catalog · {SOLUTIONS.length} solutions</p>
-            <h2 className="display mt-2 text-3xl font-extrabold sm:text-4xl">
-              {site.tagline}
-            </h2>
-            <p className="mt-3 text-[var(--steel)]">
-              Digitize workforce, security ops, CCTV AI and industry workflows with
-              real-time insights and always-on support.
-            </p>
-          </div>
-          <div className="mt-10 grid gap-5 md:grid-cols-2">
-            {highlights.map((item) => (
-              <article key={item.id} className="card-panel p-6">
-                <p className="text-xs font-bold tracking-[0.14em] text-[var(--teal)]">
-                  {item.id}
-                </p>
-                <h3 className="display mt-2 text-2xl font-bold">{item.title}</h3>
-                <p className="mt-1 text-sm font-semibold text-[var(--steel)]">{item.tag}</p>
-                <ul className="mt-4 space-y-2 text-sm text-[var(--navy)]">
-                  {item.points.map((point) => (
-                    <li key={point} className="flex gap-2">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-sm bg-[var(--orange)]" />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <Link href="/solutions" className="btn-outline">
-              Explore all {SOLUTIONS.length} solutions
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -203,25 +175,31 @@ export default function HomePage() {
 
       <section className="shell py-16">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow">Company services</p>
+          <p className="eyebrow">What CloudGen delivers · {SOLUTIONS.length} solutions</p>
           <h2 className="display mt-2 text-3xl font-extrabold">
-            Beyond the Guards app
+            Matched to the full product catalog
           </h2>
           <p className="mt-3 text-[var(--steel)]">
-            The same service lines featured on cloudgentechnologies.com.
+            Every CloudGen delivery maps to one of the fifteen SmartPatrol solutions.
           </p>
         </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {COMPANY_SERVICES.map((service) => (
-            <article key={service.title} className="card-panel p-5">
-              <h3 className="font-bold">{service.title}</h3>
-              <p className="mt-2 text-sm text-[var(--steel)]">{service.body}</p>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {SOLUTIONS.map((solution) => (
+            <article key={solution.id} className="card-panel p-5">
+              <p className="text-xs font-bold uppercase tracking-wide text-[var(--teal)]">
+                {solution.platform}
+              </p>
+              <h3 className="mt-2 font-bold">{solution.name}</h3>
+              <p className="mt-2 text-sm text-[var(--steel)]">{solution.summary}</p>
             </article>
           ))}
         </div>
-        <div className="mt-8 text-center">
-          <Link href="/contact" className="btn-primary">
-            Contact CloudGen
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Link href="/solutions" className="btn-primary">
+            Explore product
+          </Link>
+          <Link href="/about" className="btn-outline">
+            About CloudGen
           </Link>
         </div>
       </section>
