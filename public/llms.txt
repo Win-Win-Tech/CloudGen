@@ -1,10 +1,26 @@
-# SmartPatrol by CloudGen Technologies
+# CloudGen Technologies
 
-> AI-powered smart patrol solutions for workforce management, security operations, CCTV AI analytics, incident management, industry apps, and custom development.
+> AI-powered SmartPatrol / Guards workforce platform — QR Code Checkpoint Scanning, Guard Tour Patrolling, Geofence Face Biometric Attendance, CCTV AI analytics, industry apps, and custom digital solutions.
 
-Site: https://smartpatrol.asia
-Company: https://cloudgentechnologies.com/
+Site: https://cloudgentechnologies.com
+Product: SmartPatrol (Guards app)
 App: https://play.google.com/store/apps/details?id=com.guards.app
+
+## Site map (aligned with cloudgentechnologies.com)
+- / Home
+- /about About Us
+- /solutions Product (15 CloudGen solutions)
+- /pricing Pricing (USD packages + Base/Pro/Gold)
+- /contact Contact
+- /app Get the App
+- /demo Book a demo
+- /demo/test Free demo test
+- /register Organization registration
+- /checkout Razorpay subscription payment
+
+## Guards app pillars
+- Guard Tour Patrolling System: GPS, QR/virtual checkpoints, multi-site, WhatsApp/IVR tickets
+- Geofence Face Biometric Attendance: geofence tracking, face attendance, payslips, photo reports
 
 ## Solutions (15)
 - Mobile App — Face Biometric Attendance System
@@ -24,28 +40,18 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - CCTV / Mobile — OCR (ID number, name, phone, address)
 
 ## USD solution packages
-- Essentials — $79/mo · $799/yr · setup $149 (face attendance, visitors, QR patrol)
-- Operations — $179/mo · $1,829/yr · setup $299 (Essentials + vehicles + WhatsApp command centre)
-- Vision AI — $349/mo · $3,569/yr · setup $599 (CCTV attendance, counting, ANPR, OCR)
-- Industry Apps — $299/mo · $3,059/yr · setup $499 (hospital, pharmacy, court booking)
-- Enterprise Suite — $799/mo · $8,159/yr · setup $1,499 (all 15 solutions + custom builds)
+- Essentials — $79/mo · $799/yr · setup $149
+- Operations — $179/mo · $1,829/yr · setup $299
+- Vision AI — $349/mo · $3,569/yr · setup $599
+- Industry Apps — $299/mo · $3,059/yr · setup $499
+- Enterprise Suite — $799/mo · $8,159/yr · setup $1,499
 
 ## Guard-tour subscriptions (EUR / INR)
-- Plans: Base, Pro, Gold — mapped to CloudGen solutions
-- Base: QR patrol, GPS, schedules, daily reports (visitor add-on)
-- Pro: Face attendance, visitors, vehicles, WhatsApp command centre, OCR, API
-- Gold: Pro + CCTV attendance/counting/ANPR, trails, BI reports, priority support
-- Industry apps & custom builds: add-on / quote on Pro–Gold
+- Base / Pro / Gold mapped to CloudGen solutions
 - From 2.64 / 5.07 / 9.53 EUR per guard / month
-- Guard slider 1–100; >100 requires quote
-- Annual billing includes about 15% off
 - Checkout via Razorpay (INR)
 
-## Key pages
-- / solutions catalog and USD packages
-- /pricing USD packages + Base/Pro/Gold calculator
-- /app Play Store-style app download page
-- /register organization registration
-- /demo book a live demo
-- /demo/test free demo test access
-- /checkout Razorpay subscription payment
+## Company services
+- Artificial Intelligence, Mobile App Development, Full Stack Web Development
+- Cloud Transformation, IoT Integration, UI & UX Design
+- Automation Testing, Mobile App Testing

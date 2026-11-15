@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 
-type Kind = "register" | "demo" | "demo-test";
+type Kind = "register" | "demo" | "demo-test" | "contact";
 
 const copy: Record<Kind, { title: string; submit: string; endpoint: string }> = {
   register: {
@@ -18,6 +18,11 @@ const copy: Record<Kind, { title: string; submit: string; endpoint: string }> = 
   "demo-test": {
     title: "Start a free demo test",
     submit: "Start demo test",
+    endpoint: "/api/demo",
+  },
+  contact: {
+    title: "Send a message to CloudGen",
+    submit: "Send message",
     endpoint: "/api/demo",
   },
 };
@@ -103,6 +108,9 @@ export function LeadForm({
               <option>Base / Pro / Gold guard plans</option>
               <option>Enterprise quote &gt;100 guards</option>
               <option>Custom solution mix</option>
+              <option>General enquiry</option>
+              <option>Partnership</option>
+              <option>Company services</option>
             </select>
           </label>
           <label className="block text-sm font-semibold">

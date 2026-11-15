@@ -107,7 +107,7 @@ export function CheckoutClient({
         key: razorpayKeyId || orderData.keyId,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: site.name,
+        name: site.company,
         description: `${quote.plan.name} · ${guards} guards · ${billing}`,
         order_id: orderData.orderId,
         prefill: { name: fullName, email, contact: phone },

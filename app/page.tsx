@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PricingCalculator } from "@/components/PricingCalculator";
 import { SolutionPackages } from "@/components/SolutionPackages";
-import { site } from "@/lib/site";
+import { COMPANY_SERVICES, GUARDS_PILLARS, site } from "@/lib/site";
 import { formatUSD, SOLUTION_PACKAGES, SOLUTIONS } from "@/lib/solutions";
 
 const highlights = [
@@ -57,36 +57,37 @@ export default function HomePage() {
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#9be7ee]">
               {site.company}
             </p>
-            <h1 className="display mt-3 text-5xl font-extrabold uppercase leading-none sm:text-6xl">
-              {site.name}
+            <h1 className="display mt-3 text-4xl font-extrabold uppercase leading-none sm:text-5xl lg:text-6xl">
+              Mobile App QR Code Checkpoint Scanning and Face Biometric
             </h1>
             <p className="mt-4 max-w-xl text-lg text-white/85">
-              AI-powered Smart Patrol solutions — workforce, security ops, CCTV
-              AI analytics and industry apps in competitive USD packages.
+              The {site.appName} / {site.product} workforce platform — guard tour
+              patrolling, geofence face biometric attendance, and real-time
+              security operations.
             </p>
             <p className="mt-3 max-w-xl text-sm text-white/70">{site.description}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/demo/test" className="btn-primary">
-                Free testing
+              <Link href="/solutions" className="btn-primary">
+                Explore product
               </Link>
-              <Link href="/demo" className="btn border border-white/40 bg-transparent text-white hover:bg-white/10">
-                Book a demo
+              <Link href="/pricing" className="btn border border-white/40 bg-transparent text-white hover:bg-white/10">
+                Pricing
               </Link>
-              <Link href="/register" className="btn border border-white/40 bg-transparent text-white hover:bg-white/10">
-                Request a demo account
+              <Link href="/contact" className="btn border border-white/40 bg-transparent text-white hover:bg-white/10">
+                Contact
               </Link>
             </div>
           </div>
           <div className="card-panel bg-white/95 p-5 text-[var(--ink)] shadow-xl">
             <div className="flex items-start gap-4">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--ink)] text-lg font-extrabold text-white">
-                SP
+                CG
               </div>
               <div>
-                <p className="display text-2xl font-extrabold">SMART PATROL</p>
+                <p className="display text-2xl font-extrabold">{site.product}</p>
                 <p className="text-sm text-[var(--steel)]">{site.company}</p>
                 <p className="mt-2 text-sm font-semibold text-[var(--teal-deep)]">
-                  Productivity · Free · {site.appRequires}
+                  {site.appName} app · Free · {site.appRequires}
                 </p>
               </div>
             </div>
@@ -114,26 +115,18 @@ export default function HomePage() {
 
       <section className="shell py-16">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow">Full CloudGen catalog · {SOLUTIONS.length} solutions</p>
+          <p className="eyebrow">Guards app · as on cloudgentechnologies.com</p>
           <h2 className="display mt-2 text-3xl font-extrabold sm:text-4xl">
-            Smarter solutions. Safer communities.
+            QR checkpoint scanning & face biometric workforce control
           </h2>
-          <p className="mt-3 text-[var(--steel)]">
-            Digitize workforce, security ops, CCTV AI and industry workflows with
-            real-time insights and always-on support.
-          </p>
         </div>
-        <div className="mt-10 grid gap-5 md:grid-cols-2">
-          {highlights.map((item) => (
-            <article key={item.id} className="card-panel p-6">
-              <p className="text-xs font-bold tracking-[0.14em] text-[var(--teal)]">
-                {item.id}
-              </p>
-              <h3 className="display mt-2 text-2xl font-bold">{item.title}</h3>
-              <p className="mt-1 text-sm font-semibold text-[var(--steel)]">{item.tag}</p>
-              <ul className="mt-4 space-y-2 text-sm text-[var(--navy)]">
-                {item.points.map((point) => (
-                  <li key={point} className="flex gap-2">
+        <div className="mt-10 grid gap-6 lg:grid-cols-2">
+          {GUARDS_PILLARS.map((pillar) => (
+            <article key={pillar.title} className="card-panel p-6 sm:p-8">
+              <h3 className="display text-2xl font-bold">{pillar.title}</h3>
+              <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+                {pillar.points.map((point) => (
+                  <li key={point} className="flex gap-2 text-sm text-[var(--navy)]">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-sm bg-[var(--orange)]" />
                     <span>{point}</span>
                   </li>
@@ -143,30 +136,94 @@ export default function HomePage() {
           ))}
         </div>
         <div className="mt-8 text-center">
-          <Link href="/solutions" className="btn-outline">
-            Explore all {SOLUTIONS.length} solutions
+          <Link href="/about" className="btn-outline">
+            About CloudGen
           </Link>
         </div>
       </section>
 
       <section className="border-y border-[var(--line)] bg-[#f7fafc] py-16">
         <div className="shell">
-          <SolutionPackages />
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="eyebrow">Full CloudGen catalog · {SOLUTIONS.length} solutions</p>
+            <h2 className="display mt-2 text-3xl font-extrabold sm:text-4xl">
+              {site.tagline}
+            </h2>
+            <p className="mt-3 text-[var(--steel)]">
+              Digitize workforce, security ops, CCTV AI and industry workflows with
+              real-time insights and always-on support.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
+            {highlights.map((item) => (
+              <article key={item.id} className="card-panel p-6">
+                <p className="text-xs font-bold tracking-[0.14em] text-[var(--teal)]">
+                  {item.id}
+                </p>
+                <h3 className="display mt-2 text-2xl font-bold">{item.title}</h3>
+                <p className="mt-1 text-sm font-semibold text-[var(--steel)]">{item.tag}</p>
+                <ul className="mt-4 space-y-2 text-sm text-[var(--navy)]">
+                  {item.points.map((point) => (
+                    <li key={point} className="flex gap-2">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-sm bg-[var(--orange)]" />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link href="/solutions" className="btn-outline">
+              Explore all {SOLUTIONS.length} solutions
+            </Link>
+          </div>
         </div>
       </section>
 
       <section className="shell py-16">
-        <div className="mx-auto mb-10 max-w-3xl text-center">
-          <p className="eyebrow">Guard-tour subscriptions</p>
-          <h2 className="display mt-2 text-3xl font-extrabold sm:text-4xl">
-            Or license by guard count
+        <SolutionPackages />
+      </section>
+
+      <section className="border-y border-[var(--line)] bg-[#f7fafc] py-16">
+        <div className="shell">
+          <div className="mx-auto mb-10 max-w-3xl text-center">
+            <p className="eyebrow">Guard-tour subscriptions</p>
+            <h2 className="display mt-2 text-3xl font-extrabold sm:text-4xl">
+              Or license by guard count
+            </h2>
+            <p className="mt-3 text-[var(--steel)]">
+              Base, Pro and Gold per-guard plans with a slider and Razorpay checkout
+              (EUR list · INR payment).
+            </p>
+          </div>
+          <PricingCalculator />
+        </div>
+      </section>
+
+      <section className="shell py-16">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="eyebrow">Company services</p>
+          <h2 className="display mt-2 text-3xl font-extrabold">
+            Beyond the Guards app
           </h2>
           <p className="mt-3 text-[var(--steel)]">
-            Base, Pro and Gold per-guard plans with a slider and Razorpay checkout
-            (EUR list · INR payment).
+            The same service lines featured on cloudgentechnologies.com.
           </p>
         </div>
-        <PricingCalculator />
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {COMPANY_SERVICES.map((service) => (
+            <article key={service.title} className="card-panel p-5">
+              <h3 className="font-bold">{service.title}</h3>
+              <p className="mt-2 text-sm text-[var(--steel)]">{service.body}</p>
+            </article>
+          ))}
+        </div>
+        <div className="mt-8 text-center">
+          <Link href="/contact" className="btn-primary">
+            Contact CloudGen
+          </Link>
+        </div>
       </section>
 
       <section className="shell grid gap-8 py-16 lg:grid-cols-2 lg:items-center">

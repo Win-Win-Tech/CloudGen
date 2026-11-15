@@ -12,14 +12,20 @@ export function Header() {
       <div className="shell flex h-16 items-center justify-between gap-4">
         <Link href="/" className="min-w-0">
           <div className="display text-lg font-extrabold uppercase tracking-wide text-[var(--ink)]">
-            {site.name}
+            {site.company}
           </div>
           <div className="truncate text-[11px] font-medium text-[var(--steel)]">
-            {site.company}
+            {site.product} · {site.appName} app
           </div>
         </Link>
 
         <nav className="hidden items-center gap-5 md:flex">
+          <Link
+            href="/"
+            className="text-sm font-semibold text-[var(--navy)] hover:text-[var(--teal-deep)]"
+          >
+            Home
+          </Link>
           {nav.map((item) => (
             <Link
               key={item.href}
@@ -29,8 +35,8 @@ export function Header() {
               {item.label}
             </Link>
           ))}
-          <Link href="/checkout" className="btn-primary">
-            Subscribe
+          <Link href="/contact" className="btn-primary">
+            Get in touch
           </Link>
         </nav>
 
@@ -52,6 +58,13 @@ export function Header() {
       {open ? (
         <div className="border-t border-[var(--line)] bg-white md:hidden">
           <div className="shell flex flex-col gap-1 py-3">
+            <Link
+              href="/"
+              className="rounded-md px-2 py-2 text-sm font-semibold"
+              onClick={() => setOpen(false)}
+            >
+              Home
+            </Link>
             {nav.map((item) => (
               <Link
                 key={item.href}
@@ -63,11 +76,11 @@ export function Header() {
               </Link>
             ))}
             <Link
-              href="/checkout"
+              href="/contact"
               className="btn-primary mt-2"
               onClick={() => setOpen(false)}
             >
-              Subscribe
+              Get in touch
             </Link>
           </div>
         </div>
