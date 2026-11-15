@@ -47,6 +47,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       ok: true,
       id,
+      mailed,
       message: mailed
         ? "Registration received and emailed to sales. Our team will share onboarding next steps shortly."
         : "Registration received and saved. Our team will share onboarding next steps shortly.",

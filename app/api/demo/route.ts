@@ -69,6 +69,7 @@ export async function POST(request: Request) {
       return NextResponse.json({
         ok: true,
         id,
+        mailed,
         message: mailed
           ? body.kind === "contact"
             ? "Message received and emailed to sales@cloudgentechnologies.com. We will get back to you shortly."

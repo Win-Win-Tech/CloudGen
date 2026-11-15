@@ -38,6 +38,57 @@ const copy: Record<Kind, { title: string; submit: string; endpoint: string }> = 
   },
 };
 
+/** Browser-side FormSubmit — Cloudflare blocks server IPs, but browser posts usually deliver. */
+async function notifySalesInbox(payload: Record<string, FormDataEntryValue>) {
+  const inbox = site.email;
+  const subject =
+    payload.kind === "contact"
+      ? `New contact message — ${site.company}`
+      : payload.kind === "demo-test"
+        ? `New demo test request — ${site.product}`
+        : payload.kind === "register"
+          ? `New registration — ${site.product}`
+          : `New demo request — ${site.product}`;
+
+  const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(inbox)}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      name: String(payload.fullName || ""),
+      email: String(payload.email || ""),
+      phone: String(payload.phone || ""),
+      organization: String(payload.organization || ""),
+      interest: String(payload.interest || ""),
+      message: String(payload.message || ""),
+      sites: String(payload.sites || ""),
+      kind: String(payload.kind || ""),
+      _subject: subject,
+      _template: "table",
+      _replyto: String(payload.email || ""),
+      _captcha: "false",
+    }),
+  });
+
+  const detail = await res.text();
+  if (
+    detail.includes("Just a moment") ||
+    detail.includes("cf-chl") ||
+    detail.includes("<!DOCTYPE html")
+  ) {
+    return false;
+  }
+
+  try {
+    const parsed = JSON.parse(detail) as { success?: string | boolean };
+    return parsed.success === true || parsed.success === "true";
+  } catch {
+    return false;
+  }
+}
+
 export function LeadForm({
   kind,
   defaultInterest = "Operations package",
@@ -66,8 +117,24 @@ export function LeadForm({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Request failed");
+
+      let mailed = Boolean(data.mailed);
+      if (!mailed && kind !== "demo-test") {
+        try {
+          mailed = await notifySalesInbox({ ...payload, kind });
+        } catch {
+          mailed = false;
+        }
+      }
+
       setStatus("done");
-      setMessage(data.message || "Submitted successfully.");
+      setMessage(
+        mailed
+          ? kind === "contact"
+            ? "Message received and emailed to sales@cloudgentechnologies.com. We will get back to you shortly."
+            : "Demo request received and emailed to our sales team. We will contact you to schedule a walkthrough."
+          : data.message || "Submitted successfully.",
+      );
       if (data.demo) setDemo(data.demo as DemoPayload);
       formEl.reset();
     } catch (err) {
