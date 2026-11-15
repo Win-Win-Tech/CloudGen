@@ -24,7 +24,7 @@ const copy: Record<Kind, { title: string; submit: string; endpoint: string }> = 
 
 export function LeadForm({
   kind,
-  defaultInterest = "SmartPatrol Enterprise",
+  defaultInterest = "Operations package",
 }: {
   kind: Kind;
   defaultInterest?: string;
@@ -85,12 +85,24 @@ export function LeadForm({
           <label className="block text-sm font-semibold">
             Interest
             <select className="input mt-1" name="interest" defaultValue={defaultInterest}>
-              <option>Smart Patrol</option>
-              <option>Smart Patrolling</option>
-              <option>Smart Gate</option>
-              <option>Enterprise Suite</option>
-              <option>SmartPatrol Enterprise</option>
+              <option>Essentials package</option>
+              <option>Operations package</option>
+              <option>Vision AI package</option>
+              <option>Industry Apps package</option>
+              <option>Enterprise Suite package</option>
+              <option>Face Biometric Attendance</option>
+              <option>Visitor Management</option>
+              <option>Vehicle Management</option>
+              <option>QR Checkpoint Patrolling</option>
+              <option>Hospital Management</option>
+              <option>Pharmacy Billing</option>
+              <option>WhatsApp Court Booking</option>
+              <option>WhatsApp Command Centre</option>
+              <option>CCTV AI Analytics</option>
+              <option>Custom Web / Mobile / Website</option>
+              <option>Base / Pro / Gold guard plans</option>
               <option>Enterprise quote &gt;100 guards</option>
+              <option>Custom solution mix</option>
             </select>
           </label>
           <label className="block text-sm font-semibold">

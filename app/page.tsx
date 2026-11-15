@@ -1,46 +1,48 @@
 import Link from "next/link";
 import { PricingCalculator } from "@/components/PricingCalculator";
+import { SolutionPackages } from "@/components/SolutionPackages";
 import { site } from "@/lib/site";
+import { formatUSD, SOLUTION_PACKAGES, SOLUTIONS } from "@/lib/solutions";
 
-const solutions = [
+const highlights = [
   {
     id: "01",
-    title: "Smart Patrol",
-    tag: "Geofence & workforce attendance",
+    title: "Workforce & Security",
+    tag: "Attendance · Visitors · Vehicles · QR patrol",
     points: [
-      "Liveness face biometric verification and GPS geofencing",
-      "Present, Absent, Half Day, Less Duration & On-Work controls",
-      "Automatic checkout on boundary breach or shift buffer time",
+      "Face biometric attendance with liveness checks",
+      "Visitor and vehicle gate management",
+      "QR checkpoint scan patrolling with proof of presence",
     ],
   },
   {
     id: "02",
-    title: "Smart Patrolling",
-    tag: "QR checkpoint & incident management",
+    title: "CCTV AI Analytics",
+    tag: "Attendance · Counting · ANPR · OCR",
     points: [
-      "Scheduled QR checkpoint scans with time/location verification",
-      "Raise incidents with voice, image and video evidence",
-      "Automated WhatsApp and IVR ticket alerts",
+      "CCTV-based attendance and people counting",
+      "Automatic number plate recognition (ANPR)",
+      "ID card OCR for name, number, phone and address",
     ],
   },
   {
     id: "03",
-    title: "Smart Gate",
-    tag: "Visitor & vehicle management",
+    title: "Industry & Command Centre",
+    tag: "Hospital · Pharmacy · Booking · Ticketing",
     points: [
-      "ID capture with name, ID number and address extraction",
-      "Vehicle image capture and registration number recognition",
-      "Digital QR pass, blacklist/whitelist and SOS alerts",
+      "Hospital management and pharmacy billing web apps",
+      "WhatsApp badminton court booking",
+      "24×7 WhatsApp corporation complaints ticketing",
     ],
   },
   {
     id: "04",
-    title: "Enterprise Suite",
-    tag: "Integrated security operations",
+    title: "Custom Development",
+    tag: "Web · Mobile · Website",
     points: [
-      "All modules in one centralized platform",
-      "CCTV AI analytics integration options",
-      "Audit trail, roles and management reporting",
+      "Custom web application development",
+      "Powerful mobile apps for every operational need",
+      "Modern responsive website builds",
     ],
   },
 ];
@@ -59,8 +61,8 @@ export default function HomePage() {
               {site.name}
             </h1>
             <p className="mt-4 max-w-xl text-lg text-white/85">
-              The No.1 AI-powered guard tour & workforce platform for security
-              companies and facility managers.
+              AI-powered Smart Patrol solutions — workforce, security ops, CCTV
+              AI analytics and industry apps in competitive USD packages.
             </p>
             <p className="mt-3 max-w-xl text-sm text-white/70">{site.description}</p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -89,8 +91,9 @@ export default function HomePage() {
               </div>
             </div>
             <p className="mt-4 text-sm leading-relaxed text-[var(--navy)]">
-              QR checkpoint scanning, guard tour patrolling, geofence face biometric
-              attendance, ticketing and automated payslips — in one mobile app.
+              Fifteen solutions spanning face attendance, visitors, vehicles, QR
+              patrol, CCTV AI, industry apps and custom development — packaged from{" "}
+              {formatUSD(SOLUTION_PACKAGES[0].usdMonthly)}/mo.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link href="/app" className="btn-dark">
@@ -111,17 +114,17 @@ export default function HomePage() {
 
       <section className="shell py-16">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow">A new way of patrol monitoring</p>
+          <p className="eyebrow">Full CloudGen catalog · {SOLUTIONS.length} solutions</p>
           <h2 className="display mt-2 text-3xl font-extrabold sm:text-4xl">
-            Manage your security staff from everywhere
+            Smarter solutions. Safer communities.
           </h2>
           <p className="mt-3 text-[var(--steel)]">
-            Digitize attendance, checkpoint rounds, incidents and gate access with
-            real-time visibility and automated daily reports at 7:00 AM.
+            Digitize workforce, security ops, CCTV AI and industry workflows with
+            real-time insights and always-on support.
           </p>
         </div>
         <div className="mt-10 grid gap-5 md:grid-cols-2">
-          {solutions.map((item) => (
+          {highlights.map((item) => (
             <article key={item.id} className="card-panel p-6">
               <p className="text-xs font-bold tracking-[0.14em] text-[var(--teal)]">
                 {item.id}
@@ -141,26 +144,29 @@ export default function HomePage() {
         </div>
         <div className="mt-8 text-center">
           <Link href="/solutions" className="btn-outline">
-            Explore all solutions
+            Explore all {SOLUTIONS.length} solutions
           </Link>
         </div>
       </section>
 
       <section className="border-y border-[var(--line)] bg-[#f7fafc] py-16">
         <div className="shell">
-          <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="eyebrow">Just a few clicks away</p>
-            <h2 className="display mt-2 text-3xl font-extrabold sm:text-4xl">
-              Choose your SmartPatrol plan
-            </h2>
-            <p className="mt-3 text-[var(--steel)]">
-              Same package structure and EUR pricing model as leading guard-tour
-              platforms — Base, Pro and Gold — with a guard slider and Razorpay
-              subscription checkout.
-            </p>
-          </div>
-          <PricingCalculator />
+          <SolutionPackages />
         </div>
+      </section>
+
+      <section className="shell py-16">
+        <div className="mx-auto mb-10 max-w-3xl text-center">
+          <p className="eyebrow">Guard-tour subscriptions</p>
+          <h2 className="display mt-2 text-3xl font-extrabold sm:text-4xl">
+            Or license by guard count
+          </h2>
+          <p className="mt-3 text-[var(--steel)]">
+            Base, Pro and Gold per-guard plans with a slider and Razorpay checkout
+            (EUR list · INR payment).
+          </p>
+        </div>
+        <PricingCalculator />
       </section>
 
       <section className="shell grid gap-8 py-16 lg:grid-cols-2 lg:items-center">

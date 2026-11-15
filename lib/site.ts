@@ -1,9 +1,9 @@
 export const site = {
   name: "SmartPatrol",
   company: "CloudGen Technologies",
-  tagline: "AI-powered smart patrol solutions",
+  tagline: "Smarter Solutions. Safer Communities.",
   description:
-    "One connected platform for guard attendance, QR checkpoint patrolling, incident response, and visitor & vehicle access — with real-time visibility and automated reporting.",
+    "AI-powered Smart Patrol solutions for workforce management, security operations, CCTV AI analytics and incident management — packaged with competitive USD pricing.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://smartpatrol.asia",
   email: "ravit@cloudgentechnologies.com",
   supportEmail: "info@smartpatrol.asia",
