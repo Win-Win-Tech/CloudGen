@@ -112,7 +112,7 @@ export default function AppPage() {
             <li>
               Privacy policy:{" "}
               <a className="font-semibold text-[var(--teal-deep)]" href={site.privacyUrl}>
-                {site.privacyUrl}
+                cloudgentechnologies.com/privacy
               </a>
             </li>
           </ul>

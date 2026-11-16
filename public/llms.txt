@@ -16,6 +16,7 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - /solutions/vehicle-management-system Vehicle management SEO page
 - /solutions/vision-ai-cctv Vision AI CCTV SEO page
 - /blog SmartPatrol guides / SEO content cluster
+- /privacy Privacy Policy (CloudGen website + SmartPatrol / Guards app)
 - /pricing Pricing (Smart Patrol INR packages)
 - /contact Contact
 - /app Get the App

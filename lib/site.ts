@@ -24,7 +24,7 @@ export const site = {
   playStoreUrl: "https://play.google.com/store/apps/details?id=com.guards.app",
   playStoreId: "com.guards.app",
   companyUrl: "https://cloudgentechnologies.com/",
-  privacyUrl: "https://smartpatrol.asia/privacy-policy.html",
+  privacyUrl: "https://cloudgentechnologies.com/privacy",
   appVersion: "1.0.6",
   appSize: "77 MB",
   appRequires: "Android 7.0+",

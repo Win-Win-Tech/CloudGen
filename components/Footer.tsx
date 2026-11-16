@@ -32,6 +32,7 @@ export function Footer() {
             <Link href="/contact">Contact</Link>
             <Link href="/app">Get the App</Link>
             <Link href="/demo">Book a Demo</Link>
+            <Link href="/privacy">Privacy Policy</Link>
           </div>
         </div>
         <div>
