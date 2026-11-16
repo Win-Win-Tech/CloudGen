@@ -134,7 +134,7 @@ export default function AppPage() {
           <p>Developer: {site.company}</p>
           <p>Released for Android · Content rating: Everyone</p>
           <Link href="/pricing" className="btn-dark mt-2 inline-flex w-full">
-            See subscription plans
+            See Smart Patrol packages
           </Link>
         </aside>
       </section>

@@ -387,6 +387,130 @@ export const PAID_PACKAGE_IDS = SOLUTION_PACKAGES.filter((p) => !p.quoteOnly).ma
   (p) => p.id,
 ) as SolutionPackageId[];
 
+/** Rate card unit bases from Package-1 (pro-rata beyond these). */
+export const RATE_CARD = {
+  faceUsersBase: 25,
+  faceMonthly: 2000,
+  faceAnnual: 24000,
+  qrCodesBase: 20,
+  qrMonthly: 2000,
+  qrAnnual: 24000,
+  siteMonthly: 3000,
+  siteAnnual: 36000,
+  usersMaxOnline: 200,
+  codesMaxOnline: 200,
+  sitesMaxOnline: 10,
+} as const;
+
+/** Discrete bands for QR-Patrol-style drag (index → quantity). */
+export const USER_STEPS = [25, 50, 75, 100, 150, 200] as const;
+export const CODE_STEPS = [20, 40, 60, 80, 120, 200] as const;
+export const SITE_STEPS = [1, 2, 3, 5, 8, 10] as const;
+
+export type PackageQty = {
+  users: number;
+  codes: number;
+  /** Visitor management site count. */
+  visitorSites: number;
+  /** Vehicle management site count. */
+  vehicleSites: number;
+};
+
+export type PackageDimensions = {
+  users: boolean;
+  codes: boolean;
+  visitorSites: boolean;
+  vehicleSites: boolean;
+};
+
+export function packageDimensions(id: SolutionPackageId): PackageDimensions {
+  switch (id) {
+    case "face":
+      return { users: true, codes: false, visitorSites: false, vehicleSites: false };
+    case "qr-patrol":
+      return { users: false, codes: true, visitorSites: false, vehicleSites: false };
+    case "visitor":
+      return { users: false, codes: false, visitorSites: true, vehicleSites: false };
+    case "vehicle":
+      return { users: false, codes: false, visitorSites: false, vehicleSites: true };
+    case "workforce-duo":
+      return { users: true, codes: true, visitorSites: false, vehicleSites: false };
+    case "gate-duo":
+      return { users: false, codes: false, visitorSites: true, vehicleSites: true };
+    case "site-ops":
+      return { users: true, codes: true, visitorSites: true, vehicleSites: true };
+    default:
+      return { users: false, codes: false, visitorSites: false, vehicleSites: false };
+  }
+}
+
+export function defaultPackageQty(_id: SolutionPackageId): PackageQty {
+  return {
+    users: RATE_CARD.faceUsersBase,
+    codes: RATE_CARD.qrCodesBase,
+    visitorSites: 1,
+    vehicleSites: 1,
+  };
+}
+
+/** Bundle factor from published base price vs rate-card list at default qty. */
+export function bundleFactor(packageId: SolutionPackageId, billing: PackageBilling) {
+  const pkg = getPackage(packageId);
+  if (pkg.quoteOnly || pkg.inrMonthly == null || pkg.inrAnnual == null) return 1;
+  const dims = packageDimensions(packageId);
+  const list = listPeriodInr(dims, defaultPackageQty(packageId), billing);
+  if (list <= 0) return 1;
+  const published = billing === "monthly" ? pkg.inrMonthly : pkg.inrAnnual;
+  return published / list;
+}
+
+export function qtySummary(dims: PackageDimensions, qty: PackageQty) {
+  const parts: string[] = [];
+  if (dims.users) parts.push(`${qty.users} users`);
+  if (dims.codes) parts.push(`${qty.codes} codes`);
+  if (dims.visitorSites) {
+    parts.push(
+      `${qty.visitorSites} visitor site${qty.visitorSites === 1 ? "" : "s"}`,
+    );
+  }
+  if (dims.vehicleSites) {
+    parts.push(
+      `${qty.vehicleSites} vehicle site${qty.vehicleSites === 1 ? "" : "s"}`,
+    );
+  }
+  return parts.join(" · ") || "Custom scope";
+}
+
+/** Normalize qty input; `sites` mirrors both modules when a split count is omitted. */
+export function normalizePackageQty(
+  dims: PackageDimensions,
+  qtyInput?: Partial<PackageQty> & { sites?: number },
+): PackageQty {
+  const defaults = defaultPackageQty("face");
+  const sharedSites =
+    qtyInput?.sites != null ? Math.max(1, Math.round(qtyInput.sites)) : undefined;
+  return {
+    users: Math.max(1, Math.round(qtyInput?.users ?? defaults.users)),
+    codes: Math.max(1, Math.round(qtyInput?.codes ?? defaults.codes)),
+    visitorSites: Math.max(
+      1,
+      Math.round(
+        qtyInput?.visitorSites ??
+          (dims.visitorSites ? sharedSites : undefined) ??
+          defaults.visitorSites,
+      ),
+    ),
+    vehicleSites: Math.max(
+      1,
+      Math.round(
+        qtyInput?.vehicleSites ??
+          (dims.vehicleSites ? sharedSites : undefined) ??
+          defaults.vehicleSites,
+      ),
+    ),
+  };
+}
+
 export function getSolution(id: string) {
   const solution = SOLUTIONS.find((s) => s.id === id);
   if (!solution) throw new Error(`Unknown solution: ${id}`);
@@ -411,28 +535,263 @@ export function formatINR(n: number) {
   }).format(n);
 }
 
-/** Razorpay charge = period (monthly or annual) + one-time setup, already in INR. */
-export function quotePackage(packageId: SolutionPackageId, billing: PackageBilling) {
+function listPeriodInr(
+  dims: PackageDimensions,
+  qty: PackageQty,
+  billing: PackageBilling,
+) {
+  let total = 0;
+  if (dims.users) {
+    const unit =
+      billing === "monthly"
+        ? RATE_CARD.faceMonthly / RATE_CARD.faceUsersBase
+        : RATE_CARD.faceAnnual / RATE_CARD.faceUsersBase;
+    total += qty.users * unit;
+  }
+  if (dims.codes) {
+    const unit =
+      billing === "monthly"
+        ? RATE_CARD.qrMonthly / RATE_CARD.qrCodesBase
+        : RATE_CARD.qrAnnual / RATE_CARD.qrCodesBase;
+    total += qty.codes * unit;
+  }
+  const siteUnit = billing === "monthly" ? RATE_CARD.siteMonthly : RATE_CARD.siteAnnual;
+  if (dims.visitorSites) total += qty.visitorSites * siteUnit;
+  if (dims.vehicleSites) total += qty.vehicleSites * siteUnit;
+  return total;
+}
+
+/**
+ * Pro-rata quote from rate card + published bundle factor.
+ * Beyond online max users/codes/sites → needsQuote.
+ */
+export function quotePackage(
+  packageId: SolutionPackageId,
+  billing: PackageBilling,
+  qtyInput?: Partial<PackageQty> & { sites?: number },
+) {
   const pkg = getPackage(packageId);
+  const dims = packageDimensions(packageId);
+  const qty = normalizePackageQty(dims, qtyInput);
+
   if (pkg.quoteOnly || pkg.inrMonthly == null || pkg.inrAnnual == null || pkg.inrSetup == null) {
     return {
       pkg,
       billing,
+      qty,
+      dims,
       inrPeriod: null as number | null,
       inrSetup: null as number | null,
       inrDue: null as number | null,
+      listPeriod: null as number | null,
+      factor: 1,
       needsQuote: true as const,
     };
   }
 
-  const inrPeriod = billing === "monthly" ? pkg.inrMonthly : pkg.inrAnnual;
-  const inrDue = inrPeriod + pkg.inrSetup;
+  const factor = bundleFactor(packageId, billing);
+  const overLimit =
+    (dims.users && qty.users > RATE_CARD.usersMaxOnline) ||
+    (dims.codes && qty.codes > RATE_CARD.codesMaxOnline) ||
+    (dims.visitorSites && qty.visitorSites > RATE_CARD.sitesMaxOnline) ||
+    (dims.vehicleSites && qty.vehicleSites > RATE_CARD.sitesMaxOnline);
+
+  if (overLimit) {
+    return {
+      pkg,
+      billing,
+      qty,
+      dims,
+      inrPeriod: null as number | null,
+      inrSetup: null as number | null,
+      inrDue: null as number | null,
+      listPeriod: null as number | null,
+      factor,
+      needsQuote: true as const,
+    };
+  }
+
+  const listPeriod = listPeriodInr(dims, qty, billing);
+  const inrPeriod = Math.round(listPeriod * factor);
+  const scale = Math.max(
+    dims.users ? qty.users / RATE_CARD.faceUsersBase : 0,
+    dims.codes ? qty.codes / RATE_CARD.qrCodesBase : 0,
+    dims.visitorSites ? qty.visitorSites : 0,
+    dims.vehicleSites ? qty.vehicleSites : 0,
+    1,
+  );
+  const inrSetup = Math.round(pkg.inrSetup * Math.min(scale, 3));
+  const inrDue = inrPeriod + inrSetup;
+
   return {
     pkg,
     billing,
+    qty,
+    dims,
     inrPeriod,
-    inrSetup: pkg.inrSetup,
+    inrSetup,
     inrDue,
+    listPeriod: Math.round(listPeriod),
+    factor,
     needsQuote: false as const,
   };
 }
+
+/** Plan comparison columns (paid packages first, then quote-only). */
+export const COMPARISON_PACKAGE_IDS: SolutionPackageId[] = [
+  "face",
+  "qr-patrol",
+  "visitor",
+  "vehicle",
+  "workforce-duo",
+  "gate-duo",
+  "site-ops",
+  "vision-ai",
+];
+
+export type ComparisonCell = boolean | "limited" | "quote" | "addon";
+
+export type ComparisonRow = {
+  feature: string;
+  values: Partial<Record<SolutionPackageId, ComparisonCell>>;
+};
+
+export type ComparisonGroup = {
+  title: string;
+  rows: ComparisonRow[];
+};
+
+export const PLAN_COMPARISON: ComparisonGroup[] = [
+  {
+    title: "Workforce & checkpoints",
+    rows: [
+      {
+        feature: "Face biometric attendance",
+        values: { face: true, "workforce-duo": true, "site-ops": true },
+      },
+      {
+        feature: "QR checkpoint scan patrolling",
+        values: { "qr-patrol": true, "workforce-duo": true, "site-ops": true },
+      },
+      {
+        feature: "Pro-rata users (drag to scale)",
+        values: {
+          face: true,
+          "workforce-duo": true,
+          "site-ops": true,
+        },
+      },
+      {
+        feature: "Pro-rata QR codes (drag to scale)",
+        values: {
+          "qr-patrol": true,
+          "workforce-duo": true,
+          "site-ops": true,
+        },
+      },
+    ],
+  },
+  {
+    title: "Gate & site control",
+    rows: [
+      {
+        feature: "Visitor management",
+        values: { visitor: true, "gate-duo": true, "site-ops": true },
+      },
+      {
+        feature: "Vehicle management",
+        values: { vehicle: true, "gate-duo": true, "site-ops": true },
+      },
+      {
+        feature: "Visitor site scaling (drag)",
+        values: {
+          visitor: true,
+          "gate-duo": true,
+          "site-ops": true,
+        },
+      },
+      {
+        feature: "Vehicle site scaling (drag)",
+        values: {
+          vehicle: true,
+          "gate-duo": true,
+          "site-ops": true,
+        },
+      },
+    ],
+  },
+  {
+    title: "Operations & support",
+    rows: [
+      {
+        feature: "Ticket Complaints Tracking System",
+        values: {
+          face: true,
+          "qr-patrol": true,
+          visitor: true,
+          vehicle: true,
+          "workforce-duo": true,
+          "gate-duo": true,
+          "site-ops": true,
+          "vision-ai": true,
+        },
+      },
+      {
+        feature: "Mobile app access",
+        values: {
+          face: true,
+          "qr-patrol": true,
+          visitor: true,
+          vehicle: true,
+          "workforce-duo": true,
+          "gate-duo": true,
+          "site-ops": true,
+          "vision-ai": "limited",
+        },
+      },
+      {
+        feature: "Web management console",
+        values: {
+          face: true,
+          "qr-patrol": true,
+          visitor: true,
+          vehicle: true,
+          "workforce-duo": true,
+          "gate-duo": true,
+          "site-ops": true,
+          "vision-ai": true,
+        },
+      },
+      {
+        feature: "Real-time alerts & reports",
+        values: {
+          face: true,
+          "qr-patrol": true,
+          visitor: true,
+          vehicle: true,
+          "workforce-duo": true,
+          "gate-duo": true,
+          "site-ops": true,
+          "vision-ai": true,
+        },
+      },
+    ],
+  },
+  {
+    title: "Vision AI & custom",
+    rows: [
+      {
+        feature: "CCTV attendance / people counting",
+        values: { "vision-ai": "quote" },
+      },
+      {
+        feature: "ANPR & ID OCR",
+        values: { "vision-ai": "quote" },
+      },
+      {
+        feature: "Industry / Custom Build",
+        values: { "vision-ai": "addon" },
+      },
+    ],
+  },
+];

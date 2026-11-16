@@ -10,7 +10,7 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - / Home
 - /about About Us
 - /solutions Product (15 CloudGen solutions)
-- /pricing Pricing (USD packages + Base/Pro/Gold)
+- /pricing Pricing (Smart Patrol INR packages)
 - /contact Contact
 - /app Get the App
 - /demo Book a live demo
@@ -20,7 +20,7 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - /checkout Razorpay subscription payment
 
 ## Guards app pillars
-- Guard Tour Patrolling System: GPS, QR/virtual checkpoints, multi-site, WhatsApp/IVR tickets
+- Guard Tour Patrolling System: GPS, QR/virtual checkpoints, multi-site, tickets
 - Geofence Face Biometric Attendance: geofence tracking, face attendance, payslips, photo reports
 
 ## Solutions (15)
@@ -40,7 +40,7 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - CCTV — ANPR (Automatic Number Plate Recognition)
 - CCTV / Mobile — OCR (ID number, name, phone, address)
 
-## INR solution packages
+## Smart Patrol INR packages
 - Smart Patrol Attendance — ₹2,000/mo · ₹24,000/yr (upto 25 users)
 - Smart Patrol Checkpoint — ₹2,000/mo · ₹24,000/yr (upto 20 codes)
 - Smart Patrol Visitor — ₹3,000/mo · ₹36,000/yr (per site)
@@ -50,11 +50,7 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - Smart Patrol Site Ops Suite (all four) — ₹8,500/mo · ₹99,900/yr
 - Smart Patrol Vision AI / Industry Suite / Custom Build — Quote
 - Ticket Complaints Tracking included on every package
-
-## Guard-tour subscriptions (EUR / INR)
-- Base / Pro / Gold mapped to CloudGen solutions
-- From 2.64 / 5.07 / 9.53 EUR per guard / month
 - Checkout via Razorpay (INR)
 
 ## What CloudGen delivers
-- Matches the 15 SmartPatrol solutions above (workforce, security, operations, CCTV AI, custom)
+- Matches the 15 SmartPatrol solutions above, sold as Smart Patrol modules and suites

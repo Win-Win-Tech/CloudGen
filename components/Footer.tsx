@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
-import { SOLUTIONS } from "@/lib/solutions";
+import { SOLUTION_PACKAGES } from "@/lib/solutions";
 
 export function Footer() {
   return (
@@ -12,8 +12,8 @@ export function Footer() {
             {site.product} · {site.appName} workforce app
           </p>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-[var(--steel)]">
-            QR checkpoint scanning, guard tour patrolling, geofence face biometric
-            attendance, CCTV AI and custom digital solutions from Madurai, India.
+            Smart Patrol packages for attendance, checkpoints, visitors, vehicles,
+            Vision AI, industry apps and custom builds — from Madurai, India.
           </p>
           <p className="mt-4 text-xs text-[var(--steel)]">
             Copyright © {new Date().getFullYear()} {site.company}
@@ -35,16 +35,16 @@ export function Footer() {
         </div>
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.12em] text-[var(--steel)]">
-            Solutions
+            Packages
           </p>
           <div className="mt-3 flex flex-col gap-2 text-sm font-semibold">
-            {SOLUTIONS.slice(0, 7).map((solution) => (
-              <Link key={solution.id} href="/solutions">
-                {solution.name.replace(/ System$/, "")}
+            {SOLUTION_PACKAGES.slice(0, 7).map((pkg) => (
+              <Link key={pkg.id} href="/pricing">
+                {pkg.name}
               </Link>
             ))}
-            <Link href="/solutions" className="text-[var(--teal-deep)]">
-              All {SOLUTIONS.length} solutions →
+            <Link href="/pricing" className="text-[var(--teal-deep)]">
+              All packages →
             </Link>
           </div>
         </div>

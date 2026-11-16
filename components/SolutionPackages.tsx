@@ -110,10 +110,10 @@ export function SolutionPackages({ showCatalogHint = true }: Props) {
                   </Link>
                 ) : (
                   <Link
-                    href={`/checkout?package=${pkg.id}&billing=monthly`}
+                    href={`/pricing`}
                     className="btn-primary"
                   >
-                    Pay with Razorpay
+                    Configure & pay
                   </Link>
                 )}
                 <Link

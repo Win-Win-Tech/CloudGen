@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { TawkTo } from "@/components/TawkTo";
 import { site } from "@/lib/site";
+import { SOLUTION_PACKAGES } from "@/lib/solutions";
 import "./globals.css";
 
 const display = Raleway({
@@ -85,9 +86,10 @@ export default function RootLayout({
         operatingSystem: "Android, Web",
         offers: {
           "@type": "Offer",
-          priceCurrency: "USD",
-          price: "79",
-          description: "From USD 79 / month for Essentials solution package",
+          priceCurrency: "INR",
+          price: String(SOLUTION_PACKAGES[0].inrMonthly ?? 2000),
+          description:
+            "From INR 2,000 / month for Smart Patrol Attendance (Ticket Complaints Tracking included)",
         },
         publisher: {
           "@type": "Organization",

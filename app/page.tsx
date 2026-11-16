@@ -6,42 +6,42 @@ import { formatINR, SOLUTION_PACKAGES, SOLUTIONS } from "@/lib/solutions";
 const highlights = [
   {
     id: "01",
-    title: "Workforce & Security",
-    tag: "Attendance · Visitors · Vehicles · QR patrol",
+    title: "Smart Patrol modules",
+    tag: "Attendance · Checkpoint · Visitor · Vehicle",
     points: [
-      "Face biometric attendance with liveness checks",
-      "Visitor and vehicle gate management",
-      "QR checkpoint scan patrolling with proof of presence",
+      "Smart Patrol Attendance — face biometric (upto 25 users)",
+      "Smart Patrol Checkpoint — QR scan (upto 20 codes)",
+      "Smart Patrol Visitor & Vehicle — per-site gate control",
     ],
   },
   {
     id: "02",
-    title: "CCTV AI Analytics",
-    tag: "Attendance · Counting · ANPR · OCR",
+    title: "Smart Patrol bundles",
+    tag: "Workforce Duo · Gate Duo · Site Ops Suite",
     points: [
-      "CCTV-based attendance and people counting",
-      "Automatic number plate recognition (ANPR)",
-      "ID card OCR for name, number, phone and address",
+      "Workforce Duo — Face + QR at a discounted rate",
+      "Gate Duo — Visitor + Vehicle together",
+      "Site Ops Suite — full Face + QR + Visitor + Vehicle stack",
     ],
   },
   {
     id: "03",
-    title: "Industry & Command Centre",
-    tag: "Hospital · Pharmacy · Booking · Ticketing",
+    title: "Quote-only specialties",
+    tag: "Vision AI · Industry Suite · Custom Build",
     points: [
-      "Hospital management and pharmacy billing web apps",
-      "AI Chatbot Doctor Appointment Booking",
-      "Ticket Complaints Tracking System",
+      "Smart Patrol Vision AI — CCTV attendance, counting, ANPR, OCR",
+      "Smart Patrol Industry Suite — hospital, pharmacy, doctor booking",
+      "Smart Patrol Custom Build — web, mobile and website projects",
     ],
   },
   {
     id: "04",
-    title: "Custom Development",
-    tag: "Web · Mobile · Website",
+    title: "Included everywhere",
+    tag: "Ticket Complaints Tracking",
     points: [
-      "Custom web application development",
-      "Powerful mobile apps for every operational need",
-      "Modern responsive website builds",
+      "Availability Command Centre on every package",
+      "Ticket Complaints Tracking System included",
+      "Pay online with Razorpay in INR",
     ],
   },
 ];
@@ -60,14 +60,14 @@ export default function HomePage() {
               {site.product}
             </h1>
             <p className="mt-4 max-w-xl text-lg text-white/85">
-              {site.tagline} AI-powered workforce, security ops, CCTV analytics,
-              industry apps and custom builds — in one CloudGen stack.
+              {site.tagline} Modular Smart Patrol packages for attendance,
+              checkpoints, visitors, vehicles, Vision AI, industry apps and custom
+              builds — in one CloudGen stack.
             </p>
             <p className="mt-3 max-w-xl text-sm text-white/70">
-              From face attendance and QR patrol to visitor/vehicle gate, ticket
-              complaints tracking, hospital & pharmacy systems, AI doctor
-              appointment booking, ANPR/OCR vision AI, and custom web/mobile/website
-              delivery.
+              Choose Smart Patrol Attendance, Checkpoint, Visitor or Vehicle alone —
+              or Workforce Duo, Gate Duo and Site Ops Suite. Ticket Complaints
+              Tracking is included on every package.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/solutions" className="btn-primary">
@@ -95,9 +95,9 @@ export default function HomePage() {
               </div>
             </div>
             <p className="mt-4 text-sm leading-relaxed text-[var(--navy)]">
-              Fifteen solutions spanning face attendance, visitors, vehicles, QR
-              patrol, CCTV AI, industry apps and custom development — packages from{" "}
-              {formatINR(SOLUTION_PACKAGES[0].inrMonthly!)}/mo.
+              Fifteen solutions packaged as Smart Patrol modules and suites —
+              starting from {formatINR(SOLUTION_PACKAGES[0].inrMonthly!)}/mo, with
+              Ticket Complaints Tracking on every plan.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link href="/app" className="btn-dark">
@@ -123,8 +123,9 @@ export default function HomePage() {
             {site.tagline}
           </h2>
           <p className="mt-3 text-[var(--steel)]">
-            Digitize workforce, security ops, CCTV AI, industry workflows and custom
-            apps — with real-time insights and always-on support.
+            Digitize workforce and security with Smart Patrol packages — plus Vision
+            AI, Industry Suite and Custom Build on quote — with real-time insights
+            and always-on support.
           </p>
         </div>
         <div className="mt-10 grid gap-5 md:grid-cols-2">
@@ -208,8 +209,8 @@ export default function HomePage() {
             <Link href="/register" className="btn-outline">
               Register
             </Link>
-            <Link href="/checkout" className="btn-dark">
-              Subscribe & pay
+            <Link href="/pricing" className="btn-dark">
+              View packages & pay
             </Link>
           </div>
         </div>
@@ -218,7 +219,7 @@ export default function HomePage() {
             ["01", "Register", "Create your organization profile"],
             ["02", "Demo test", "Try checkpoints, attendance and tickets"],
             ["03", "Live demo", "Walkthrough with CloudGen specialists"],
-            ["04", "Subscribe", "Pick a package, checkout with Razorpay"],
+            ["04", "Subscribe", "Pick a Smart Patrol package, pay with Razorpay"],
           ].map(([num, title, body]) => (
             <div key={num} className="rounded-lg border border-[var(--line)] p-4">
               <p className="text-xs font-bold text-[var(--teal)]">{num}</p>

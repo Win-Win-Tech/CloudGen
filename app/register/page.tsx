@@ -28,8 +28,8 @@ export default function RegisterPage() {
             <li>• Subscribe online with Razorpay</li>
           </ul>
         </div>
-        <Link href="/checkout" className="btn-outline mt-8 inline-flex">
-          Already ready to subscribe?
+        <Link href="/pricing" className="btn-outline mt-8 inline-flex">
+          Browse Smart Patrol packages
         </Link>
       </div>
       <LeadForm kind="register" />

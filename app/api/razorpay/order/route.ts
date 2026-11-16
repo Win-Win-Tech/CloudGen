@@ -5,6 +5,7 @@ import { quotePlan } from "@/lib/pricing";
 import { getRazorpay, getRazorpayKeyId, razorpayConfigured } from "@/lib/razorpay";
 import {
   PAID_PACKAGE_IDS,
+  qtySummary,
   quotePackage,
   type SolutionPackageId,
 } from "@/lib/solutions";
@@ -15,6 +16,11 @@ const schema = z.object({
   guards: z.number().int().min(1).max(100).optional(),
   // INR solution packages
   packageId: z.enum(PAID_PACKAGE_IDS as [SolutionPackageId, ...SolutionPackageId[]]).optional(),
+  users: z.number().int().min(1).max(500).optional(),
+  codes: z.number().int().min(1).max(500).optional(),
+  sites: z.number().int().min(1).max(50).optional(),
+  visitorSites: z.number().int().min(1).max(50).optional(),
+  vehicleSites: z.number().int().min(1).max(50).optional(),
   billing: z.enum(["monthly", "annual"]),
   fullName: z.string().min(2),
   email: z.string().email(),
@@ -36,7 +42,13 @@ export async function POST(request: Request) {
     let description: string;
 
     if (body.packageId) {
-      const quote = quotePackage(body.packageId as SolutionPackageId, body.billing);
+      const quote = quotePackage(body.packageId as SolutionPackageId, body.billing, {
+        users: body.users,
+        codes: body.codes,
+        sites: body.sites,
+        visitorSites: body.visitorSites,
+        vehicleSites: body.vehicleSites,
+      });
       if (quote.needsQuote || quote.inrDue == null || quote.inrPeriod == null) {
         return NextResponse.json(
           { error: "This package requires a custom quote" },
@@ -46,7 +58,8 @@ export async function POST(request: Request) {
       amountInr =
         body.includeSetup === false ? quote.inrPeriod : quote.inrDue;
       planKey = `pkg:${body.packageId}`;
-      description = `${quote.pkg.name} package · ${body.billing}`;
+      description = `${quote.pkg.name} · ${qtySummary(quote.dims, quote.qty)} · ${body.billing}`;
+      guards = quote.qty.users;
     } else if (body.planId && body.guards) {
       const quote = quotePlan(body.planId, body.guards, body.billing);
       if (quote.needsQuote || !quote.inrDue || !quote.eurDue) {

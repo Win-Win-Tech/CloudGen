@@ -25,8 +25,9 @@ export default async function ContactPage({
           Talk to {site.company}
         </h1>
         <p className="mt-3 text-[var(--steel)]">
-          Reach us for product demos, INR solution packages, or custom web,
-          mobile and AI delivery.
+          Reach us for product demos, Smart Patrol packages (Attendance,
+          Checkpoint, Visitor, Vehicle, Site Ops Suite), or Vision AI / Industry /
+          Custom Build quotes.
         </p>
 
         <div className="mt-8 space-y-4 text-sm">

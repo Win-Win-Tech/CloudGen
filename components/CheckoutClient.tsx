@@ -11,6 +11,7 @@ import {
 import { site } from "@/lib/site";
 import {
   formatINR as formatPackageINR,
+  qtySummary,
   quotePackage,
   SolutionPackageId,
 } from "@/lib/solutions";
@@ -29,6 +30,10 @@ type Props = {
   initialPlan?: PlanId;
   initialPackage?: SolutionPackageId;
   initialGuards?: number;
+  initialUsers?: number;
+  initialCodes?: number;
+  initialVisitorSites?: number;
+  initialVehicleSites?: number;
   initialBilling: BillingCycle;
   razorpayKeyId: string;
   razorpayReady: boolean;
@@ -53,6 +58,10 @@ export function CheckoutClient({
   initialPlan = "pro",
   initialPackage = "site-ops",
   initialGuards = 8,
+  initialUsers = 25,
+  initialCodes = 20,
+  initialVisitorSites = 1,
+  initialVehicleSites = 1,
   initialBilling,
   razorpayKeyId,
   razorpayReady,
@@ -60,6 +69,10 @@ export function CheckoutClient({
   const [planId] = useState<PlanId>(initialPlan);
   const [packageId] = useState<SolutionPackageId>(initialPackage);
   const [guards] = useState(initialGuards);
+  const [users] = useState(initialUsers);
+  const [codes] = useState(initialCodes);
+  const [visitorSites] = useState(initialVisitorSites);
+  const [vehicleSites] = useState(initialVehicleSites);
   const [billing] = useState<BillingCycle>(initialBilling);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -73,15 +86,21 @@ export function CheckoutClient({
     [planId, guards, billing],
   );
   const packageQuote = useMemo(
-    () => quotePackage(packageId, billing),
-    [packageId, billing],
+    () =>
+      quotePackage(packageId, billing, {
+        users,
+        codes,
+        visitorSites,
+        vehicleSites,
+      }),
+    [packageId, billing, users, codes, visitorSites, vehicleSites],
   );
 
   const summary =
     mode === "package"
       ? {
           title: packageQuote.pkg.name,
-          subtitle: `${packageQuote.pkg.unitLimit} · ${billing}`,
+          subtitle: `${qtySummary(packageQuote.dims, packageQuote.qty)} · ${billing}`,
           listLabel: packageQuote.needsQuote ? "Quote" : "INR total (period + setup)",
           listValue: packageQuote.needsQuote
             ? "Custom quote"
@@ -123,6 +142,10 @@ export function CheckoutClient({
             ? {
                 packageId,
                 billing,
+                users,
+                codes,
+                visitorSites,
+                vehicleSites,
                 fullName,
                 email,
                 phone,

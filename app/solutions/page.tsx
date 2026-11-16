@@ -20,28 +20,28 @@ const CATEGORY_ORDER: {
 }[] = [
   {
     id: "workforce",
-    title: "Workforce Management",
-    subtitle: "Attendance and presence with mobile biometrics.",
+    title: "Smart Patrol Attendance",
+    subtitle: "Face biometric attendance — sold as Smart Patrol Attendance.",
   },
   {
     id: "security",
-    title: "Security Operations",
-    subtitle: "Visitors, vehicles and QR checkpoint patrolling.",
+    title: "Smart Patrol Checkpoint · Visitor · Vehicle",
+    subtitle: "QR patrol and gate modules — alone or in Duo / Site Ops Suite.",
   },
   {
     id: "operations",
-    title: "Incident & Industry Operations",
-    subtitle: "24×7 ticketing plus ready vertical business apps.",
+    title: "Smart Patrol Industry Suite & Ticketing",
+    subtitle: "Ticket Complaints Tracking on every package · Industry Suite on quote.",
   },
   {
     id: "cctv",
-    title: "CCTV AI Analytics",
-    subtitle: "Attendance, people counting, ANPR and ID OCR.",
+    title: "Smart Patrol Vision AI",
+    subtitle: "CCTV attendance, people counting, ANPR and ID OCR — quote only.",
   },
   {
     id: "custom",
-    title: "Custom Development",
-    subtitle: "Web apps, mobile apps and modern websites.",
+    title: "Smart Patrol Custom Build",
+    subtitle: "Web apps, mobile apps and modern websites — quote only.",
   },
 ];
 
@@ -56,8 +56,8 @@ export default function SolutionsPage() {
           </h1>
           <p className="mt-3 text-[var(--steel)]">
             Smarter solutions. Safer communities. Fifteen CloudGen offerings across
-            workforce management, security operations, CCTV AI analytics and
-            incident management — available as competitive USD packages.
+            workforce, security, Vision AI, industry and custom delivery — available
+            as competitive Smart Patrol INR packages.
           </p>
         </div>
 

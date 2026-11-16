@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 };
 
 const CATEGORY_LABELS: Record<Solution["category"], string> = {
-  workforce: "Workforce Management",
-  security: "Security Operations",
-  operations: "Incident & Industry Operations",
-  cctv: "CCTV AI Analytics",
-  custom: "Custom Development",
+  workforce: "Smart Patrol Attendance",
+  security: "Smart Patrol Checkpoint · Visitor · Vehicle",
+  operations: "Smart Patrol Industry Suite & Ticketing",
+  cctv: "Smart Patrol Vision AI",
+  custom: "Smart Patrol Custom Build",
 };
 
 const CATEGORY_ORDER: Solution["category"][] = [
@@ -50,12 +50,12 @@ export default function AboutPage() {
             [
               "Product",
               `${site.appName} / ${site.product}`,
-              "Workforce management with QR patrol, face attendance, ticketing and gate control.",
+              "Smart Patrol Attendance, Checkpoint, Visitor, Vehicle and Site Ops Suite.",
             ],
             [
               "Catalog",
               `${SOLUTIONS.length} solutions`,
-              "Mobile, web, CCTV AI and custom development offerings in one stack.",
+              "Modular INR packages plus Vision AI, Industry Suite and Custom Build quotes.",
             ],
             [
               "Support",

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { SolutionPackages } from "@/components/SolutionPackages";
+import { PackagePricingCalculator } from "@/components/PackagePricingCalculator";
+import { PlanComparison } from "@/components/PlanComparison";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: `${site.product} INR packages — Smart Patrol Attendance, Checkpoint, Visitor, Vehicle, Duo bundles, Site Ops Suite, plus quote-only Vision AI, Industry Suite and Custom Build.`,
+  description: `${site.product} INR packages — drag users, QR codes and sites for pro-rata pricing on Smart Patrol Attendance, Checkpoint, Visitor, Vehicle, Duo bundles and Site Ops Suite.`,
 };
 
 export default function PricingPage() {
@@ -17,16 +18,19 @@ export default function PricingPage() {
             Pricing
           </h1>
           <p className="mt-3 text-[var(--steel)]">
-            Modular INR packages for Face, QR, Visitor and Vehicle — buy one module
-            or a discounted bundle. Ticket Complaints Tracking is included on every
-            package. Smart Patrol Vision AI, Industry Suite and Custom Build are
-            quote-only.
+            Choose a package, drag capacity beyond the base band, and pay pro-rata
+            from the published rate card. Ticket Complaints Tracking is included on
+            every package. Vision AI, Industry Suite and Custom Build are quote-only.
           </p>
         </div>
       </section>
 
       <section className="shell py-12">
-        <SolutionPackages showCatalogHint={false} />
+        <PackagePricingCalculator />
+      </section>
+
+      <section className="shell border-t border-[var(--line)] py-14">
+        <PlanComparison />
       </section>
     </div>
   );
