@@ -91,7 +91,7 @@ async function notifySalesInbox(payload: Record<string, FormDataEntryValue>) {
 
 export function LeadForm({
   kind,
-  defaultInterest = "Operations package",
+  defaultInterest = "Smart Patrol Site Ops Suite",
 }: {
   kind: Kind;
   defaultInterest?: string;
@@ -173,23 +173,27 @@ export function LeadForm({
             Interest
             <select className="input mt-1" name="interest" defaultValue={defaultInterest}>
               <option>Free demo test</option>
-              <option>Essentials package</option>
-              <option>Operations package</option>
-              <option>Vision AI package</option>
-              <option>Industry Apps package</option>
-              <option>Enterprise Suite package</option>
+              <option>Smart Patrol Attendance</option>
+              <option>Smart Patrol Checkpoint</option>
+              <option>Smart Patrol Visitor</option>
+              <option>Smart Patrol Vehicle</option>
+              <option>Smart Patrol Workforce Duo</option>
+              <option>Smart Patrol Gate Duo</option>
+              <option>Smart Patrol Site Ops Suite</option>
+              <option>Smart Patrol Vision AI quote</option>
+              <option>Smart Patrol Industry Suite quote</option>
+              <option>Smart Patrol Custom Build quote</option>
               <option>Face Biometric Attendance</option>
               <option>Visitor Management</option>
               <option>Vehicle Management</option>
               <option>QR Checkpoint Patrolling</option>
               <option>Hospital Management</option>
               <option>Pharmacy Billing</option>
-              <option>WhatsApp Court Booking</option>
-              <option>WhatsApp Command Centre</option>
-              <option>CCTV AI Analytics</option>
+              <option>AI Chatbot Doctor Appointment Booking</option>
+              <option>Ticket Complaints Tracking System</option>
+              <option>Smart Patrol Vision AI</option>
               <option>Custom Web / Mobile / Website</option>
-              <option>Base / Pro / Gold guard plans</option>
-              <option>Enterprise quote &gt;100 guards</option>
+              <option>Enterprise quote</option>
               <option>Custom solution mix</option>
               <option>General enquiry</option>
               <option>Partnership</option>

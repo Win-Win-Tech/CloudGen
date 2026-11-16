@@ -2,20 +2,14 @@ import type { Metadata } from "next";
 import { CheckoutClient } from "@/components/CheckoutClient";
 import { BillingCycle, PlanId } from "@/lib/pricing";
 import { getRazorpayKeyId, razorpayConfigured } from "@/lib/razorpay";
-import { SolutionPackageId } from "@/lib/solutions";
+import { SOLUTION_PACKAGES, SolutionPackageId } from "@/lib/solutions";
 
 export const metadata: Metadata = {
   title: "Checkout",
   description: "Subscribe to SmartPatrol and pay securely online with Razorpay.",
 };
 
-const PACKAGE_IDS: SolutionPackageId[] = [
-  "essentials",
-  "operations",
-  "vision-ai",
-  "industry",
-  "enterprise",
-];
+const PACKAGE_IDS = SOLUTION_PACKAGES.map((p) => p.id);
 
 export default async function CheckoutPage({
   searchParams,
@@ -42,7 +36,7 @@ export default async function CheckoutPage({
       <CheckoutClient
         mode={packageId ? "package" : "plan"}
         initialPlan={plan}
-        initialPackage={packageId || "operations"}
+        initialPackage={packageId || "site-ops"}
         initialGuards={guards}
         initialBilling={billing}
         razorpayKeyId={getRazorpayKeyId()}

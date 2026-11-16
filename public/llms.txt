@@ -29,8 +29,8 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - Mobile App — Vehicle Management System
 - Mobile App — QR Code Checkpoint Scan Patrolling System
 - Web App — Hospital Management System
-- Mobile App — Badminton Court WhatsApp Booking System
-- Mobile App — Availability Command Centre (24×7 WhatsApp complaints ticketing)
+- Mobile App — AI Chatbot Doctor Appointment Booking
+- Mobile App — Availability Command Centre (Ticket Complaints Tracking System)
 - Web App — Pharmacy Billing System
 - Custom — Web App Development
 - Custom — Mobile App Development
@@ -40,12 +40,16 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - CCTV — ANPR (Automatic Number Plate Recognition)
 - CCTV / Mobile — OCR (ID number, name, phone, address)
 
-## USD solution packages
-- Essentials — $79/mo · $799/yr · setup $149
-- Operations — $179/mo · $1,829/yr · setup $299
-- Vision AI — $349/mo · $3,569/yr · setup $599
-- Industry Apps — $299/mo · $3,059/yr · setup $499
-- Enterprise Suite — $799/mo · $8,159/yr · setup $1,499
+## INR solution packages
+- Smart Patrol Attendance — ₹2,000/mo · ₹24,000/yr (upto 25 users)
+- Smart Patrol Checkpoint — ₹2,000/mo · ₹24,000/yr (upto 20 codes)
+- Smart Patrol Visitor — ₹3,000/mo · ₹36,000/yr (per site)
+- Smart Patrol Vehicle — ₹3,000/mo · ₹36,000/yr (per site)
+- Smart Patrol Workforce Duo (Face + QR) — ₹3,500/mo · ₹42,000/yr
+- Smart Patrol Gate Duo (Visitor + Vehicle) — ₹5,500/mo · ₹66,000/yr
+- Smart Patrol Site Ops Suite (all four) — ₹8,500/mo · ₹99,900/yr
+- Smart Patrol Vision AI / Industry Suite / Custom Build — Quote
+- Ticket Complaints Tracking included on every package
 
 ## Guard-tour subscriptions (EUR / INR)
 - Base / Pro / Gold mapped to CloudGen solutions

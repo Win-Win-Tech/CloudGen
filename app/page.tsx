@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { PricingCalculator } from "@/components/PricingCalculator";
 import { SolutionPackages } from "@/components/SolutionPackages";
 import { site } from "@/lib/site";
-import { formatUSD, SOLUTION_PACKAGES, SOLUTIONS } from "@/lib/solutions";
+import { formatINR, SOLUTION_PACKAGES, SOLUTIONS } from "@/lib/solutions";
 
 const highlights = [
   {
@@ -31,8 +30,8 @@ const highlights = [
     tag: "Hospital · Pharmacy · Booking · Ticketing",
     points: [
       "Hospital management and pharmacy billing web apps",
-      "WhatsApp badminton court booking",
-      "24×7 WhatsApp corporation complaints ticketing",
+      "AI Chatbot Doctor Appointment Booking",
+      "Ticket Complaints Tracking System",
     ],
   },
   {
@@ -65,9 +64,10 @@ export default function HomePage() {
               industry apps and custom builds — in one CloudGen stack.
             </p>
             <p className="mt-3 max-w-xl text-sm text-white/70">
-              From face attendance and QR patrol to visitor/vehicle gate, WhatsApp
-              command centre, hospital & pharmacy systems, ANPR/OCR vision AI, and
-              custom web/mobile/website delivery.
+              From face attendance and QR patrol to visitor/vehicle gate, ticket
+              complaints tracking, hospital & pharmacy systems, AI doctor
+              appointment booking, ANPR/OCR vision AI, and custom web/mobile/website
+              delivery.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/solutions" className="btn-primary">
@@ -96,8 +96,8 @@ export default function HomePage() {
             </div>
             <p className="mt-4 text-sm leading-relaxed text-[var(--navy)]">
               Fifteen solutions spanning face attendance, visitors, vehicles, QR
-              patrol, CCTV AI, industry apps and custom development — packaged from{" "}
-              {formatUSD(SOLUTION_PACKAGES[0].usdMonthly)}/mo.
+              patrol, CCTV AI, industry apps and custom development — packages from{" "}
+              {formatINR(SOLUTION_PACKAGES[0].inrMonthly!)}/mo.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link href="/app" className="btn-dark">
@@ -155,22 +155,6 @@ export default function HomePage() {
 
       <section className="shell py-16">
         <SolutionPackages />
-      </section>
-
-      <section className="border-y border-[var(--line)] bg-[#f7fafc] py-16">
-        <div className="shell">
-          <div className="mx-auto mb-10 max-w-3xl text-center">
-            <p className="eyebrow">Guard-tour subscriptions</p>
-            <h2 className="display mt-2 text-3xl font-extrabold sm:text-4xl">
-              Or license by guard count
-            </h2>
-            <p className="mt-3 text-[var(--steel)]">
-              Base, Pro and Gold per-guard plans with a slider and Razorpay checkout
-              (EUR list · INR payment).
-            </p>
-          </div>
-          <PricingCalculator />
-        </div>
       </section>
 
       <section className="shell py-16">
@@ -234,7 +218,7 @@ export default function HomePage() {
             ["01", "Register", "Create your organization profile"],
             ["02", "Demo test", "Try checkpoints, attendance and tickets"],
             ["03", "Live demo", "Walkthrough with CloudGen specialists"],
-            ["04", "Subscribe", "Pick guards, checkout with Razorpay"],
+            ["04", "Subscribe", "Pick a package, checkout with Razorpay"],
           ].map(([num, title, body]) => (
             <div key={num} className="rounded-lg border border-[var(--line)] p-4">
               <p className="text-xs font-bold text-[var(--teal)]">{num}</p>

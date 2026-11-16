@@ -10,10 +10,9 @@ import {
 } from "@/lib/pricing";
 import { site } from "@/lib/site";
 import {
-  formatUSD,
+  formatINR as formatPackageINR,
   quotePackage,
   SolutionPackageId,
-  USD_TO_INR,
 } from "@/lib/solutions";
 
 declare global {
@@ -52,7 +51,7 @@ function loadRazorpayScript() {
 export function CheckoutClient({
   mode,
   initialPlan = "pro",
-  initialPackage = "operations",
+  initialPackage = "site-ops",
   initialGuards = 8,
   initialBilling,
   razorpayKeyId,
@@ -82,12 +81,16 @@ export function CheckoutClient({
     mode === "package"
       ? {
           title: packageQuote.pkg.name,
-          subtitle: `${packageQuote.pkg.solutionIds.length} solutions · ${billing}`,
-          listLabel: "USD total (period + setup)",
-          listValue: formatUSD(packageQuote.usdDue),
+          subtitle: `${packageQuote.pkg.unitLimit} · ${billing}`,
+          listLabel: packageQuote.needsQuote ? "Quote" : "INR total (period + setup)",
+          listValue: packageQuote.needsQuote
+            ? "Custom quote"
+            : formatPackageINR(packageQuote.inrDue!),
           payInr: packageQuote.inrDue,
-          detail: `Period ${formatUSD(packageQuote.usdPeriod)} + setup ${formatUSD(packageQuote.usdSetup)} · FX ≈ ₹${USD_TO_INR}/USD`,
-          canPay: true,
+          detail: packageQuote.needsQuote
+            ? "This package requires a custom quote from sales."
+            : `Period ${formatPackageINR(packageQuote.inrPeriod!)} + setup ${formatPackageINR(packageQuote.inrSetup!)}`,
+          canPay: !packageQuote.needsQuote && Boolean(packageQuote.inrDue),
         }
       : {
           title: planQuote.plan.name,

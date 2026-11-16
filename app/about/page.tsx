@@ -60,7 +60,7 @@ export default function AboutPage() {
             [
               "Support",
               "Always on",
-              "Demo, onboarding and 24×7 WhatsApp command-centre style operations support.",
+              "Demo, onboarding and Ticket Complaints Tracking System operations support.",
             ],
           ].map(([eyebrow, title, body]) => (
             <article key={title} className="card-panel p-6">
@@ -82,8 +82,7 @@ export default function AboutPage() {
           </h2>
           <p className="mt-2 max-w-2xl text-[var(--steel)]">
             Every CloudGen offering maps to one of the fifteen SmartPatrol
-            solutions — available individually, in USD packages, or as Base /
-            Pro / Gold guard plans.
+            solutions — available as modular INR packages or custom quotes.
           </p>
 
           <div className="mt-10 space-y-10">

@@ -28,8 +28,8 @@ export default async function DemoPage({
         </p>
         <ul className="mt-6 space-y-3 text-sm text-[var(--navy)]">
           <li>• Live product walkthrough with CloudGen specialists</li>
-          <li>• Fit assessment for your sites and guard count</li>
-          <li>• Guidance on Base / Pro / Gold packaging</li>
+          <li>• Fit assessment for your sites and modules</li>
+          <li>• Guidance on Smart Patrol Attendance / Checkpoint / Visitor / Vehicle packages</li>
         </ul>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/demo/test" className="btn-outline">

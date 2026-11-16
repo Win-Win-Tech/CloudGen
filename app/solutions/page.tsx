@@ -10,7 +10,7 @@ import {
 export const metadata: Metadata = {
   title: "Solutions",
   description:
-    "Fifteen CloudGen SmartPatrol solutions — workforce, security ops, CCTV AI, industry apps and custom development — packaged with competitive USD pricing.",
+    "Fifteen CloudGen SmartPatrol solutions — workforce, security ops, CCTV AI, industry apps and custom development — packaged with competitive INR pricing.",
 };
 
 const CATEGORY_ORDER: {

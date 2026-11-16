@@ -25,8 +25,8 @@ export default async function ContactPage({
           Talk to {site.company}
         </h1>
         <p className="mt-3 text-[var(--steel)]">
-          Reach us for product demos, USD solution packages, Base / Pro / Gold
-          guard plans, or custom web, mobile and AI delivery.
+          Reach us for product demos, INR solution packages, or custom web,
+          mobile and AI delivery.
         </p>
 
         <div className="mt-8 space-y-4 text-sm">

@@ -4,24 +4,17 @@ import { sql } from "@/lib/db";
 import { quotePlan } from "@/lib/pricing";
 import { getRazorpay, getRazorpayKeyId, razorpayConfigured } from "@/lib/razorpay";
 import {
+  PAID_PACKAGE_IDS,
   quotePackage,
   type SolutionPackageId,
 } from "@/lib/solutions";
-
-const packageIds = [
-  "essentials",
-  "operations",
-  "vision-ai",
-  "industry",
-  "enterprise",
-] as const;
 
 const schema = z.object({
   // Guard-count plans
   planId: z.enum(["base", "pro", "gold"]).optional(),
   guards: z.number().int().min(1).max(100).optional(),
-  // USD solution packages
-  packageId: z.enum(packageIds).optional(),
+  // INR solution packages
+  packageId: z.enum(PAID_PACKAGE_IDS as [SolutionPackageId, ...SolutionPackageId[]]).optional(),
   billing: z.enum(["monthly", "annual"]),
   fullName: z.string().min(2),
   email: z.string().email(),
@@ -44,11 +37,14 @@ export async function POST(request: Request) {
 
     if (body.packageId) {
       const quote = quotePackage(body.packageId as SolutionPackageId, body.billing);
-      const usdDue = body.includeSetup === false
-        ? quote.usdPeriod
-        : quote.usdDue;
-      amountUsd = usdDue;
-      amountInr = Math.round(usdDue * (Number(process.env.NEXT_PUBLIC_USD_TO_INR || 83)));
+      if (quote.needsQuote || quote.inrDue == null || quote.inrPeriod == null) {
+        return NextResponse.json(
+          { error: "This package requires a custom quote" },
+          { status: 400 },
+        );
+      }
+      amountInr =
+        body.includeSetup === false ? quote.inrPeriod : quote.inrDue;
       planKey = `pkg:${body.packageId}`;
       description = `${quote.pkg.name} package · ${body.billing}`;
     } else if (body.planId && body.guards) {

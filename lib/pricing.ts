@@ -55,7 +55,7 @@ export const PLANS: Plan[] = [
       "Geolocation & GPS monitoring",
       "Schedules & real-time alerts",
       "Daily activity reports",
-      "User management (limited roles)",
+      "Ticket Complaints Tracking System",
       "Missed-scan issue alerts",
       "Visitor management (add-on)",
     ],
@@ -63,7 +63,7 @@ export const PLANS: Plan[] = [
   {
     id: "pro",
     name: "Pro",
-    blurb: "Face attendance, visitors, vehicles and WhatsApp command-centre ticketing.",
+    blurb: "Face attendance, visitors, vehicles and Ticket Complaints Tracking System.",
     popular: true,
     fromPerGuard: 5.07,
     prices: {
@@ -78,7 +78,7 @@ export const PLANS: Plan[] = [
       "Face biometric attendance",
       "Visitor management system",
       "Vehicle management system",
-      "24×7 WhatsApp complaints ticketing",
+      "Ticket Complaints Tracking System",
       "SOS, welfare check & indoor location",
       "ID card OCR & API access",
     ],
@@ -114,8 +114,8 @@ export const COMPARISON: {
   {
     group: "Workforce management",
     rows: [
-      { name: "Face biometric attendance (mobile)", base: false, pro: true, gold: true },
-      { name: "CCTV attendance system", base: false, pro: "Add-on", gold: true },
+      { name: "Mobile App — Face Biometric Attendance System", base: false, pro: true, gold: true },
+      { name: "CCTV — CCTV Attendance System", base: false, pro: "Add-on", gold: true },
       { name: "GPS geofencing & shift controls", base: true, pro: true, gold: true },
       { name: "Schedules & multi-site access", base: "Limited", pro: true, gold: true },
     ],
@@ -123,10 +123,9 @@ export const COMPARISON: {
   {
     group: "Security operations",
     rows: [
-      { name: "QR checkpoint scan patrolling", base: true, pro: true, gold: true },
-      { name: "Visitor management system", base: "Add-on", pro: true, gold: true },
-      { name: "Vehicle management system", base: false, pro: true, gold: true },
-      { name: "ID card OCR (name, ID, phone, address)", base: false, pro: true, gold: true },
+      { name: "Mobile App — QR Code Checkpoint Scan Patrolling System", base: true, pro: true, gold: true },
+      { name: "Mobile App — Visitor Management System", base: "Add-on", pro: true, gold: true },
+      { name: "Mobile App — Vehicle Management System", base: false, pro: true, gold: true },
       { name: "Virtual checkpoints & guard trail", base: false, pro: false, gold: true },
     ],
   },
@@ -135,12 +134,11 @@ export const COMPARISON: {
     rows: [
       { name: "Missed-scan / basic issue alerts", base: true, pro: true, gold: true },
       {
-        name: "24×7 WhatsApp complaints ticketing",
-        base: false,
+        name: "Mobile App — Availability Command Centre — Ticket Complaints Tracking System",
+        base: true,
         pro: true,
         gold: true,
       },
-      { name: "Availability command centre", base: false, pro: true, gold: true },
       { name: "In-app SOS & welfare check", base: "In-app SOS", pro: true, gold: true },
       { name: "Full incident evidence (voice / image / video)", base: false, pro: true, gold: true },
     ],
@@ -148,18 +146,26 @@ export const COMPARISON: {
   {
     group: "CCTV AI analytics",
     rows: [
-      { name: "People counting", base: false, pro: "Add-on", gold: true },
-      { name: "ANPR (automatic number plate recognition)", base: false, pro: "Add-on", gold: true },
-      { name: "CCTV / mobile OCR pipelines", base: false, pro: "Limited", gold: true },
+      { name: "CCTV — CCTV Attendance System", base: "Quote", pro: "Quote", gold: "Quote" },
+      { name: "CCTV — CCTV People Counting", base: "Quote", pro: "Quote", gold: "Quote" },
+      { name: "CCTV — CCTV ANPR (Automatic Number Plate Recognition)", base: "Quote", pro: "Quote", gold: "Quote" },
+      { name: "CCTV / Mobile App — CCTV / Mobile OCR for ID Cards", base: "Quote", pro: "Quote", gold: "Quote" },
     ],
   },
   {
-    group: "Industry apps & custom development",
+    group: "Industry apps",
     rows: [
-      { name: "Hospital management system", base: false, pro: "Add-on", gold: "Add-on" },
-      { name: "Pharmacy billing system", base: false, pro: "Add-on", gold: "Add-on" },
-      { name: "WhatsApp court booking", base: false, pro: "Add-on", gold: "Add-on" },
-      { name: "Custom web / mobile / website builds", base: "Quote", pro: "Quote", gold: "Quote" },
+      { name: "Web App — Hospital Management System", base: "Quote", pro: "Quote", gold: "Quote" },
+      { name: "Web App — Pharmacy Billing System", base: "Quote", pro: "Quote", gold: "Quote" },
+      { name: "Mobile App — AI Chatbot Doctor Appointment Booking", base: "Quote", pro: "Quote", gold: "Quote" },
+    ],
+  },
+  {
+    group: "Custom development",
+    rows: [
+      { name: "Custom — Web App Development", base: "Quote", pro: "Quote", gold: "Quote" },
+      { name: "Custom — Mobile App Development", base: "Quote", pro: "Quote", gold: "Quote" },
+      { name: "Custom — Website Development", base: "Quote", pro: "Quote", gold: "Quote" },
     ],
   },
   {

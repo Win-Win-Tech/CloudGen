@@ -1,6 +1,7 @@
 /**
- * CloudGen SmartPatrol solution catalog from the product flyer,
- * grouped into competitive USD packages for SMB / mid-market buyers.
+ * CloudGen SmartPatrol solution catalog + INR commercial packages.
+ * Rate card: Face/QR ₹2,000/mo · Visitor/Vehicle ₹3,000/mo (per site).
+ * Bundles discount vs à-la-carte. CCTV / Industry / Custom = quote.
  */
 
 export type SolutionPlatform =
@@ -55,17 +56,17 @@ export const SOLUTIONS: Solution[] = [
     category: "operations",
   },
   {
-    id: "court-booking",
-    name: "Badminton Court WhatsApp Booking System",
+    id: "doctor-appointment",
+    name: "AI Chatbot Doctor Appointment Booking",
     platform: "Mobile App",
-    summary: "Book courts easily via WhatsApp with availability sync.",
+    summary: "Book doctor appointments through an AI chatbot with availability sync.",
     category: "operations",
   },
   {
     id: "command-centre",
-    name: "Availability Command Centre — 24×7 WhatsApp Complaints Ticketing",
+    name: "Availability Command Centre — Ticket Complaints Tracking System",
     platform: "Mobile App",
-    summary: "Report and resolve corporation complaints instantly over WhatsApp.",
+    summary: "Report and resolve corporation complaints instantly with the ticket complaints tracking system.",
     category: "operations",
   },
   {
@@ -127,125 +128,237 @@ export const SOLUTIONS: Solution[] = [
   },
 ];
 
+/** Included on every commercial package. */
+export const COMMON_SOLUTION_IDS = ["command-centre"] as const;
+
 export type SolutionPackageId =
-  | "essentials"
-  | "operations"
+  | "face"
+  | "qr-patrol"
+  | "visitor"
+  | "vehicle"
+  | "workforce-duo"
+  | "gate-duo"
+  | "site-ops"
   | "vision-ai"
   | "industry"
-  | "enterprise";
+  | "custom";
 
 export type SolutionPackage = {
   id: SolutionPackageId;
   name: string;
   blurb: string;
   popular?: boolean;
-  /** Competitive USD list price per month (site / org license). */
-  usdMonthly: number;
-  /** Competitive USD annual total (~15% off). */
-  usdAnnual: number;
-  /** One-time setup / onboarding in USD. */
-  usdSetup: number;
+  /** True = sales quote only (no online checkout price). */
+  quoteOnly?: boolean;
+  /** Capacity / commercial unit from rate card. */
+  unitLimit: string;
+  /** INR list price per month. */
+  inrMonthly: number | null;
+  /** INR billed annually (typically 12× monthly; bundles may discount). */
+  inrAnnual: number | null;
+  /** One-time setup / onboarding in INR. */
+  inrSetup: number | null;
   solutionIds: string[];
   highlights: string[];
   bestFor: string;
 };
 
 /**
- * Competitive USD packaging vs regional SaaS / systems integrators:
- * - Guard/workforce suites often list $50–200 / site / mo
- * - Visitor + vehicle gate stacks $100–250 / mo
- * - CCTV AI analytics (ANPR / counting) typically $200–500 / camera-set / mo
- * - Vertical apps (hospital / pharmacy) $200–600 / mo
- * Bundles undercut à-la-carte while staying commercially credible.
+ * INR packages from CloudGen rate card (Package-1):
+ * Face ₹2,000/mo · QR ₹2,000/mo · Visitor ₹3,000/mo · Vehicle ₹3,000/mo
+ * Singles match list; combos undercut à-la-carte. CCTV / Industry / Custom = quote.
  */
 export const SOLUTION_PACKAGES: SolutionPackage[] = [
   {
-    id: "essentials",
-    name: "Essentials",
-    blurb: "Core workforce and patrol stack for single sites.",
-    usdMonthly: 79,
-    usdAnnual: 799,
-    usdSetup: 149,
-    solutionIds: ["face-attendance", "visitor-management", "qr-patrolling"],
+    id: "face",
+    name: "Smart Patrol Attendance",
+    blurb: "Face biometric attendance only — for sites that only need workforce punch.",
+    unitLimit: "Upto 25 users",
+    inrMonthly: 2000,
+    inrAnnual: 24000,
+    inrSetup: 999,
+    solutionIds: ["face-attendance", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Face biometric attendance",
-      "Visitor check-in & digital passes",
-      "QR checkpoint patrolling",
-      "Daily activity visibility",
+      "Upto 25 users",
+      "Ticket Complaints Tracking System",
+      "Mobile app access",
     ],
-    bestFor: "Small security teams and single facilities",
+    bestFor: "Customers who only need face biometric",
   },
   {
-    id: "operations",
-    name: "Operations",
-    blurb: "Gate control plus 24×7 WhatsApp command-centre ticketing.",
+    id: "qr-patrol",
+    name: "Smart Patrol Checkpoint",
+    blurb: "QR checkpoint scan patrolling only — proof of presence on routes.",
+    unitLimit: "Upto 20 codes",
+    inrMonthly: 2000,
+    inrAnnual: 24000,
+    inrSetup: 999,
+    solutionIds: ["qr-patrolling", ...COMMON_SOLUTION_IDS],
+    highlights: [
+      "QR code checkpoint scan",
+      "Upto 20 codes",
+      "Ticket Complaints Tracking System",
+      "Time & location proof",
+    ],
+    bestFor: "Customers who only need QR scan",
+  },
+  {
+    id: "visitor",
+    name: "Smart Patrol Visitor",
+    blurb: "Visitor management only — digital check-in for a single site.",
+    unitLimit: "Per site",
+    inrMonthly: 3000,
+    inrAnnual: 36000,
+    inrSetup: 1499,
+    solutionIds: ["visitor-management", ...COMMON_SOLUTION_IDS],
+    highlights: [
+      "Visitor management system",
+      "Per site license",
+      "Ticket Complaints Tracking System",
+      "Digital passes",
+    ],
+    bestFor: "Customers who only need visitor management",
+  },
+  {
+    id: "vehicle",
+    name: "Smart Patrol Vehicle",
+    blurb: "Vehicle management only — entry / exit control for a single site.",
+    unitLimit: "Per site",
+    inrMonthly: 3000,
+    inrAnnual: 36000,
+    inrSetup: 1499,
+    solutionIds: ["vehicle-management", ...COMMON_SOLUTION_IDS],
+    highlights: [
+      "Vehicle management system",
+      "Per site license",
+      "Ticket Complaints Tracking System",
+      "Gate movement visibility",
+    ],
+    bestFor: "Customers who only need vehicle management",
+  },
+  {
+    id: "workforce-duo",
+    name: "Smart Patrol Workforce Duo",
+    blurb: "Face biometric + QR patrol together — save vs buying both alone.",
+    unitLimit: "25 users · 20 codes",
+    inrMonthly: 3500,
+    inrAnnual: 42000,
+    inrSetup: 1499,
+    solutionIds: ["face-attendance", "qr-patrolling", ...COMMON_SOLUTION_IDS],
+    highlights: [
+      "Face biometric + QR patrol",
+      "List ₹4,000/mo → ₹3,500/mo",
+      "Ticket Complaints Tracking System",
+      "Ideal attendance + checkpoint stack",
+    ],
+    bestFor: "Customers who need face biometric and QR scan",
+  },
+  {
+    id: "gate-duo",
+    name: "Smart Patrol Gate Duo",
+    blurb: "Visitor + vehicle gate stack for reception and parking control.",
+    unitLimit: "Per site",
+    inrMonthly: 5500,
+    inrAnnual: 66000,
+    inrSetup: 1999,
+    solutionIds: ["visitor-management", "vehicle-management", ...COMMON_SOLUTION_IDS],
+    highlights: [
+      "Visitor + vehicle management",
+      "List ₹6,000/mo → ₹5,500/mo",
+      "Ticket Complaints Tracking System",
+      "Single-site gate operations",
+    ],
+    bestFor: "Customers who need visitor and vehicle together",
+  },
+  {
+    id: "site-ops",
+    name: "Smart Patrol Site Ops Suite",
+    blurb: "Full site stack — face, QR, visitor and vehicle in one competitive bundle.",
     popular: true,
-    usdMonthly: 179,
-    usdAnnual: 1829,
-    usdSetup: 299,
+    unitLimit: "25 users · 20 codes · per site gate",
+    inrMonthly: 8500,
+    inrAnnual: 99900,
+    inrSetup: 2499,
     solutionIds: [
       "face-attendance",
-      "visitor-management",
       "qr-patrolling",
+      "visitor-management",
       "vehicle-management",
-      "command-centre",
+      ...COMMON_SOLUTION_IDS,
     ],
     highlights: [
-      "Everything in Essentials",
-      "Vehicle entry / exit management",
-      "24×7 WhatsApp complaints ticketing",
-      "Availability command centre",
+      "Face + QR + Visitor + Vehicle",
+      "List ₹10,000/mo → ₹8,500/mo",
+      "Ticket Complaints Tracking System",
+      "Best value full site operations",
     ],
-    bestFor: "Multi-gate campuses and civic / facility ops",
+    bestFor: "Customers who need the complete site operations stack",
   },
   {
     id: "vision-ai",
-    name: "Vision AI",
-    blurb: "CCTV intelligence for attendance, footfall, plates and ID OCR.",
-    usdMonthly: 349,
-    usdAnnual: 3569,
-    usdSetup: 599,
-    solutionIds: ["cctv-attendance", "people-counting", "anpr", "ocr"],
-    highlights: [
-      "CCTV face attendance",
-      "People counting analytics",
-      "ANPR number-plate recognition",
-      "ID card OCR extraction",
+    name: "Smart Patrol Vision AI",
+    blurb: "CCTV attendance, people counting, ANPR and ID OCR — scoped per camera set.",
+    quoteOnly: true,
+    unitLimit: "Per camera set · custom scope",
+    inrMonthly: null,
+    inrAnnual: null,
+    inrSetup: null,
+    solutionIds: [
+      "cctv-attendance",
+      "people-counting",
+      "anpr",
+      "ocr",
+      ...COMMON_SOLUTION_IDS,
     ],
-    bestFor: "Sites with camera infrastructure ready for AI",
+    highlights: [
+      "CCTV attendance & people counting",
+      "ANPR number-plate recognition",
+      "ID card OCR",
+      "Ticket Complaints Tracking System",
+    ],
+    bestFor: "Sites with camera infrastructure — request a quote",
   },
   {
     id: "industry",
-    name: "Industry Apps",
-    blurb: "Ready vertical systems for hospitals, pharmacies and court booking.",
-    usdMonthly: 299,
-    usdAnnual: 3059,
-    usdSetup: 499,
-    solutionIds: ["hospital-management", "pharmacy-billing", "court-booking"],
-    highlights: [
-      "Hospital management web app",
-      "Pharmacy billing system",
-      "WhatsApp court booking",
-      "Domain-ready workflows",
+    name: "Smart Patrol Industry Suite",
+    blurb: "Hospital, pharmacy and AI doctor appointment booking — scoped per deployment.",
+    quoteOnly: true,
+    unitLimit: "Custom scope",
+    inrMonthly: null,
+    inrAnnual: null,
+    inrSetup: null,
+    solutionIds: [
+      "hospital-management",
+      "pharmacy-billing",
+      "doctor-appointment",
+      ...COMMON_SOLUTION_IDS,
     ],
-    bestFor: "Healthcare, retail pharmacy and sports facilities",
+    highlights: [
+      "Hospital management",
+      "Pharmacy billing",
+      "AI Chatbot Doctor Appointment Booking",
+      "Ticket Complaints Tracking System",
+    ],
+    bestFor: "Healthcare and vertical ops — request a quote",
   },
   {
-    id: "enterprise",
-    name: "Enterprise Suite",
-    blurb: "All SmartPatrol solutions plus custom web, mobile and website builds.",
-    usdMonthly: 799,
-    usdAnnual: 8159,
-    usdSetup: 1499,
-    solutionIds: SOLUTIONS.map((s) => s.id),
+    id: "custom",
+    name: "Smart Patrol Custom Build",
+    blurb: "Custom web, mobile and website builds tailored to your workflows.",
+    quoteOnly: true,
+    unitLimit: "Project quote",
+    inrMonthly: null,
+    inrAnnual: null,
+    inrSetup: null,
+    solutionIds: ["web-dev", "mobile-dev", "website-dev", ...COMMON_SOLUTION_IDS],
     highlights: [
-      "All 15 CloudGen solutions",
-      "Custom web app development",
-      "Custom mobile app development",
-      "Website development & branding",
-      "Priority 24×7 support",
+      "Web app development",
+      "Mobile app development",
+      "Website development",
+      "Ticket Complaints Tracking System",
     ],
-    bestFor: "Enterprises needing full stack + custom delivery",
+    bestFor: "Bespoke digital delivery — request a quote",
   },
 ];
 
@@ -264,13 +377,15 @@ export const VALUE_PROPS = [
   },
   {
     title: "Always-On Support",
-    body: "24×7 WhatsApp command centre and CloudGen specialist coverage.",
+    body: "Ticket Complaints Tracking System and CloudGen specialist coverage.",
   },
 ] as const;
 
 export type PackageBilling = "monthly" | "annual";
 
-export const USD_TO_INR = Number(process.env.NEXT_PUBLIC_USD_TO_INR || 83);
+export const PAID_PACKAGE_IDS = SOLUTION_PACKAGES.filter((p) => !p.quoteOnly).map(
+  (p) => p.id,
+) as SolutionPackageId[];
 
 export function getSolution(id: string) {
   const solution = SOLUTIONS.find((s) => s.id === id);
@@ -288,26 +403,36 @@ export function solutionsForPackage(pkg: SolutionPackage) {
   return pkg.solutionIds.map(getSolution);
 }
 
-export function formatUSD(n: number) {
-  return new Intl.NumberFormat("en-US", {
+export function formatINR(n: number) {
+  return new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "USD",
-    maximumFractionDigits: n % 1 === 0 ? 0 : 2,
+    currency: "INR",
+    maximumFractionDigits: 0,
   }).format(n);
 }
 
-/** First Razorpay charge = period price + one-time setup, converted to INR. */
+/** Razorpay charge = period (monthly or annual) + one-time setup, already in INR. */
 export function quotePackage(packageId: SolutionPackageId, billing: PackageBilling) {
   const pkg = getPackage(packageId);
-  const usdPeriod = billing === "monthly" ? pkg.usdMonthly : pkg.usdAnnual;
-  const usdDue = usdPeriod + pkg.usdSetup;
-  const inrDue = Math.round(usdDue * USD_TO_INR);
+  if (pkg.quoteOnly || pkg.inrMonthly == null || pkg.inrAnnual == null || pkg.inrSetup == null) {
+    return {
+      pkg,
+      billing,
+      inrPeriod: null as number | null,
+      inrSetup: null as number | null,
+      inrDue: null as number | null,
+      needsQuote: true as const,
+    };
+  }
+
+  const inrPeriod = billing === "monthly" ? pkg.inrMonthly : pkg.inrAnnual;
+  const inrDue = inrPeriod + pkg.inrSetup;
   return {
     pkg,
     billing,
-    usdPeriod,
-    usdSetup: pkg.usdSetup,
-    usdDue,
+    inrPeriod,
+    inrSetup: pkg.inrSetup,
     inrDue,
+    needsQuote: false as const,
   };
 }
