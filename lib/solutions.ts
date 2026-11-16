@@ -535,6 +535,20 @@ export function formatINR(n: number) {
   }).format(n);
 }
 
+/** GST charged on subscription + setup at Razorpay checkout. */
+export const GST_RATE = 0.18;
+export const GST_PERCENT_LABEL = "18%";
+
+export function applyGst(taxableInr: number) {
+  const taxable = Math.max(0, Math.round(taxableInr));
+  const gst = Math.round(taxable * GST_RATE);
+  return {
+    taxable,
+    gst,
+    total: taxable + gst,
+  };
+}
+
 function listPeriodInr(
   dims: PackageDimensions,
   qty: PackageQty,
@@ -582,6 +596,8 @@ export function quotePackage(
       dims,
       inrPeriod: null as number | null,
       inrSetup: null as number | null,
+      inrSubtotal: null as number | null,
+      inrGst: null as number | null,
       inrDue: null as number | null,
       listPeriod: null as number | null,
       factor: 1,
@@ -604,6 +620,8 @@ export function quotePackage(
       dims,
       inrPeriod: null as number | null,
       inrSetup: null as number | null,
+      inrSubtotal: null as number | null,
+      inrGst: null as number | null,
       inrDue: null as number | null,
       listPeriod: null as number | null,
       factor,
@@ -621,7 +639,7 @@ export function quotePackage(
     1,
   );
   const inrSetup = Math.round(pkg.inrSetup * Math.min(scale, 3));
-  const inrDue = inrPeriod + inrSetup;
+  const taxed = applyGst(inrPeriod + inrSetup);
 
   return {
     pkg,
@@ -630,7 +648,10 @@ export function quotePackage(
     dims,
     inrPeriod,
     inrSetup,
-    inrDue,
+    inrSubtotal: taxed.taxable,
+    inrGst: taxed.gst,
+    /** Razorpay payable = period + setup + 18% GST. */
+    inrDue: taxed.total,
     listPeriod: Math.round(listPeriod),
     factor,
     needsQuote: false as const,

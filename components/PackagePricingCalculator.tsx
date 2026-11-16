@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import {
   CODE_STEPS,
   formatINR,
+  GST_PERCENT_LABEL,
   packageDimensions,
   quotePackage,
   qtySummary,
@@ -352,8 +353,14 @@ export function PackagePricingCalculator() {
                 <p className="mt-2 text-sm font-semibold text-[var(--navy)]">
                   + setup {formatINR(quote.inrSetup!)} (one-time)
                 </p>
-                <p className="mt-1 text-xs text-[var(--steel)]">
+                <p className="mt-1 text-sm text-[var(--navy)]">
+                  + GST {GST_PERCENT_LABEL} {formatINR(quote.inrGst!)}
+                </p>
+                <p className="mt-2 text-sm font-bold text-[var(--ink)]">
                   Due today {formatINR(quote.inrDue!)}
+                  <span className="ml-1 text-xs font-semibold text-[var(--steel)]">
+                    (incl. GST)
+                  </span>
                 </p>
               </>
             )}

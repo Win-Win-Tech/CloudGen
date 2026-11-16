@@ -182,6 +182,15 @@ export const COMPARISON: {
 
 export const EUR_TO_INR = Number(process.env.NEXT_PUBLIC_EUR_TO_INR || 90);
 
+/** GST charged on Razorpay INR totals (legacy guard plans). */
+export const GST_RATE = 0.18;
+
+export function applyGst(taxableInr: number) {
+  const taxable = Math.max(0, Math.round(taxableInr));
+  const gst = Math.round(taxable * GST_RATE);
+  return { taxable, gst, total: taxable + gst };
+}
+
 export function tierForGuards(guards: number): GuardTierId | "quote" {
   if (guards < 1) return "1-3";
   if (guards > 100) return "quote";
@@ -206,6 +215,8 @@ export function quotePlan(planId: PlanId, guards: number, billing: BillingCycle)
       billing,
       eurMonthly: null as number | null,
       eurDue: null as number | null,
+      inrSubtotal: null as number | null,
+      inrGst: null as number | null,
       inrDue: null as number | null,
       perGuard: null as number | null,
       needsQuote: true as const,
@@ -215,7 +226,8 @@ export function quotePlan(planId: PlanId, guards: number, billing: BillingCycle)
   const price = plan.prices[tierId];
   const eurMonthly = billing === "monthly" ? price.monthly : price.annualMonthly;
   const eurDue = billing === "monthly" ? price.monthly : price.annualTotal;
-  const inrDue = Math.round(eurDue * EUR_TO_INR);
+  const inrSubtotal = Math.round(eurDue * EUR_TO_INR);
+  const taxed = applyGst(inrSubtotal);
   const perGuard = Number((eurMonthly / guards).toFixed(2));
   return {
     plan,
@@ -224,7 +236,10 @@ export function quotePlan(planId: PlanId, guards: number, billing: BillingCycle)
     billing,
     eurMonthly,
     eurDue,
-    inrDue,
+    inrSubtotal: taxed.taxable,
+    inrGst: taxed.gst,
+    /** Razorpay payable = INR list + 18% GST. */
+    inrDue: taxed.total,
     perGuard,
     needsQuote: false as const,
     annualTotal: price.annualTotal,

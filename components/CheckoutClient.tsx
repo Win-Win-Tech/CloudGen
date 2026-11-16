@@ -11,6 +11,7 @@ import {
 import { site } from "@/lib/site";
 import {
   formatINR as formatPackageINR,
+  GST_PERCENT_LABEL,
   qtySummary,
   quotePackage,
   SolutionPackageId,
@@ -101,24 +102,28 @@ export function CheckoutClient({
       ? {
           title: packageQuote.pkg.name,
           subtitle: `${qtySummary(packageQuote.dims, packageQuote.qty)} · ${billing}`,
-          listLabel: packageQuote.needsQuote ? "Quote" : "INR total (period + setup)",
-          listValue: packageQuote.needsQuote
-            ? "Custom quote"
-            : formatPackageINR(packageQuote.inrDue!),
+          periodInr: packageQuote.inrPeriod,
+          setupInr: packageQuote.inrSetup,
+          subtotalInr: packageQuote.inrSubtotal,
+          gstInr: packageQuote.inrGst,
           payInr: packageQuote.inrDue,
+          eurList: null as string | null,
           detail: packageQuote.needsQuote
             ? "This package requires a custom quote from sales."
-            : `Period ${formatPackageINR(packageQuote.inrPeriod!)} + setup ${formatPackageINR(packageQuote.inrSetup!)}`,
+            : "Subscription and setup are billed in INR; GST is added as a separate line before Razorpay payment.",
           canPay: !packageQuote.needsQuote && Boolean(packageQuote.inrDue),
         }
       : {
           title: planQuote.plan.name,
           subtitle: `${guards} guards · ${billing}`,
-          listLabel: "List price",
-          listValue: planQuote.needsQuote ? "Custom quote" : formatEUR(planQuote.eurDue!),
+          periodInr: planQuote.inrSubtotal,
+          setupInr: null as number | null,
+          subtotalInr: planQuote.inrSubtotal,
+          gstInr: planQuote.inrGst,
           payInr: planQuote.inrDue,
+          eurList: planQuote.needsQuote ? null : formatEUR(planQuote.eurDue!),
           detail:
-            "EUR package pricing; INR charged via Razorpay at the configured conversion rate.",
+            "EUR package pricing converted to INR; GST is added as a separate line before Razorpay payment.",
           canPay: !planQuote.needsQuote && Boolean(planQuote.inrDue),
         };
 
@@ -255,12 +260,38 @@ export function CheckoutClient({
           </div>
           {summary.canPay ? (
             <>
+              {summary.eurList ? (
+                <div className="flex justify-between gap-4 border-t border-[var(--line)] pt-3">
+                  <dt className="text-[var(--steel)]">List (EUR)</dt>
+                  <dd className="font-semibold">{summary.eurList}</dd>
+                </div>
+              ) : null}
+              {summary.periodInr != null ? (
+                <div
+                  className={`flex justify-between gap-4 ${
+                    summary.eurList ? "" : "border-t border-[var(--line)] pt-3"
+                  }`}
+                >
+                  <dt className="text-[var(--steel)]">
+                    {mode === "package" ? "Subscription" : "Subtotal"}
+                  </dt>
+                  <dd className="font-semibold">{formatINR(summary.periodInr)}</dd>
+                </div>
+              ) : null}
+              {summary.setupInr != null ? (
+                <div className="flex justify-between gap-4">
+                  <dt className="text-[var(--steel)]">Setup (one-time)</dt>
+                  <dd className="font-semibold">{formatINR(summary.setupInr)}</dd>
+                </div>
+              ) : null}
+              {summary.gstInr != null ? (
+                <div className="flex justify-between gap-4">
+                  <dt className="text-[var(--steel)]">GST ({GST_PERCENT_LABEL})</dt>
+                  <dd className="font-semibold">{formatINR(summary.gstInr)}</dd>
+                </div>
+              ) : null}
               <div className="flex justify-between gap-4 border-t border-[var(--line)] pt-3">
-                <dt className="text-[var(--steel)]">{summary.listLabel}</dt>
-                <dd className="font-semibold">{summary.listValue}</dd>
-              </div>
-              <div className="flex justify-between gap-4">
-                <dt className="text-[var(--steel)]">Pay with Razorpay</dt>
+                <dt className="font-semibold text-[var(--ink)]">Pay with Razorpay</dt>
                 <dd className="display text-2xl font-extrabold text-[var(--teal-deep)]">
                   {formatINR(summary.payInr!)}
                 </dd>

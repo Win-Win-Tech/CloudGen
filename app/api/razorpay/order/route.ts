@@ -4,6 +4,8 @@ import { sql } from "@/lib/db";
 import { quotePlan } from "@/lib/pricing";
 import { getRazorpay, getRazorpayKeyId, razorpayConfigured } from "@/lib/razorpay";
 import {
+  applyGst,
+  GST_PERCENT_LABEL,
   PAID_PACKAGE_IDS,
   qtySummary,
   quotePackage,
@@ -49,16 +51,23 @@ export async function POST(request: Request) {
         visitorSites: body.visitorSites,
         vehicleSites: body.vehicleSites,
       });
-      if (quote.needsQuote || quote.inrDue == null || quote.inrPeriod == null) {
+      if (
+        quote.needsQuote ||
+        quote.inrDue == null ||
+        quote.inrPeriod == null ||
+        quote.inrGst == null
+      ) {
         return NextResponse.json(
           { error: "This package requires a custom quote" },
           { status: 400 },
         );
       }
       amountInr =
-        body.includeSetup === false ? quote.inrPeriod : quote.inrDue;
+        body.includeSetup === false
+          ? applyGst(quote.inrPeriod).total
+          : quote.inrDue;
       planKey = `pkg:${body.packageId}`;
-      description = `${quote.pkg.name} · ${qtySummary(quote.dims, quote.qty)} · ${body.billing}`;
+      description = `${quote.pkg.name} · ${qtySummary(quote.dims, quote.qty)} · ${body.billing} · incl. GST ${GST_PERCENT_LABEL}`;
       guards = quote.qty.users;
     } else if (body.planId && body.guards) {
       const quote = quotePlan(body.planId, body.guards, body.billing);
@@ -72,7 +81,7 @@ export async function POST(request: Request) {
       amountEur = quote.eurDue;
       planKey = body.planId;
       guards = body.guards;
-      description = `${quote.plan.name} · ${body.guards} guards · ${body.billing}`;
+      description = `${quote.plan.name} · ${body.guards} guards · ${body.billing} · incl. GST ${GST_PERCENT_LABEL}`;
     } else {
       return NextResponse.json(
         { error: "Provide either a guard plan or a solution package" },
