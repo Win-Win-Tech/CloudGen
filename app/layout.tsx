@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Raleway, Source_Sans_3 } from "next/font/google";
+import { Analytics } from "@/components/Analytics";
 import { ClickToChat } from "@/components/ClickToChat";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { TawkTo } from "@/components/TawkTo";
+import { absoluteUrl } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { SOLUTION_PACKAGES } from "@/lib/solutions";
 import "./globals.css";
@@ -32,12 +34,13 @@ export const metadata: Metadata = {
     "CloudGen Technologies",
     "SmartPatrol",
     "Guards app",
-    "guard tour system",
-    "QR checkpoint",
+    "guard tour system India",
+    "QR checkpoint patrol software",
+    "face biometric attendance",
     "geofence attendance",
-    "visitor management",
-    "security operations",
-    "Madurai",
+    "visitor management system",
+    "vehicle entry exit software",
+    "security operations Madurai",
   ],
   authors: [{ name: site.company, url: site.companyUrl }],
   openGraph: {
@@ -56,10 +59,20 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   alternates: {
     canonical: site.url,
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+  },
+  category: "technology",
 };
 
 export default function RootLayout({
@@ -73,10 +86,35 @@ export default function RootLayout({
       {
         "@type": "Organization",
         name: site.company,
-        url: site.companyUrl,
+        url: site.url,
         email: site.email,
         telephone: site.phone,
-        address: site.address,
+        sameAs: [site.playStoreUrl, site.companyUrl],
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "No. 3/634, Kalvi Nagar North, Alampatti, Nagamalai Pudukottai",
+          addressLocality: "Madurai",
+          addressRegion: "Tamil Nadu",
+          postalCode: "625019",
+          addressCountry: "IN",
+        },
+      },
+      {
+        "@type": "LocalBusiness",
+        name: site.company,
+        image: absoluteUrl("/opengraph-image"),
+        url: site.url,
+        telephone: site.phone,
+        email: site.email,
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "No. 3/634, Kalvi Nagar North, Alampatti, Nagamalai Pudukottai",
+          addressLocality: "Madurai",
+          addressRegion: "Tamil Nadu",
+          addressCountry: "IN",
+        },
+        areaServed: "IN",
+        priceRange: "₹₹",
       },
       {
         "@type": "SoftwareApplication",
@@ -94,14 +132,19 @@ export default function RootLayout({
         publisher: {
           "@type": "Organization",
           name: site.company,
-          url: site.companyUrl,
+          url: site.url,
         },
+      },
+      {
+        "@type": "WebSite",
+        name: site.company,
+        url: site.url,
       },
     ],
   };
 
   return (
-    <html lang="en">
+    <html lang="en-IN">
       <body className={`${display.variable} ${body.variable} antialiased`}>
         <script
           type="application/ld+json"
@@ -112,6 +155,7 @@ export default function RootLayout({
         <Footer />
         <ClickToChat />
         <TawkTo />
+        <Analytics />
       </body>
     </html>
   );

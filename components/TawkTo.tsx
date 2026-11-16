@@ -95,11 +95,10 @@ export async function openTawkChat() {
 }
 
 /**
- * Prefetch Tawk in production only (avoids noisy Next.js console overlay in dev).
+ * Prefetch the Tawk chat widget so the bubble appears on the site.
  */
 export function TawkTo() {
   useEffect(() => {
-    if (process.env.NODE_ENV !== "production") return;
     if (!site.tawkPropertyId || !site.tawkWidgetId) return;
 
     let cancelled = false;
@@ -110,10 +109,11 @@ export function TawkTo() {
     let idleHandle: number | undefined;
     let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
 
+    // Small delay keeps first paint clean; still loads in both dev and production.
     if (typeof window.requestIdleCallback === "function") {
-      idleHandle = window.requestIdleCallback(run);
+      idleHandle = window.requestIdleCallback(run, { timeout: 2500 });
     } else {
-      timeoutHandle = setTimeout(run, 1800);
+      timeoutHandle = setTimeout(run, 800);
     }
 
     return () => {

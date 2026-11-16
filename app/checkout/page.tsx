@@ -7,6 +7,7 @@ import { SOLUTION_PACKAGES, SolutionPackageId } from "@/lib/solutions";
 export const metadata: Metadata = {
   title: "Checkout",
   description: "Subscribe to SmartPatrol and pay securely online with Razorpay.",
+  robots: { index: false, follow: false },
 };
 
 const PACKAGE_IDS = SOLUTION_PACKAGES.map((p) => p.id);

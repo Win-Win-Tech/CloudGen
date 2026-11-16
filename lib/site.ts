@@ -15,10 +15,10 @@ export const site = {
   whatsappUrl:
     "https://wa.me/918248359796?text=" +
     encodeURIComponent("Hi CloudGen, I would like to chat about SmartPatrol solutions."),
-  /** From live cloudgentechnologies.com embed (override via env if needed). */
+  /** Tawk.to property/widget (override via env if needed). */
   tawkPropertyId:
-    process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID || "672866ff2480f5b4f59842aa",
-  tawkWidgetId: process.env.NEXT_PUBLIC_TAWK_WIDGET_ID || "1ibqt4mc1",
+    process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID || "6afb3da16e876a3cc05f8f42",
+  tawkWidgetId: process.env.NEXT_PUBLIC_TAWK_WIDGET_ID || "default",
   address:
     "No. 3/634, Kalvi Nagar North, Alampatti, Nagamalai Pudukottai, Madurai, Tamil Nadu, India",
   playStoreUrl: "https://play.google.com/store/apps/details?id=com.guards.app",
@@ -35,5 +35,6 @@ export const nav = [
   { href: "/about", label: "About Us" },
   { href: "/solutions", label: "Product" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/blog", label: "Guides" },
   { href: "/contact", label: "Contact" },
 ] as const;

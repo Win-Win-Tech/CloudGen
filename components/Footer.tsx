@@ -1,6 +1,6 @@
 import Link from "next/link";
+import { PRODUCT_PILLARS } from "@/lib/seo";
 import { site } from "@/lib/site";
-import { SOLUTION_PACKAGES } from "@/lib/solutions";
 
 export function Footer() {
   return (
@@ -28,6 +28,7 @@ export function Footer() {
             <Link href="/about">About Us</Link>
             <Link href="/solutions">Product</Link>
             <Link href="/pricing">Pricing</Link>
+            <Link href="/blog">Guides</Link>
             <Link href="/contact">Contact</Link>
             <Link href="/app">Get the App</Link>
             <Link href="/demo">Book a Demo</Link>
@@ -35,12 +36,12 @@ export function Footer() {
         </div>
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.12em] text-[var(--steel)]">
-            Packages
+            Solutions
           </p>
           <div className="mt-3 flex flex-col gap-2 text-sm font-semibold">
-            {SOLUTION_PACKAGES.slice(0, 7).map((pkg) => (
-              <Link key={pkg.id} href="/pricing">
-                {pkg.name}
+            {PRODUCT_PILLARS.map((pillar) => (
+              <Link key={pillar.slug} href={`/solutions/${pillar.slug}`}>
+                {pillar.h1.split(" for ")[0]}
               </Link>
             ))}
             <Link href="/pricing" className="text-[var(--teal-deep)]">

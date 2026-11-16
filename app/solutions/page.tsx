@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SolutionPackages } from "@/components/SolutionPackages";
+import { PRODUCT_PILLARS, absoluteUrl } from "@/lib/seo";
 import {
   SOLUTIONS,
   VALUE_PROPS,
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
   title: "Solutions",
   description:
     "Fifteen CloudGen SmartPatrol solutions — workforce, security ops, CCTV AI, industry apps and custom development — packaged with competitive INR pricing.",
+  alternates: { canonical: absoluteUrl("/solutions") },
 };
 
 const CATEGORY_ORDER: {
@@ -68,6 +70,25 @@ export default function SolutionsPage() {
               <p className="mt-2 text-sm text-[var(--steel)]">{item.body}</p>
             </div>
           ))}
+        </div>
+
+        <div className="mt-10">
+          <h2 className="display text-2xl font-extrabold">Top solution guides</h2>
+          <p className="mt-2 max-w-2xl text-sm text-[var(--steel)]">
+            Deep-dive landing pages for the searches buyers use most — attendance,
+            QR guard tour, visitor, vehicle and Vision AI.
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {PRODUCT_PILLARS.map((pillar) => (
+              <Link
+                key={pillar.slug}
+                href={`/solutions/${pillar.slug}`}
+                className="rounded-lg border border-[var(--line)] bg-white px-4 py-3 text-sm font-semibold text-[var(--navy)] hover:border-[var(--teal)] hover:text-[var(--teal-deep)]"
+              >
+                {pillar.title}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

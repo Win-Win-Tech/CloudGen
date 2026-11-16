@@ -10,6 +10,12 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - / Home
 - /about About Us
 - /solutions Product (15 CloudGen solutions)
+- /solutions/face-biometric-attendance Face biometric attendance SEO page
+- /solutions/qr-checkpoint-guard-tour QR checkpoint guard tour SEO page
+- /solutions/visitor-management-system Visitor management SEO page
+- /solutions/vehicle-management-system Vehicle management SEO page
+- /solutions/vision-ai-cctv Vision AI CCTV SEO page
+- /blog SmartPatrol guides / SEO content cluster
 - /pricing Pricing (Smart Patrol INR packages)
 - /contact Contact
 - /app Get the App
@@ -17,7 +23,7 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - /demo/test Free timed demo (default 7 days) — issues username/password stored in demo_accounts
 - /api/demo/validate Mobile app login check; rejects expired demos (kick-out)
 - /register Organization registration
-- /checkout Razorpay subscription payment
+- /checkout Razorpay subscription payment (noindex)
 
 ## Guards app pillars
 - Guard Tour Patrolling System: GPS, QR/virtual checkpoints, multi-site, tickets
