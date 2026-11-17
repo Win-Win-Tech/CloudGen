@@ -38,9 +38,15 @@ const copy: Record<Kind, { title: string; submit: string; endpoint: string }> = 
   },
 };
 
-/** Browser-side FormSubmit — Cloudflare blocks server IPs, but browser posts usually deliver. */
+/**
+ * Browser-side FormSubmit fallback (when Resend/SMTP are not configured).
+ * Use the FormSubmit activation hash — not a naked email — after clicking
+ * "Activate Form" in the first FormSubmit email.
+ */
+const FORMSUBMIT_ID =
+  process.env.NEXT_PUBLIC_FORMSUBMIT_ID || "f97908ddf0fc1124bde6f9056777f4b0";
+
 async function notifySalesInbox(payload: Record<string, FormDataEntryValue>) {
-  const inbox = site.email;
   const subject =
     payload.kind === "contact"
       ? `New contact message — ${site.company}`
@@ -50,7 +56,7 @@ async function notifySalesInbox(payload: Record<string, FormDataEntryValue>) {
           ? `New registration — ${site.product}`
           : `New demo request — ${site.product}`;
 
-  const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(inbox)}`, {
+  const res = await fetch(`https://formsubmit.co/ajax/${FORMSUBMIT_ID}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
