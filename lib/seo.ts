@@ -58,7 +58,7 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
         heading: "Built for Indian security and facility operations",
         body: [
           "Use it for factories, campuses, societies, hospitals and multi-site agencies. Supervisors get clearer attendance trails; finance gets cleaner payroll inputs.",
-          "Start from $24/mo for the base Attendance band, then scale users with pro-rata pricing on the published USD rate card.",
+          "Start from $49/mo for the base Attendance band, then scale users with pro-rata pricing on the published USD rate card.",
         ],
       },
     ],
