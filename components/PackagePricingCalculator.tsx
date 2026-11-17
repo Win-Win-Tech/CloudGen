@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   CODE_STEPS,
+  formatUSD,
   formatINR,
-  GST_PERCENT_LABEL,
   packageDimensions,
   quotePackage,
   qtySummary,
@@ -151,7 +151,7 @@ export function PackagePricingCalculator() {
                 <p className="display text-lg font-extrabold leading-snug">{pkg.name}</p>
                 <p className="mt-2 text-xs text-[var(--steel)]">from</p>
                 <p className="display text-2xl font-extrabold text-[var(--ink)]">
-                  {formatINR(fromQuote.inrPeriod ?? pkg.inrMonthly ?? 0)}
+                  {formatUSD(fromQuote.usdPeriod ?? pkg.usdMonthly ?? 0)}
                   <span className="ml-1 text-xs font-semibold text-[var(--steel)]">
                     /mo
                   </span>
@@ -332,7 +332,7 @@ export function PackagePricingCalculator() {
               </button>
             </div>
 
-            {quote.needsQuote || quote.inrPeriod == null ? (
+            {quote.needsQuote || quote.usdPeriod == null ? (
               <p className="display mt-6 text-3xl font-extrabold">Custom quote</p>
             ) : (
               <>
@@ -340,27 +340,25 @@ export function PackagePricingCalculator() {
                   {billing === "annual" ? "Billed annually" : "Billed monthly"}
                 </p>
                 <p className="display text-4xl font-extrabold text-[var(--ink)]">
-                  {formatINR(quote.inrPeriod)}
+                  {formatUSD(quote.usdPeriod)}
                   <span className="ml-1 text-sm font-semibold text-[var(--steel)]">
                     /{billing === "annual" ? "yr" : "mo"}
                   </span>
                 </p>
-                {quote.listPeriod != null && quote.listPeriod > quote.inrPeriod ? (
+                {quote.usdListPeriod != null &&
+                quote.usdListPeriod > quote.usdPeriod ? (
                   <p className="mt-1 text-sm text-[var(--steel)] line-through">
-                    List {formatINR(quote.listPeriod)}
+                    List {formatUSD(quote.usdListPeriod)}
                   </p>
                 ) : null}
                 <p className="mt-2 text-sm font-semibold text-[var(--navy)]">
-                  + setup {formatINR(quote.inrSetup!)} (one-time)
+                  + setup {formatUSD(quote.usdSetup!)} (one-time)
                 </p>
                 <p className="mt-1 text-sm text-[var(--navy)]">
-                  + GST {GST_PERCENT_LABEL} {formatINR(quote.inrGst!)}
+                  Razorpay due {formatINR(quote.inrDue!)}
                 </p>
-                <p className="mt-2 text-sm font-bold text-[var(--ink)]">
-                  Due today {formatINR(quote.inrDue!)}
-                  <span className="ml-1 text-xs font-semibold text-[var(--steel)]">
-                    (incl. GST)
-                  </span>
+                <p className="mt-1 text-xs text-[var(--steel)]">
+                  USD list converted to INR at checkout. LUT export — no GST.
                 </p>
               </>
             )}

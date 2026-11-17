@@ -58,7 +58,7 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
         heading: "Built for Indian security and facility operations",
         body: [
           "Use it for factories, campuses, societies, hospitals and multi-site agencies. Supervisors get clearer attendance trails; finance gets cleaner payroll inputs.",
-          "Start from ₹2,000/mo for the base Attendance band, then scale users with pro-rata pricing on the published rate card.",
+          "Start from $25/mo for the base Attendance band, then scale users with pro-rata pricing on the published USD rate card.",
         ],
       },
     ],
@@ -471,7 +471,7 @@ export const BLOG_POSTS: BlogPost[] = [
         heading: "Local builders, India-wide deployments",
         body: [
           `${site.company} is based in Madurai and ships SmartPatrol / Guards for workforce and security operations teams across India.`,
-          "Buyers get INR packaging, Razorpay checkout and hands-on demos — not a generic overseas template.",
+          "Buyers get competitive USD packaging, Razorpay checkout in INR, and hands-on demos — not a generic overseas template.",
         ],
       },
       {

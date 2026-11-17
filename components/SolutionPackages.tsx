@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {
-  formatINR,
+  formatUSD,
   SOLUTION_PACKAGES,
   solutionsForPackage,
 } from "@/lib/solutions";
@@ -14,14 +14,14 @@ export function SolutionPackages({ showCatalogHint = true }: Props) {
     <div className="space-y-8">
       {showCatalogHint ? (
         <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow">SmartPatrol packages · INR</p>
+          <p className="eyebrow">SmartPatrol packages · USD</p>
           <h2 className="display mt-2 text-3xl font-extrabold sm:text-4xl">
             Pick the stack that matches your site
           </h2>
           <p className="mt-3 text-[var(--steel)]">
             Buy a single Smart Patrol module, combine Face + QR, or take Site Ops Suite.
             Ticket Complaints Tracking is included on every package. Vision AI, Industry
-            Suite and Custom Build are quote-only.
+            Suite and Custom Build are quote-only. Checkout converts USD to INR for Razorpay (LUT — no GST).
           </p>
         </div>
       ) : null}
@@ -53,7 +53,7 @@ export function SolutionPackages({ showCatalogHint = true }: Props) {
                 {pkg.unitLimit}
               </p>
 
-              {quoteOnly || pkg.inrMonthly == null ? (
+              {quoteOnly || pkg.usdMonthly == null ? (
                 <p className="display mt-4 text-3xl font-extrabold text-[var(--ink)]">
                   Custom quote
                 </p>
@@ -61,14 +61,14 @@ export function SolutionPackages({ showCatalogHint = true }: Props) {
                 <>
                   <p className="mt-4 text-sm text-[var(--steel)]">from</p>
                   <p className="display text-4xl font-extrabold text-[var(--ink)]">
-                    {formatINR(pkg.inrMonthly)}
+                    {formatUSD(pkg.usdMonthly)}
                     <span className="ml-1 text-sm font-semibold text-[var(--steel)]">
                       /mo
                     </span>
                   </p>
                   <p className="mt-1 text-sm font-semibold text-[var(--navy)]">
-                    {formatINR(pkg.inrAnnual!)} / year · setup{" "}
-                    {formatINR(pkg.inrSetup!)}
+                    {formatUSD(pkg.usdAnnual!)} / year · setup{" "}
+                    {formatUSD(pkg.usdSetup!)}
                   </p>
                 </>
               )}

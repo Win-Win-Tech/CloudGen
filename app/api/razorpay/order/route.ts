@@ -4,7 +4,6 @@ import { sql } from "@/lib/db";
 import { quotePlan } from "@/lib/pricing";
 import { getRazorpay, getRazorpayKeyId, razorpayConfigured } from "@/lib/razorpay";
 import {
-  applyGst,
   GST_PERCENT_LABEL,
   PAID_PACKAGE_IDS,
   qtySummary,
@@ -16,7 +15,7 @@ const schema = z.object({
   // Guard-count plans
   planId: z.enum(["base", "pro", "gold"]).optional(),
   guards: z.number().int().min(1).max(100).optional(),
-  // INR solution packages
+  // USD-listed solution packages (charged in INR via Razorpay)
   packageId: z.enum(PAID_PACKAGE_IDS as [SolutionPackageId, ...SolutionPackageId[]]).optional(),
   users: z.number().int().min(1).max(500).optional(),
   codes: z.number().int().min(1).max(500).optional(),
@@ -54,20 +53,24 @@ export async function POST(request: Request) {
       if (
         quote.needsQuote ||
         quote.inrDue == null ||
-        quote.inrPeriod == null ||
-        quote.inrGst == null
+        quote.inrPeriod == null
       ) {
         return NextResponse.json(
           { error: "This package requires a custom quote" },
           { status: 400 },
         );
       }
+      // USD packages: LUT zero-rated — charge INR conversion only, no GST.
       amountInr =
+        body.includeSetup === false ? quote.inrPeriod : quote.inrDue;
+      amountUsd =
         body.includeSetup === false
-          ? applyGst(quote.inrPeriod).total
-          : quote.inrDue;
+          ? quote.usdPeriod
+          : quote.usdPeriod != null && quote.usdSetup != null
+            ? quote.usdPeriod + quote.usdSetup
+            : quote.usdPeriod;
       planKey = `pkg:${body.packageId}`;
-      description = `${quote.pkg.name} · ${qtySummary(quote.dims, quote.qty)} · ${body.billing} · incl. GST ${GST_PERCENT_LABEL}`;
+      description = `${quote.pkg.name} · ${qtySummary(quote.dims, quote.qty)} · ${body.billing} · USD · LUT (0% GST)`;
       guards = quote.qty.users;
     } else if (body.planId && body.guards) {
       const quote = quotePlan(body.planId, body.guards, body.billing);

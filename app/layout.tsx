@@ -114,7 +114,7 @@ export default function RootLayout({
           addressCountry: "IN",
         },
         areaServed: "IN",
-        priceRange: "₹₹",
+        priceRange: "$$",
       },
       {
         "@type": "SoftwareApplication",
@@ -124,10 +124,10 @@ export default function RootLayout({
         operatingSystem: "Android, Web",
         offers: {
           "@type": "Offer",
-          priceCurrency: "INR",
-          price: String(SOLUTION_PACKAGES[0].inrMonthly ?? 2000),
+          priceCurrency: "USD",
+          price: String(SOLUTION_PACKAGES[0].usdMonthly ?? 25),
           description:
-            "From INR 2,000 / month for Smart Patrol Attendance (Ticket Complaints Tracking included)",
+            "From USD 25 / month for Smart Patrol Attendance (Ticket Complaints Tracking included)",
         },
         publisher: {
           "@type": "Organization",

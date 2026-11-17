@@ -5,7 +5,7 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: `${site.product} INR packages — drag users, QR codes and sites for pro-rata pricing on Smart Patrol Attendance, Checkpoint, Visitor, Vehicle, Duo bundles and Site Ops Suite.`,
+  description: `${site.product} USD packages — drag users, QR codes and sites for pro-rata pricing on Smart Patrol Attendance, Checkpoint, Visitor, Vehicle, Duo bundles and Site Ops Suite.`,
 };
 
 export default function PricingPage() {
@@ -13,7 +13,7 @@ export default function PricingPage() {
     <div className="pb-16">
       <section className="border-b border-[var(--line)] bg-white py-12">
         <div className="shell mx-auto max-w-3xl text-center">
-          <p className="eyebrow">SmartPatrol pricelist</p>
+          <p className="eyebrow">SmartPatrol pricelist · USD</p>
           <h1 className="display mt-2 text-4xl font-extrabold sm:text-5xl">
             Pricing
           </h1>

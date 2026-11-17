@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SolutionPackages } from "@/components/SolutionPackages";
 import { site } from "@/lib/site";
-import { formatINR, SOLUTION_PACKAGES, SOLUTIONS } from "@/lib/solutions";
+import { formatUSD, SOLUTION_PACKAGES, SOLUTIONS } from "@/lib/solutions";
 
 const highlights = [
   {
@@ -41,7 +41,7 @@ const highlights = [
     points: [
       "Availability Command Centre on every package",
       "Ticket Complaints Tracking System included",
-      "Pay online with Razorpay in INR",
+      "Pay online with Razorpay (USD list → INR)",
     ],
   },
 ];
@@ -96,7 +96,7 @@ export default function HomePage() {
             </div>
             <p className="mt-4 text-sm leading-relaxed text-[var(--navy)]">
               Fifteen solutions packaged as Smart Patrol modules and suites —
-              starting from {formatINR(SOLUTION_PACKAGES[0].inrMonthly!)}/mo, with
+              starting from {formatUSD(SOLUTION_PACKAGES[0].usdMonthly!)}/mo, with
               Ticket Complaints Tracking on every plan.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">

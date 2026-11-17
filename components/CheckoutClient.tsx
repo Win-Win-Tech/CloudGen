@@ -107,10 +107,17 @@ export function CheckoutClient({
           subtotalInr: packageQuote.inrSubtotal,
           gstInr: packageQuote.inrGst,
           payInr: packageQuote.inrDue,
+          usdList:
+            packageQuote.usdPeriod != null
+              ? `${packageQuote.usdPeriod} USD period` +
+                (packageQuote.usdSetup != null
+                  ? ` + ${packageQuote.usdSetup} USD setup`
+                  : "")
+              : null,
           eurList: null as string | null,
           detail: packageQuote.needsQuote
             ? "This package requires a custom quote from sales."
-            : "Subscription and setup are billed in INR; GST is added as a separate line before Razorpay payment.",
+            : "USD package pricing is converted to INR at checkout. LUT export supply — GST is not charged.",
           canPay: !packageQuote.needsQuote && Boolean(packageQuote.inrDue),
         }
       : {
@@ -121,6 +128,7 @@ export function CheckoutClient({
           subtotalInr: planQuote.inrSubtotal,
           gstInr: planQuote.inrGst,
           payInr: planQuote.inrDue,
+          usdList: null as string | null,
           eurList: planQuote.needsQuote ? null : formatEUR(planQuote.eurDue!),
           detail:
             "EUR package pricing converted to INR; GST is added as a separate line before Razorpay payment.",
@@ -260,8 +268,18 @@ export function CheckoutClient({
           </div>
           {summary.canPay ? (
             <>
-              {summary.eurList ? (
+              {summary.usdList ? (
                 <div className="flex justify-between gap-4 border-t border-[var(--line)] pt-3">
+                  <dt className="text-[var(--steel)]">List (USD)</dt>
+                  <dd className="font-semibold">{summary.usdList}</dd>
+                </div>
+              ) : null}
+              {summary.eurList ? (
+                <div
+                  className={`flex justify-between gap-4 ${
+                    summary.usdList ? "" : "border-t border-[var(--line)] pt-3"
+                  }`}
+                >
                   <dt className="text-[var(--steel)]">List (EUR)</dt>
                   <dd className="font-semibold">{summary.eurList}</dd>
                 </div>
@@ -269,7 +287,9 @@ export function CheckoutClient({
               {summary.periodInr != null ? (
                 <div
                   className={`flex justify-between gap-4 ${
-                    summary.eurList ? "" : "border-t border-[var(--line)] pt-3"
+                    summary.usdList || summary.eurList
+                      ? ""
+                      : "border-t border-[var(--line)] pt-3"
                   }`}
                 >
                   <dt className="text-[var(--steel)]">
@@ -284,10 +304,15 @@ export function CheckoutClient({
                   <dd className="font-semibold">{formatINR(summary.setupInr)}</dd>
                 </div>
               ) : null}
-              {summary.gstInr != null ? (
+              {summary.gstInr != null && summary.gstInr > 0 ? (
                 <div className="flex justify-between gap-4">
                   <dt className="text-[var(--steel)]">GST ({GST_PERCENT_LABEL})</dt>
                   <dd className="font-semibold">{formatINR(summary.gstInr)}</dd>
+                </div>
+              ) : mode === "package" && summary.canPay ? (
+                <div className="flex justify-between gap-4">
+                  <dt className="text-[var(--steel)]">GST</dt>
+                  <dd className="font-semibold">Nil (LUT)</dd>
                 </div>
               ) : null}
               <div className="flex justify-between gap-4 border-t border-[var(--line)] pt-3">

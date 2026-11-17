@@ -55,7 +55,7 @@ export default function AboutPage() {
             [
               "Catalog",
               `${SOLUTIONS.length} solutions`,
-              "Modular INR packages plus Vision AI, Industry Suite and Custom Build quotes.",
+              "Modular USD packages plus Vision AI, Industry Suite and Custom Build quotes.",
             ],
             [
               "Support",
@@ -82,7 +82,7 @@ export default function AboutPage() {
           </h2>
           <p className="mt-2 max-w-2xl text-[var(--steel)]">
             Every CloudGen offering maps to one of the fifteen SmartPatrol
-            solutions — available as modular INR packages or custom quotes.
+            solutions — available as modular USD packages or custom quotes.
           </p>
 
           <div className="mt-10 space-y-10">

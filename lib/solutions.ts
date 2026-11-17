@@ -1,7 +1,10 @@
 /**
- * CloudGen SmartPatrol solution catalog + INR commercial packages.
- * Rate card: Face/QR ₹2,000/mo · Visitor/Vehicle ₹3,000/mo (per site).
+ * CloudGen SmartPatrol solution catalog + USD commercial packages.
+ * Competitive USD rate card (from prior INR card ≈ ₹83/USD, rounded):
+ * Face/QR $25/mo · Visitor/Vehicle $36/mo (per site).
  * Bundles discount vs à-la-carte. CCTV / Industry / Custom = quote.
+ * Razorpay checkout converts USD → INR via USD_TO_INR.
+ * USD packages are zero-rated under LUT (no GST).
  */
 
 export type SolutionPlatform =
@@ -152,21 +155,21 @@ export type SolutionPackage = {
   quoteOnly?: boolean;
   /** Capacity / commercial unit from rate card. */
   unitLimit: string;
-  /** INR list price per month. */
-  inrMonthly: number | null;
-  /** INR billed annually (typically 12× monthly; bundles may discount). */
-  inrAnnual: number | null;
-  /** One-time setup / onboarding in INR. */
-  inrSetup: number | null;
+  /** USD list price per month. */
+  usdMonthly: number | null;
+  /** USD billed annually (~10× monthly for competitive annual). */
+  usdAnnual: number | null;
+  /** One-time setup / onboarding in USD. */
+  usdSetup: number | null;
   solutionIds: string[];
   highlights: string[];
   bestFor: string;
 };
 
 /**
- * INR packages from CloudGen rate card (Package-1):
- * Face ₹2,000/mo · QR ₹2,000/mo · Visitor ₹3,000/mo · Vehicle ₹3,000/mo
- * Singles match list; combos undercut à-la-carte. CCTV / Industry / Custom = quote.
+ * Competitive USD packages (converted from INR Package-1, rounded):
+ * Face/QR $25/mo · Visitor/Vehicle $36/mo · combos undercut à-la-carte.
+ * CCTV / Industry / Custom = quote.
  */
 export const SOLUTION_PACKAGES: SolutionPackage[] = [
   {
@@ -174,9 +177,9 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     name: "Smart Patrol Attendance",
     blurb: "Face biometric attendance only — for sites that only need workforce punch.",
     unitLimit: "Upto 25 users",
-    inrMonthly: 2000,
-    inrAnnual: 24000,
-    inrSetup: 999,
+    usdMonthly: 25,
+    usdAnnual: 250,
+    usdSetup: 12,
     solutionIds: ["face-attendance", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Face biometric attendance",
@@ -191,9 +194,9 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     name: "Smart Patrol Checkpoint",
     blurb: "QR checkpoint scan patrolling only — proof of presence on routes.",
     unitLimit: "Upto 20 codes",
-    inrMonthly: 2000,
-    inrAnnual: 24000,
-    inrSetup: 999,
+    usdMonthly: 25,
+    usdAnnual: 250,
+    usdSetup: 12,
     solutionIds: ["qr-patrolling", ...COMMON_SOLUTION_IDS],
     highlights: [
       "QR code checkpoint scan",
@@ -208,9 +211,9 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     name: "Smart Patrol Visitor",
     blurb: "Visitor management only — digital check-in for a single site.",
     unitLimit: "Per site",
-    inrMonthly: 3000,
-    inrAnnual: 36000,
-    inrSetup: 1499,
+    usdMonthly: 36,
+    usdAnnual: 360,
+    usdSetup: 18,
     solutionIds: ["visitor-management", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Visitor management system",
@@ -225,9 +228,9 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     name: "Smart Patrol Vehicle",
     blurb: "Vehicle management only — entry / exit control for a single site.",
     unitLimit: "Per site",
-    inrMonthly: 3000,
-    inrAnnual: 36000,
-    inrSetup: 1499,
+    usdMonthly: 36,
+    usdAnnual: 360,
+    usdSetup: 18,
     solutionIds: ["vehicle-management", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Vehicle management system",
@@ -242,13 +245,13 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     name: "Smart Patrol Workforce Duo",
     blurb: "Face biometric + QR patrol together — save vs buying both alone.",
     unitLimit: "25 users · 20 codes",
-    inrMonthly: 3500,
-    inrAnnual: 42000,
-    inrSetup: 1499,
+    usdMonthly: 42,
+    usdAnnual: 420,
+    usdSetup: 18,
     solutionIds: ["face-attendance", "qr-patrolling", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Face biometric + QR patrol",
-      "List ₹4,000/mo → ₹3,500/mo",
+      "List $50/mo → $42/mo",
       "Ticket Complaints Tracking System",
       "Ideal attendance + checkpoint stack",
     ],
@@ -259,13 +262,13 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     name: "Smart Patrol Gate Duo",
     blurb: "Visitor + vehicle gate stack for reception and parking control.",
     unitLimit: "Per site",
-    inrMonthly: 5500,
-    inrAnnual: 66000,
-    inrSetup: 1999,
+    usdMonthly: 66,
+    usdAnnual: 660,
+    usdSetup: 24,
     solutionIds: ["visitor-management", "vehicle-management", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Visitor + vehicle management",
-      "List ₹6,000/mo → ₹5,500/mo",
+      "List $72/mo → $66/mo",
       "Ticket Complaints Tracking System",
       "Single-site gate operations",
     ],
@@ -277,9 +280,9 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Full site stack — face, QR, visitor and vehicle in one competitive bundle.",
     popular: true,
     unitLimit: "25 users · 20 codes · per site gate",
-    inrMonthly: 8500,
-    inrAnnual: 99900,
-    inrSetup: 2499,
+    usdMonthly: 99,
+    usdAnnual: 990,
+    usdSetup: 30,
     solutionIds: [
       "face-attendance",
       "qr-patrolling",
@@ -289,7 +292,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     ],
     highlights: [
       "Face + QR + Visitor + Vehicle",
-      "List ₹10,000/mo → ₹8,500/mo",
+      "List $122/mo → $99/mo",
       "Ticket Complaints Tracking System",
       "Best value full site operations",
     ],
@@ -301,9 +304,9 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "CCTV attendance, people counting, ANPR and ID OCR — scoped per camera set.",
     quoteOnly: true,
     unitLimit: "Per camera set · custom scope",
-    inrMonthly: null,
-    inrAnnual: null,
-    inrSetup: null,
+    usdMonthly: null,
+    usdAnnual: null,
+    usdSetup: null,
     solutionIds: [
       "cctv-attendance",
       "people-counting",
@@ -325,9 +328,9 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Hospital, pharmacy and AI doctor appointment booking — scoped per deployment.",
     quoteOnly: true,
     unitLimit: "Custom scope",
-    inrMonthly: null,
-    inrAnnual: null,
-    inrSetup: null,
+    usdMonthly: null,
+    usdAnnual: null,
+    usdSetup: null,
     solutionIds: [
       "hospital-management",
       "pharmacy-billing",
@@ -348,9 +351,9 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Custom web, mobile and website builds tailored to your workflows.",
     quoteOnly: true,
     unitLimit: "Project quote",
-    inrMonthly: null,
-    inrAnnual: null,
-    inrSetup: null,
+    usdMonthly: null,
+    usdAnnual: null,
+    usdSetup: null,
     solutionIds: ["web-dev", "mobile-dev", "website-dev", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Web app development",
@@ -387,20 +390,23 @@ export const PAID_PACKAGE_IDS = SOLUTION_PACKAGES.filter((p) => !p.quoteOnly).ma
   (p) => p.id,
 ) as SolutionPackageId[];
 
-/** Rate card unit bases from Package-1 (pro-rata beyond these). */
+/** USD rate card unit bases (pro-rata beyond these). */
 export const RATE_CARD = {
   faceUsersBase: 25,
-  faceMonthly: 2000,
-  faceAnnual: 24000,
+  faceMonthly: 25,
+  faceAnnual: 250,
   qrCodesBase: 20,
-  qrMonthly: 2000,
-  qrAnnual: 24000,
-  siteMonthly: 3000,
-  siteAnnual: 36000,
+  qrMonthly: 25,
+  qrAnnual: 250,
+  siteMonthly: 36,
+  siteAnnual: 360,
   usersMaxOnline: 200,
   codesMaxOnline: 200,
   sitesMaxOnline: 10,
 } as const;
+
+/** Convert published USD package totals to INR for Razorpay. */
+export const USD_TO_INR = Number(process.env.NEXT_PUBLIC_USD_TO_INR || 83);
 
 /** Discrete bands for QR-Patrol-style drag (index → quantity). */
 export const USER_STEPS = [25, 50, 75, 100, 150, 200] as const;
@@ -456,11 +462,11 @@ export function defaultPackageQty(_id: SolutionPackageId): PackageQty {
 /** Bundle factor from published base price vs rate-card list at default qty. */
 export function bundleFactor(packageId: SolutionPackageId, billing: PackageBilling) {
   const pkg = getPackage(packageId);
-  if (pkg.quoteOnly || pkg.inrMonthly == null || pkg.inrAnnual == null) return 1;
+  if (pkg.quoteOnly || pkg.usdMonthly == null || pkg.usdAnnual == null) return 1;
   const dims = packageDimensions(packageId);
-  const list = listPeriodInr(dims, defaultPackageQty(packageId), billing);
+  const list = listPeriodUsd(dims, defaultPackageQty(packageId), billing);
   if (list <= 0) return 1;
-  const published = billing === "monthly" ? pkg.inrMonthly : pkg.inrAnnual;
+  const published = billing === "monthly" ? pkg.usdMonthly : pkg.usdAnnual;
   return published / list;
 }
 
@@ -527,6 +533,14 @@ export function solutionsForPackage(pkg: SolutionPackage) {
   return pkg.solutionIds.map(getSolution);
 }
 
+export function formatUSD(n: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(n);
+}
+
 export function formatINR(n: number) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -535,7 +549,13 @@ export function formatINR(n: number) {
   }).format(n);
 }
 
-/** GST charged on subscription + setup at Razorpay checkout. */
+export function usdToInr(usd: number) {
+  return Math.round(usd * USD_TO_INR);
+}
+
+/**
+ * Legacy helper (EUR plans). USD Smart Patrol packages are LUT zero-rated — no GST.
+ */
 export const GST_RATE = 0.18;
 export const GST_PERCENT_LABEL = "18%";
 
@@ -549,7 +569,7 @@ export function applyGst(taxableInr: number) {
   };
 }
 
-function listPeriodInr(
+function listPeriodUsd(
   dims: PackageDimensions,
   qty: PackageQty,
   billing: PackageBilling,
@@ -576,8 +596,9 @@ function listPeriodInr(
 }
 
 /**
- * Pro-rata quote from rate card + published bundle factor.
+ * Pro-rata quote from USD rate card + published bundle factor.
  * Beyond online max users/codes/sites → needsQuote.
+ * INR fields are derived for Razorpay (USD × USD_TO_INR). No GST (LUT).
  */
 export function quotePackage(
   packageId: SolutionPackageId,
@@ -588,12 +609,15 @@ export function quotePackage(
   const dims = packageDimensions(packageId);
   const qty = normalizePackageQty(dims, qtyInput);
 
-  if (pkg.quoteOnly || pkg.inrMonthly == null || pkg.inrAnnual == null || pkg.inrSetup == null) {
+  if (pkg.quoteOnly || pkg.usdMonthly == null || pkg.usdAnnual == null || pkg.usdSetup == null) {
     return {
       pkg,
       billing,
       qty,
       dims,
+      usdPeriod: null as number | null,
+      usdSetup: null as number | null,
+      usdListPeriod: null as number | null,
       inrPeriod: null as number | null,
       inrSetup: null as number | null,
       inrSubtotal: null as number | null,
@@ -618,6 +642,9 @@ export function quotePackage(
       billing,
       qty,
       dims,
+      usdPeriod: null as number | null,
+      usdSetup: null as number | null,
+      usdListPeriod: null as number | null,
       inrPeriod: null as number | null,
       inrSetup: null as number | null,
       inrSubtotal: null as number | null,
@@ -629,8 +656,8 @@ export function quotePackage(
     };
   }
 
-  const listPeriod = listPeriodInr(dims, qty, billing);
-  const inrPeriod = Math.round(listPeriod * factor);
+  const listPeriod = listPeriodUsd(dims, qty, billing);
+  const usdPeriod = Math.round(listPeriod * factor);
   const scale = Math.max(
     dims.users ? qty.users / RATE_CARD.faceUsersBase : 0,
     dims.codes ? qty.codes / RATE_CARD.qrCodesBase : 0,
@@ -638,20 +665,26 @@ export function quotePackage(
     dims.vehicleSites ? qty.vehicleSites : 0,
     1,
   );
-  const inrSetup = Math.round(pkg.inrSetup * Math.min(scale, 3));
-  const taxed = applyGst(inrPeriod + inrSetup);
+  const usdSetup = Math.round(pkg.usdSetup * Math.min(scale, 3));
+  const inrPeriod = usdToInr(usdPeriod);
+  const inrSetup = usdToInr(usdSetup);
+  const inrSubtotal = inrPeriod + inrSetup;
 
   return {
     pkg,
     billing,
     qty,
     dims,
+    usdPeriod,
+    usdSetup,
+    usdListPeriod: Math.round(listPeriod),
     inrPeriod,
     inrSetup,
-    inrSubtotal: taxed.taxable,
-    inrGst: taxed.gst,
-    /** Razorpay payable = period + setup + 18% GST. */
-    inrDue: taxed.total,
+    inrSubtotal,
+    /** USD packages are LUT zero-rated — GST not charged. */
+    inrGst: 0,
+    /** Razorpay payable = INR(period + setup), no GST. */
+    inrDue: inrSubtotal,
     listPeriod: Math.round(listPeriod),
     factor,
     needsQuote: false as const,

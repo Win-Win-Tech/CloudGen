@@ -11,7 +11,7 @@ import {
 export const metadata: Metadata = {
   title: "Solutions",
   description:
-    "Fifteen CloudGen SmartPatrol solutions — workforce, security ops, CCTV AI, industry apps and custom development — packaged with competitive INR pricing.",
+    "Fifteen CloudGen SmartPatrol solutions — workforce, security ops, CCTV AI, industry apps and custom development — packaged with competitive USD pricing.",
   alternates: { canonical: absoluteUrl("/solutions") },
 };
 
@@ -59,7 +59,7 @@ export default function SolutionsPage() {
           <p className="mt-3 text-[var(--steel)]">
             Smarter solutions. Safer communities. Fifteen CloudGen offerings across
             workforce, security, Vision AI, industry and custom delivery — available
-            as competitive Smart Patrol INR packages.
+            as competitive Smart Patrol USD packages.
           </p>
         </div>
 

@@ -17,7 +17,7 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - /solutions/vision-ai-cctv Vision AI CCTV SEO page
 - /blog SmartPatrol guides / SEO content cluster
 - /privacy Privacy Policy (CloudGen website + SmartPatrol / Guards app)
-- /pricing Pricing (Smart Patrol INR packages)
+- /pricing Pricing (Smart Patrol USD packages)
 - /contact Contact
 - /app Get the App
 - /demo Book a live demo
@@ -47,17 +47,17 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - CCTV — ANPR (Automatic Number Plate Recognition)
 - CCTV / Mobile — OCR (ID number, name, phone, address)
 
-## Smart Patrol INR packages
-- Smart Patrol Attendance — ₹2,000/mo · ₹24,000/yr (upto 25 users)
-- Smart Patrol Checkpoint — ₹2,000/mo · ₹24,000/yr (upto 20 codes)
-- Smart Patrol Visitor — ₹3,000/mo · ₹36,000/yr (per site)
-- Smart Patrol Vehicle — ₹3,000/mo · ₹36,000/yr (per site)
-- Smart Patrol Workforce Duo (Face + QR) — ₹3,500/mo · ₹42,000/yr
-- Smart Patrol Gate Duo (Visitor + Vehicle) — ₹5,500/mo · ₹66,000/yr
-- Smart Patrol Site Ops Suite (all four) — ₹8,500/mo · ₹99,900/yr
+## Smart Patrol USD packages (Razorpay charges INR after FX; LUT — no GST)
+- Smart Patrol Attendance — $25/mo · $250/yr (upto 25 users)
+- Smart Patrol Checkpoint — $25/mo · $250/yr (upto 20 codes)
+- Smart Patrol Visitor — $36/mo · $360/yr (per site)
+- Smart Patrol Vehicle — $36/mo · $360/yr (per site)
+- Smart Patrol Workforce Duo (Face + QR) — $42/mo · $420/yr
+- Smart Patrol Gate Duo (Visitor + Vehicle) — $66/mo · $660/yr
+- Smart Patrol Site Ops Suite (all four) — $99/mo · $990/yr
 - Smart Patrol Vision AI / Industry Suite / Custom Build — Quote
 - Ticket Complaints Tracking included on every package
-- Checkout via Razorpay (INR)
+- Checkout via Razorpay (USD list → INR, LUT 0% GST)
 
 ## What CloudGen delivers
 - Matches the 15 SmartPatrol solutions above, sold as Smart Patrol modules and suites

@@ -6,7 +6,7 @@ Includes:
 
 - SEO-ready App Router pages (`metadata`, `sitemap.xml`, `robots.txt`, JSON-LD, `llms.txt`)
 - Full **15-solution** CloudGen catalog (workforce, security, CCTV AI, industry apps, custom)
-- **Smart Patrol INR packages**: Attendance, Checkpoint, Visitor, Vehicle, Workforce Duo, Gate Duo, Site Ops Suite
+- **Smart Patrol USD packages**: Attendance, Checkpoint, Visitor, Vehicle, Workforce Duo, Gate Duo, Site Ops Suite
 - Quote-only: **Smart Patrol Vision AI**, **Industry Suite**, **Custom Build**
 - Ticket Complaints Tracking included on every package
 - Registration, demo booking, free demo test
