@@ -2,6 +2,11 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { LocalCurrencyHint } from "@/components/LocalCurrencyHint";
+import {
+  DEFAULT_DISPLAY_CURRENCY,
+  type DisplayCurrencyCode,
+} from "@/lib/fxDisplay";
 import {
   CODE_STEPS,
   formatUSD,
@@ -81,6 +86,9 @@ export function PackagePricingCalculator() {
   const [packageId, setPackageId] = useState<SolutionPackageId>("site-ops");
   const [billing, setBilling] = useState<PackageBilling>("annual");
   const [currency, setCurrency] = useState<PackageCurrency>("USD");
+  const [localCurrency, setLocalCurrency] = useState<DisplayCurrencyCode>(
+    DEFAULT_DISPLAY_CURRENCY,
+  );
   const [userIdx, setUserIdx] = useState(0);
   const [codeIdx, setCodeIdx] = useState(0);
   const [visitorSiteIdx, setVisitorSiteIdx] = useState(0);
@@ -406,6 +414,15 @@ export function PackagePricingCalculator() {
                     ? "USD list → INR at checkout. Export under LUT — no GST."
                     : "Domestic INR billing with 18% GST. Paid via Razorpay in INR."}
                 </p>
+                {currency === "USD" ? (
+                  <LocalCurrencyHint
+                    className="mt-4"
+                    usdPeriod={quote.usdPeriod}
+                    usdSetup={quote.usdSetup}
+                    value={localCurrency}
+                    onChange={setLocalCurrency}
+                  />
+                ) : null}
               </>
             )}
 

@@ -1,6 +1,11 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import { LocalCurrencyHint } from "@/components/LocalCurrencyHint";
+import {
+  DEFAULT_DISPLAY_CURRENCY,
+  type DisplayCurrencyCode,
+} from "@/lib/fxDisplay";
 import {
   BillingCycle,
   formatEUR,
@@ -79,6 +84,9 @@ export function CheckoutClient({
   const [vehicleSites] = useState(initialVehicleSites);
   const [billing] = useState<BillingCycle>(initialBilling);
   const [currency, setCurrency] = useState<PackageCurrency>(initialCurrency);
+  const [localCurrency, setLocalCurrency] = useState<DisplayCurrencyCode>(
+    DEFAULT_DISPLAY_CURRENCY,
+  );
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -338,6 +346,17 @@ export function CheckoutClient({
             </>
           ) : null}
         </dl>
+        {mode === "package" &&
+        currency === "USD" &&
+        packageQuote.usdPeriod != null ? (
+          <LocalCurrencyHint
+            className="mt-4"
+            usdPeriod={packageQuote.usdPeriod}
+            usdSetup={packageQuote.usdSetup}
+            value={localCurrency}
+            onChange={setLocalCurrency}
+          />
+        ) : null}
         <p className="mt-4 text-xs leading-relaxed text-[var(--steel)]">
           {summary.detail} Online payments are processed securely by Razorpay for{" "}
           {site.company}.

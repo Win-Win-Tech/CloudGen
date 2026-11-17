@@ -19,9 +19,10 @@ export default function PricingPage() {
           </h1>
           <p className="mt-3 text-[var(--steel)]">
             Choose a package, pick USD (LUT export) or INR (domestic + GST), drag
-            capacity beyond the base band, and pay pro-rata. Ticket Complaints Tracking
-            is included on every package. Vision AI, Industry Suite and Custom Build are
-            quote-only.
+            capacity beyond the base band, and pay pro-rata. In USD mode, see an
+            approximate MYR/SGD/AED (and more) conversion for planning. Ticket Complaints
+            Tracking is included on every package. Vision AI, Industry Suite and Custom
+            Build are quote-only.
           </p>
         </div>
       </section>
