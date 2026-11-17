@@ -188,7 +188,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     unitLimit: "Upto 25 users",
     usdMonthly: 49,
     usdAnnual: annualFromMonthly(49),
-    usdSetup: 49,
+    usdSetup: 19,
     solutionIds: ["face-attendance", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Face biometric attendance",
@@ -205,7 +205,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     unitLimit: "Upto 20 codes",
     usdMonthly: 49,
     usdAnnual: annualFromMonthly(49),
-    usdSetup: 49,
+    usdSetup: 19,
     solutionIds: ["qr-patrolling", ...COMMON_SOLUTION_IDS],
     highlights: [
       "QR code checkpoint scan",
@@ -222,7 +222,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     unitLimit: "Per site",
     usdMonthly: 79,
     usdAnnual: annualFromMonthly(79),
-    usdSetup: 79,
+    usdSetup: 29,
     solutionIds: ["visitor-management", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Visitor management system",
@@ -239,7 +239,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     unitLimit: "Per site",
     usdMonthly: 79,
     usdAnnual: annualFromMonthly(79),
-    usdSetup: 79,
+    usdSetup: 29,
     solutionIds: ["vehicle-management", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Vehicle management system",
@@ -256,7 +256,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     unitLimit: "25 users · 20 codes",
     usdMonthly: 89,
     usdAnnual: annualFromMonthly(89),
-    usdSetup: 79,
+    usdSetup: 39,
     solutionIds: ["face-attendance", "qr-patrolling", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Face biometric + QR patrol",
@@ -273,7 +273,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     unitLimit: "Per site",
     usdMonthly: 139,
     usdAnnual: annualFromMonthly(139),
-    usdSetup: 99,
+    usdSetup: 49,
     solutionIds: ["visitor-management", "vehicle-management", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Visitor + vehicle management",
@@ -291,7 +291,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     unitLimit: "25 users · 20 codes · per site gate",
     usdMonthly: 199,
     usdAnnual: annualFromMonthly(199),
-    usdSetup: 149,
+    usdSetup: 79,
     solutionIds: [
       "face-attendance",
       "qr-patrolling",
