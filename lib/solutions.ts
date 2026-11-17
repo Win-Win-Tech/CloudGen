@@ -1,7 +1,7 @@
 /**
  * CloudGen SmartPatrol solution catalog + USD commercial packages.
- * Competitive USD rate card (from prior INR card ≈ ₹83/USD, rounded):
- * Face/QR $25/mo · Visitor/Vehicle $36/mo (per site).
+ * USD rate card converted from INR Package-1 at ≈ ₹83/USD:
+ * Face/QR $24/mo · $289/yr · Visitor/Vehicle $36/mo · $434/yr.
  * Bundles discount vs à-la-carte. CCTV / Industry / Custom = quote.
  * Catalog is priced in USD. Checkout supports:
  * - USD + LUT (0% GST) for export
@@ -157,9 +157,9 @@ export type SolutionPackage = {
   quoteOnly?: boolean;
   /** Capacity / commercial unit from rate card. */
   unitLimit: string;
-  /** USD list price per month. */
+  /** USD list price per month (from original INR card ÷ USD_TO_INR). */
   usdMonthly: number | null;
-  /** USD billed annually (~10× monthly for competitive annual). */
+  /** USD billed for one year (from original INR annual ÷ USD_TO_INR; ~12× monthly). */
   usdAnnual: number | null;
   /** One-time setup / onboarding in USD. */
   usdSetup: number | null;
@@ -169,8 +169,10 @@ export type SolutionPackage = {
 };
 
 /**
- * Competitive USD packages (converted from INR Package-1, rounded):
- * Face/QR $25/mo · Visitor/Vehicle $36/mo · combos undercut à-la-carte.
+ * USD packages converted from original INR Package-1 at USD_TO_INR (default 83):
+ * Face/QR ₹2,000→$24/mo · ₹24,000→$289/yr
+ * Visitor/Vehicle ₹3,000→$36/mo · ₹36,000→$434/yr
+ * Annual stays ~12× monthly (same as INR card). Combos keep bundle discounts.
  * CCTV / Industry / Custom = quote.
  */
 export const SOLUTION_PACKAGES: SolutionPackage[] = [
@@ -179,8 +181,8 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     name: "Smart Patrol Attendance",
     blurb: "Face biometric attendance only — for sites that only need workforce punch.",
     unitLimit: "Upto 25 users",
-    usdMonthly: 25,
-    usdAnnual: 250,
+    usdMonthly: 24,
+    usdAnnual: 289,
     usdSetup: 12,
     solutionIds: ["face-attendance", ...COMMON_SOLUTION_IDS],
     highlights: [
@@ -196,8 +198,8 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     name: "Smart Patrol Checkpoint",
     blurb: "QR checkpoint scan patrolling only — proof of presence on routes.",
     unitLimit: "Upto 20 codes",
-    usdMonthly: 25,
-    usdAnnual: 250,
+    usdMonthly: 24,
+    usdAnnual: 289,
     usdSetup: 12,
     solutionIds: ["qr-patrolling", ...COMMON_SOLUTION_IDS],
     highlights: [
@@ -214,7 +216,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Visitor management only — digital check-in for a single site.",
     unitLimit: "Per site",
     usdMonthly: 36,
-    usdAnnual: 360,
+    usdAnnual: 434,
     usdSetup: 18,
     solutionIds: ["visitor-management", ...COMMON_SOLUTION_IDS],
     highlights: [
@@ -231,7 +233,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Vehicle management only — entry / exit control for a single site.",
     unitLimit: "Per site",
     usdMonthly: 36,
-    usdAnnual: 360,
+    usdAnnual: 434,
     usdSetup: 18,
     solutionIds: ["vehicle-management", ...COMMON_SOLUTION_IDS],
     highlights: [
@@ -248,12 +250,12 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Face biometric + QR patrol together — save vs buying both alone.",
     unitLimit: "25 users · 20 codes",
     usdMonthly: 42,
-    usdAnnual: 420,
+    usdAnnual: 506,
     usdSetup: 18,
     solutionIds: ["face-attendance", "qr-patrolling", ...COMMON_SOLUTION_IDS],
     highlights: [
       "Face biometric + QR patrol",
-      "List $50/mo → $42/mo",
+      "List $48/mo → $42/mo",
       "Ticket Complaints Tracking System",
       "Ideal attendance + checkpoint stack",
     ],
@@ -265,7 +267,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Visitor + vehicle gate stack for reception and parking control.",
     unitLimit: "Per site",
     usdMonthly: 66,
-    usdAnnual: 660,
+    usdAnnual: 795,
     usdSetup: 24,
     solutionIds: ["visitor-management", "vehicle-management", ...COMMON_SOLUTION_IDS],
     highlights: [
@@ -282,8 +284,8 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Full site stack — face, QR, visitor and vehicle in one competitive bundle.",
     popular: true,
     unitLimit: "25 users · 20 codes · per site gate",
-    usdMonthly: 99,
-    usdAnnual: 990,
+    usdMonthly: 102,
+    usdAnnual: 1204,
     usdSetup: 30,
     solutionIds: [
       "face-attendance",
@@ -294,7 +296,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     ],
     highlights: [
       "Face + QR + Visitor + Vehicle",
-      "List $122/mo → $99/mo",
+      "List $120/mo → $102/mo",
       "Ticket Complaints Tracking System",
       "Best value full site operations",
     ],
@@ -395,16 +397,16 @@ export const PAID_PACKAGE_IDS = SOLUTION_PACKAGES.filter((p) => !p.quoteOnly).ma
   (p) => p.id,
 ) as SolutionPackageId[];
 
-/** USD rate card unit bases (pro-rata beyond these). */
+/** USD rate card unit bases (pro-rata beyond these). Matches INR÷83. */
 export const RATE_CARD = {
   faceUsersBase: 25,
-  faceMonthly: 25,
-  faceAnnual: 250,
+  faceMonthly: 24,
+  faceAnnual: 289,
   qrCodesBase: 20,
-  qrMonthly: 25,
-  qrAnnual: 250,
+  qrMonthly: 24,
+  qrAnnual: 289,
   siteMonthly: 36,
-  siteAnnual: 360,
+  siteAnnual: 434,
   usersMaxOnline: 200,
   codesMaxOnline: 200,
   sitesMaxOnline: 10,

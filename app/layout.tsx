@@ -125,9 +125,9 @@ export default function RootLayout({
         offers: {
           "@type": "Offer",
           priceCurrency: "USD",
-          price: String(SOLUTION_PACKAGES[0].usdMonthly ?? 25),
+          price: String(SOLUTION_PACKAGES[0].usdMonthly ?? 24),
           description:
-            "From USD 25 / month for Smart Patrol Attendance (Ticket Complaints Tracking included)",
+            "From USD 24 / month for Smart Patrol Attendance (Ticket Complaints Tracking included)",
         },
         publisher: {
           "@type": "Organization",

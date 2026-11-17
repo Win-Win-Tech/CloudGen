@@ -48,13 +48,13 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - CCTV / Mobile — OCR (ID number, name, phone, address)
 
 ## Smart Patrol packages (USD catalog; checkout INR or USD mode)
-- Smart Patrol Attendance — $25/mo · $250/yr (upto 25 users)
-- Smart Patrol Checkpoint — $25/mo · $250/yr (upto 20 codes)
-- Smart Patrol Visitor — $36/mo · $360/yr (per site)
-- Smart Patrol Vehicle — $36/mo · $360/yr (per site)
-- Smart Patrol Workforce Duo (Face + QR) — $42/mo · $420/yr
-- Smart Patrol Gate Duo (Visitor + Vehicle) — $66/mo · $660/yr
-- Smart Patrol Site Ops Suite (all four) — $99/mo · $990/yr
+- Smart Patrol Attendance — $24/mo · $289/yr (upto 25 users)
+- Smart Patrol Checkpoint — $24/mo · $289/yr (upto 20 codes)
+- Smart Patrol Visitor — $36/mo · $434/yr (per site)
+- Smart Patrol Vehicle — $36/mo · $434/yr (per site)
+- Smart Patrol Workforce Duo (Face + QR) — $42/mo · $506/yr
+- Smart Patrol Gate Duo (Visitor + Vehicle) — $66/mo · $795/yr
+- Smart Patrol Site Ops Suite (all four) — $102/mo · $1,204/yr
 - Smart Patrol Vision AI / Industry Suite / Custom Build — Quote
 - Ticket Complaints Tracking included on every package
 - Checkout: USD + LUT (0% GST) or INR + 18% GST; Razorpay always collects INR
