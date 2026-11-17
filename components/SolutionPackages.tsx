@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  ANNUAL_MONTHS_CHARGED,
   formatUSD,
   SOLUTION_PACKAGES,
   solutionsForPackage,
@@ -68,8 +69,8 @@ export function SolutionPackages({ showCatalogHint = true }: Props) {
                     </span>
                   </p>
                   <p className="mt-1 text-sm font-semibold text-[var(--navy)]">
-                    {formatUSD(pkg.usdAnnual!)} / year · setup{" "}
-                    {formatUSD(pkg.usdSetup!)}
+                    {formatUSD(pkg.usdAnnual!)} / year ({ANNUAL_MONTHS_CHARGED} mo
+                    cost) · setup {formatUSD(pkg.usdSetup!)}
                   </p>
                 </>
               )}

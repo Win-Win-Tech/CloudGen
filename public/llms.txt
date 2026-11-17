@@ -57,6 +57,7 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - Smart Patrol Site Ops Suite (all four) — $199/mo · $1,990/yr
 - Smart Patrol Vision AI / Industry Suite / Custom Build — Quote
 - Ticket Complaints Tracking included on every package
+- Annual billing = 10× monthly (2 months free)
 - Checkout: USD + LUT (0% GST) or INR + 18% GST; Razorpay always collects INR
 
 ## What CloudGen delivers

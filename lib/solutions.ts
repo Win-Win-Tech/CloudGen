@@ -159,7 +159,7 @@ export type SolutionPackage = {
   unitLimit: string;
   /** USD list price per month (mid-market SaaS). */
   usdMonthly: number | null;
-  /** USD billed for one year (10× monthly ≈ 2 months free). */
+  /** USD billed for one year — always 10× monthly (2 months free). */
   usdAnnual: number | null;
   /** One-time setup / onboarding in USD. */
   usdSetup: number | null;
@@ -168,10 +168,17 @@ export type SolutionPackage = {
   bestFor: string;
 };
 
+/** Annual bill = 10 months of monthly price (2 months free). */
+export const ANNUAL_MONTHS_CHARGED = 10;
+
+export function annualFromMonthly(usdMonthly: number) {
+  return usdMonthly * ANNUAL_MONTHS_CHARGED;
+}
+
 /**
  * Mid-market competitive USD packages (aligned with global guard/visitor SaaS bands):
  * Face/QR $49 · Visitor/Vehicle $79 · Workforce Duo $89 · Gate Duo $139 · Site Ops $199.
- * Annual = 10× monthly. Combos undercut à-la-carte. CCTV / Industry / Custom = quote.
+ * Annual = 10× monthly only. Combos undercut à-la-carte. CCTV / Industry / Custom = quote.
  */
 export const SOLUTION_PACKAGES: SolutionPackage[] = [
   {
@@ -180,7 +187,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Face biometric attendance only — for sites that only need workforce punch.",
     unitLimit: "Upto 25 users",
     usdMonthly: 49,
-    usdAnnual: 490,
+    usdAnnual: annualFromMonthly(49),
     usdSetup: 49,
     solutionIds: ["face-attendance", ...COMMON_SOLUTION_IDS],
     highlights: [
@@ -197,7 +204,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "QR checkpoint scan patrolling only — proof of presence on routes.",
     unitLimit: "Upto 20 codes",
     usdMonthly: 49,
-    usdAnnual: 490,
+    usdAnnual: annualFromMonthly(49),
     usdSetup: 49,
     solutionIds: ["qr-patrolling", ...COMMON_SOLUTION_IDS],
     highlights: [
@@ -214,7 +221,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Visitor management only — digital check-in for a single site.",
     unitLimit: "Per site",
     usdMonthly: 79,
-    usdAnnual: 790,
+    usdAnnual: annualFromMonthly(79),
     usdSetup: 79,
     solutionIds: ["visitor-management", ...COMMON_SOLUTION_IDS],
     highlights: [
@@ -231,7 +238,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Vehicle management only — entry / exit control for a single site.",
     unitLimit: "Per site",
     usdMonthly: 79,
-    usdAnnual: 790,
+    usdAnnual: annualFromMonthly(79),
     usdSetup: 79,
     solutionIds: ["vehicle-management", ...COMMON_SOLUTION_IDS],
     highlights: [
@@ -248,7 +255,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Face biometric + QR patrol together — save vs buying both alone.",
     unitLimit: "25 users · 20 codes",
     usdMonthly: 89,
-    usdAnnual: 890,
+    usdAnnual: annualFromMonthly(89),
     usdSetup: 79,
     solutionIds: ["face-attendance", "qr-patrolling", ...COMMON_SOLUTION_IDS],
     highlights: [
@@ -265,7 +272,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     blurb: "Visitor + vehicle gate stack for reception and parking control.",
     unitLimit: "Per site",
     usdMonthly: 139,
-    usdAnnual: 1390,
+    usdAnnual: annualFromMonthly(139),
     usdSetup: 99,
     solutionIds: ["visitor-management", "vehicle-management", ...COMMON_SOLUTION_IDS],
     highlights: [
@@ -283,7 +290,7 @@ export const SOLUTION_PACKAGES: SolutionPackage[] = [
     popular: true,
     unitLimit: "25 users · 20 codes · per site gate",
     usdMonthly: 199,
-    usdAnnual: 1990,
+    usdAnnual: annualFromMonthly(199),
     usdSetup: 149,
     solutionIds: [
       "face-attendance",
@@ -399,12 +406,12 @@ export const PAID_PACKAGE_IDS = SOLUTION_PACKAGES.filter((p) => !p.quoteOnly).ma
 export const RATE_CARD = {
   faceUsersBase: 25,
   faceMonthly: 49,
-  faceAnnual: 490,
+  faceAnnual: annualFromMonthly(49),
   qrCodesBase: 20,
   qrMonthly: 49,
-  qrAnnual: 490,
+  qrAnnual: annualFromMonthly(49),
   siteMonthly: 79,
-  siteAnnual: 790,
+  siteAnnual: annualFromMonthly(79),
   usersMaxOnline: 200,
   codesMaxOnline: 200,
   sitesMaxOnline: 10,

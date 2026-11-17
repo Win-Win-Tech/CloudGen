@@ -8,6 +8,7 @@ import {
   type DisplayCurrencyCode,
 } from "@/lib/fxDisplay";
 import {
+  ANNUAL_MONTHS_CHARGED,
   CODE_STEPS,
   formatUSD,
   formatINR,
@@ -374,8 +375,10 @@ export function PackagePricingCalculator() {
             ) : (
               <>
                 <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-[var(--steel)]">
-                  {billing === "annual" ? "Billed annually" : "Billed monthly"} ·{" "}
-                  {currency === "USD" ? "Export (LUT)" : "India (GST)"}
+                  {billing === "annual"
+                    ? `Billed annually · ${ANNUAL_MONTHS_CHARGED} months cost (2 free)`
+                    : "Billed monthly"}{" "}
+                  · {currency === "USD" ? "Export (LUT)" : "India (GST)"}
                 </p>
                 <p className="display text-4xl font-extrabold text-[var(--ink)]">
                   {currency === "USD"
