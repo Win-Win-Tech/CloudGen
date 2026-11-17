@@ -38,68 +38,6 @@ const copy: Record<Kind, { title: string; submit: string; endpoint: string }> = 
   },
 };
 
-/**
- * Browser FormSubmit fallback when Resend/SMTP are not configured.
- * Uses the activated FormSubmit hash (not a naked email).
- */
-const FORMSUBMIT_ID =
-  process.env.NEXT_PUBLIC_FORMSUBMIT_ID || "f97908ddf0fc1124bde6f9056777f4b0";
-
-/** Fire-and-forget — UI does not wait; keepalive lets the request finish. */
-function notifySalesInbox(payload: Record<string, FormDataEntryValue>) {
-  const fullName = String(payload.fullName || "").trim();
-  const email = String(payload.email || "").trim();
-  const phone = String(payload.phone || "").trim() || "—";
-  const organization = String(payload.organization || "").trim() || "—";
-  const interest = String(payload.interest || "").trim() || "—";
-  const sites = String(payload.sites || "").trim() || "—";
-  const kind = String(payload.kind || "").trim() || "demo";
-  const userMessage = String(payload.message || "").trim() || "—";
-
-  const subject =
-    kind === "contact"
-      ? `New contact — ${fullName || site.company}`
-      : kind === "register"
-        ? `New registration — ${fullName || site.product}`
-        : `New demo request — ${fullName || site.product}`;
-
-  // Put every field in `message` so the email always shows complete lead details.
-  const details = [
-    `Kind: ${kind}`,
-    `Name: ${fullName}`,
-    `Email: ${email}`,
-    `Phone: ${phone}`,
-    `Organization: ${organization}`,
-    `Interest: ${interest}`,
-    `Sites: ${sites}`,
-    `Message: ${userMessage}`,
-    `Source: ${site.url}`,
-  ].join("\n");
-
-  void fetch(`https://formsubmit.co/ajax/${FORMSUBMIT_ID}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    keepalive: true,
-    body: JSON.stringify({
-      name: fullName,
-      email,
-      phone,
-      organization,
-      interest,
-      sites,
-      kind,
-      message: details,
-      _subject: subject,
-      _template: "table",
-      _replyto: email,
-      _captcha: "false",
-    }),
-  }).catch(() => undefined);
-}
-
 export function LeadForm({
   kind,
   defaultInterest = "Smart Patrol Site Ops Suite",
@@ -129,17 +67,14 @@ export function LeadForm({
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Request failed");
 
-      // Don't block the UI on FormSubmit — lead is already saved by the API.
-      if (!data.mailed && kind !== "demo-test") {
-        notifySalesInbox({ ...payload, kind });
-      }
-
       setStatus("done");
       setMessage(
         data.message ||
           (kind === "contact"
             ? "Message received. Our team will follow up shortly."
-            : "Demo request received. We will contact you to schedule a walkthrough."),
+            : kind === "register"
+              ? "Registration received. Our team will share onboarding next steps shortly."
+              : "Demo request received. We will contact you to schedule a walkthrough."),
       );
       if (data.demo) setDemo(data.demo as DemoPayload);
       formEl.reset();

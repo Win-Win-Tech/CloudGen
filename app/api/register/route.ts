@@ -6,7 +6,7 @@ import { sendLeadEmail } from "@/lib/mail";
 const schema = z.object({
   fullName: z.string().min(2),
   email: z.string().email(),
-  phone: z.string().optional(),
+  phone: z.string().min(7, "Mobile number is required"),
   organization: z.string().min(2),
   sites: z.string().optional(),
 });

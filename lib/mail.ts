@@ -33,6 +33,8 @@ function subjectFor(kind: string, fullName?: string) {
 
 function textBody(payload: LeadMailPayload) {
   return [
+    "NEW LEAD DETAILS",
+    "----------------",
     `Kind: ${payload.kind}`,
     `Name: ${payload.fullName}`,
     `Email: ${payload.email}`,
@@ -123,7 +125,7 @@ async function sendWithSmtp(payload: LeadMailPayload) {
   const pass = process.env.SMTP_PASS?.trim();
   if (!host || !user || !pass) return false;
 
-  const port = Number(process.env.SMTP_PORT || 587);
+  const port = Number(process.env.SMTP_PORT || 465);
   const secure = process.env.SMTP_SECURE === "true" || port === 465;
   const from =
     process.env.MAIL_FROM?.trim() ||
@@ -134,6 +136,9 @@ async function sendWithSmtp(payload: LeadMailPayload) {
     port,
     secure,
     auth: { user, pass },
+    connectionTimeout: 12_000,
+    greetingTimeout: 12_000,
+    socketTimeout: 20_000,
   });
 
   await transporter.sendMail({

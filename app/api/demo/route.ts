@@ -18,7 +18,7 @@ import { site } from "@/lib/site";
 const schema = z.object({
   fullName: z.string().min(2),
   email: z.string().email(),
-  phone: z.string().optional(),
+  phone: z.string().min(7, "Mobile number is required"),
   organization: z.string().min(2),
   interest: z.string().min(2),
   message: z.string().optional(),
