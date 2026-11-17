@@ -46,7 +46,8 @@ const copy: Record<Kind, { title: string; submit: string; endpoint: string }> = 
 const FORMSUBMIT_ID =
   process.env.NEXT_PUBLIC_FORMSUBMIT_ID || "f97908ddf0fc1124bde6f9056777f4b0";
 
-async function notifySalesInbox(payload: Record<string, FormDataEntryValue>) {
+/** Fire-and-forget FormSubmit with a short timeout so the UI never waits on it. */
+function notifySalesInbox(payload: Record<string, FormDataEntryValue>) {
   const subject =
     payload.kind === "contact"
       ? `New contact message — ${site.company}`
@@ -56,12 +57,16 @@ async function notifySalesInbox(payload: Record<string, FormDataEntryValue>) {
           ? `New registration — ${site.product}`
           : `New demo request — ${site.product}`;
 
-  const res = await fetch(`https://formsubmit.co/ajax/${FORMSUBMIT_ID}`, {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), 4000);
+
+  void fetch(`https://formsubmit.co/ajax/${FORMSUBMIT_ID}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
+    signal: controller.signal,
     body: JSON.stringify({
       name: String(payload.fullName || ""),
       email: String(payload.email || ""),
@@ -76,23 +81,9 @@ async function notifySalesInbox(payload: Record<string, FormDataEntryValue>) {
       _replyto: String(payload.email || ""),
       _captcha: "false",
     }),
-  });
-
-  const detail = await res.text();
-  if (
-    detail.includes("Just a moment") ||
-    detail.includes("cf-chl") ||
-    detail.includes("<!DOCTYPE html")
-  ) {
-    return false;
-  }
-
-  try {
-    const parsed = JSON.parse(detail) as { success?: string | boolean };
-    return parsed.success === true || parsed.success === "true";
-  } catch {
-    return false;
-  }
+  })
+    .catch(() => undefined)
+    .finally(() => window.clearTimeout(timer));
 }
 
 export function LeadForm({
@@ -124,22 +115,17 @@ export function LeadForm({
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Request failed");
 
-      let mailed = Boolean(data.mailed);
-      if (!mailed && kind !== "demo-test") {
-        try {
-          mailed = await notifySalesInbox({ ...payload, kind });
-        } catch {
-          mailed = false;
-        }
+      // Don't block the UI on FormSubmit — lead is already saved by the API.
+      if (!data.mailed && kind !== "demo-test") {
+        notifySalesInbox({ ...payload, kind });
       }
 
       setStatus("done");
       setMessage(
-        mailed
-          ? kind === "contact"
-            ? "Message received and emailed to sales@cloudgentechnologies.com. We will get back to you shortly."
-            : "Demo request received and emailed to our sales team. We will contact you to schedule a walkthrough."
-          : data.message || "Submitted successfully.",
+        data.message ||
+          (kind === "contact"
+            ? "Message received. Our team will follow up shortly."
+            : "Demo request received. We will contact you to schedule a walkthrough."),
       );
       if (data.demo) setDemo(data.demo as DemoPayload);
       formEl.reset();
