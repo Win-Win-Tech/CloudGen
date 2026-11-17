@@ -3,8 +3,10 @@
  * Competitive USD rate card (from prior INR card ≈ ₹83/USD, rounded):
  * Face/QR $25/mo · Visitor/Vehicle $36/mo (per site).
  * Bundles discount vs à-la-carte. CCTV / Industry / Custom = quote.
- * Razorpay checkout converts USD → INR via USD_TO_INR.
- * USD packages are zero-rated under LUT (no GST).
+ * Catalog is priced in USD. Checkout supports:
+ * - USD + LUT (0% GST) for export
+ * - INR + 18% GST for domestic India
+ * Razorpay always collects INR (USD × USD_TO_INR [+ GST if domestic]).
  */
 
 export type SolutionPlatform =
@@ -385,6 +387,9 @@ export const VALUE_PROPS = [
 ] as const;
 
 export type PackageBilling = "monthly" | "annual";
+/** Billing currency preference — drives tax mode (GST vs LUT). */
+export type PackageCurrency = "INR" | "USD";
+export type PackageTaxMode = "gst" | "lut";
 
 export const PAID_PACKAGE_IDS = SOLUTION_PACKAGES.filter((p) => !p.quoteOnly).map(
   (p) => p.id,
@@ -553,9 +558,7 @@ export function usdToInr(usd: number) {
   return Math.round(usd * USD_TO_INR);
 }
 
-/**
- * Legacy helper (EUR plans). USD Smart Patrol packages are LUT zero-rated — no GST.
- */
+/** Domestic India GST on INR checkout. Export USD uses LUT (0%). */
 export const GST_RATE = 0.18;
 export const GST_PERCENT_LABEL = "18%";
 
@@ -567,6 +570,10 @@ export function applyGst(taxableInr: number) {
     gst,
     total: taxable + gst,
   };
+}
+
+export function normalizePackageCurrency(value?: string | null): PackageCurrency {
+  return value?.toUpperCase() === "INR" ? "INR" : "USD";
 }
 
 function listPeriodUsd(
@@ -598,21 +605,26 @@ function listPeriodUsd(
 /**
  * Pro-rata quote from USD rate card + published bundle factor.
  * Beyond online max users/codes/sites → needsQuote.
- * INR fields are derived for Razorpay (USD × USD_TO_INR). No GST (LUT).
+ * currency=USD → LUT (0% GST); currency=INR → domestic 18% GST on Razorpay INR.
  */
 export function quotePackage(
   packageId: SolutionPackageId,
   billing: PackageBilling,
   qtyInput?: Partial<PackageQty> & { sites?: number },
+  currency: PackageCurrency = "USD",
 ) {
   const pkg = getPackage(packageId);
   const dims = packageDimensions(packageId);
   const qty = normalizePackageQty(dims, qtyInput);
+  const selectedCurrency = normalizePackageCurrency(currency);
+  const taxMode: PackageTaxMode = selectedCurrency === "INR" ? "gst" : "lut";
 
   if (pkg.quoteOnly || pkg.usdMonthly == null || pkg.usdAnnual == null || pkg.usdSetup == null) {
     return {
       pkg,
       billing,
+      currency: selectedCurrency,
+      taxMode,
       qty,
       dims,
       usdPeriod: null as number | null,
@@ -640,6 +652,8 @@ export function quotePackage(
     return {
       pkg,
       billing,
+      currency: selectedCurrency,
+      taxMode,
       qty,
       dims,
       usdPeriod: null as number | null,
@@ -669,10 +683,16 @@ export function quotePackage(
   const inrPeriod = usdToInr(usdPeriod);
   const inrSetup = usdToInr(usdSetup);
   const inrSubtotal = inrPeriod + inrSetup;
+  const taxed =
+    taxMode === "gst"
+      ? applyGst(inrSubtotal)
+      : { taxable: inrSubtotal, gst: 0, total: inrSubtotal };
 
   return {
     pkg,
     billing,
+    currency: selectedCurrency,
+    taxMode,
     qty,
     dims,
     usdPeriod,
@@ -680,11 +700,10 @@ export function quotePackage(
     usdListPeriod: Math.round(listPeriod),
     inrPeriod,
     inrSetup,
-    inrSubtotal,
-    /** USD packages are LUT zero-rated — GST not charged. */
-    inrGst: 0,
-    /** Razorpay payable = INR(period + setup), no GST. */
-    inrDue: inrSubtotal,
+    inrSubtotal: taxed.taxable,
+    inrGst: taxed.gst,
+    /** Razorpay payable in INR (with GST only for domestic INR mode). */
+    inrDue: taxed.total,
     listPeriod: Math.round(listPeriod),
     factor,
     needsQuote: false as const,

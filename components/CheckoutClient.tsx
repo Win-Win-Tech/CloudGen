@@ -10,10 +10,11 @@ import {
 } from "@/lib/pricing";
 import { site } from "@/lib/site";
 import {
-  formatINR as formatPackageINR,
+  formatUSD,
   GST_PERCENT_LABEL,
   qtySummary,
   quotePackage,
+  type PackageCurrency,
   SolutionPackageId,
 } from "@/lib/solutions";
 
@@ -36,6 +37,7 @@ type Props = {
   initialVisitorSites?: number;
   initialVehicleSites?: number;
   initialBilling: BillingCycle;
+  initialCurrency?: PackageCurrency;
   razorpayKeyId: string;
   razorpayReady: boolean;
 };
@@ -64,6 +66,7 @@ export function CheckoutClient({
   initialVisitorSites = 1,
   initialVehicleSites = 1,
   initialBilling,
+  initialCurrency = "USD",
   razorpayKeyId,
   razorpayReady,
 }: Props) {
@@ -75,6 +78,7 @@ export function CheckoutClient({
   const [visitorSites] = useState(initialVisitorSites);
   const [vehicleSites] = useState(initialVehicleSites);
   const [billing] = useState<BillingCycle>(initialBilling);
+  const [currency, setCurrency] = useState<PackageCurrency>(initialCurrency);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -88,36 +92,44 @@ export function CheckoutClient({
   );
   const packageQuote = useMemo(
     () =>
-      quotePackage(packageId, billing, {
-        users,
-        codes,
-        visitorSites,
-        vehicleSites,
-      }),
-    [packageId, billing, users, codes, visitorSites, vehicleSites],
+      quotePackage(
+        packageId,
+        billing,
+        {
+          users,
+          codes,
+          visitorSites,
+          vehicleSites,
+        },
+        currency,
+      ),
+    [packageId, billing, users, codes, visitorSites, vehicleSites, currency],
   );
 
   const summary =
     mode === "package"
       ? {
           title: packageQuote.pkg.name,
-          subtitle: `${qtySummary(packageQuote.dims, packageQuote.qty)} · ${billing}`,
+          subtitle: `${qtySummary(packageQuote.dims, packageQuote.qty)} · ${billing} · ${currency}`,
           periodInr: packageQuote.inrPeriod,
           setupInr: packageQuote.inrSetup,
           subtotalInr: packageQuote.inrSubtotal,
           gstInr: packageQuote.inrGst,
           payInr: packageQuote.inrDue,
+          taxMode: packageQuote.taxMode,
           usdList:
             packageQuote.usdPeriod != null
-              ? `${packageQuote.usdPeriod} USD period` +
+              ? `${formatUSD(packageQuote.usdPeriod)} period` +
                 (packageQuote.usdSetup != null
-                  ? ` + ${packageQuote.usdSetup} USD setup`
+                  ? ` + ${formatUSD(packageQuote.usdSetup)} setup`
                   : "")
               : null,
           eurList: null as string | null,
           detail: packageQuote.needsQuote
             ? "This package requires a custom quote from sales."
-            : "USD package pricing is converted to INR at checkout. LUT export supply — GST is not charged.",
+            : currency === "USD"
+              ? "USD / export billing under LUT — GST nil. Razorpay collects the INR equivalent."
+              : "Domestic INR billing with 18% GST. Razorpay collects INR.",
           canPay: !packageQuote.needsQuote && Boolean(packageQuote.inrDue),
         }
       : {
@@ -128,6 +140,7 @@ export function CheckoutClient({
           subtotalInr: planQuote.inrSubtotal,
           gstInr: planQuote.inrGst,
           payInr: planQuote.inrDue,
+          taxMode: "gst" as const,
           usdList: null as string | null,
           eurList: planQuote.needsQuote ? null : formatEUR(planQuote.eurDue!),
           detail:
@@ -155,6 +168,7 @@ export function CheckoutClient({
             ? {
                 packageId,
                 billing,
+                currency,
                 users,
                 codes,
                 visitorSites,
@@ -344,6 +358,38 @@ export function CheckoutClient({
       <form className="card-panel space-y-4 p-6" onSubmit={onSubmit}>
         <p className="eyebrow">Billing details</p>
         <h2 className="display text-2xl font-bold">Subscriber information</h2>
+        {mode === "package" ? (
+          <div>
+            <p className="text-sm font-semibold">Billing currency</p>
+            <div className="mt-2 inline-flex rounded-md border border-[var(--line)] bg-white p-1">
+              <button
+                type="button"
+                className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
+                  currency === "USD"
+                    ? "bg-[var(--teal-deep)] text-white"
+                    : "text-[var(--steel)]"
+                }`}
+                onClick={() => setCurrency("USD")}
+              >
+                USD · LUT (0% GST)
+              </button>
+              <button
+                type="button"
+                className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
+                  currency === "INR"
+                    ? "bg-[var(--teal-deep)] text-white"
+                    : "text-[var(--steel)]"
+                }`}
+                onClick={() => setCurrency("INR")}
+              >
+                INR · +18% GST
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-[var(--steel)]">
+              Choose USD for export (LUT). Choose INR for domestic India billing with GST.
+            </p>
+          </div>
+        ) : null}
         <label className="block text-sm font-semibold">
           Full name
           <input className="input mt-1" required value={fullName} onChange={(e) => setFullName(e.target.value)} />

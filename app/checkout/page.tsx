@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { CheckoutClient } from "@/components/CheckoutClient";
 import { BillingCycle, PlanId } from "@/lib/pricing";
 import { getRazorpayKeyId, razorpayConfigured } from "@/lib/razorpay";
-import { SOLUTION_PACKAGES, SolutionPackageId } from "@/lib/solutions";
+import {
+  normalizePackageCurrency,
+  SOLUTION_PACKAGES,
+  SolutionPackageId,
+} from "@/lib/solutions";
 
 export const metadata: Metadata = {
   title: "Checkout",
@@ -25,10 +29,12 @@ export default async function CheckoutPage({
     sites?: string;
     visitorSites?: string;
     vehicleSites?: string;
+    currency?: string;
   }>;
 }) {
   const params = await searchParams;
   const billing = (params.billing === "annual" ? "annual" : "monthly") as BillingCycle;
+  const currency = normalizePackageCurrency(params.currency);
   const packageId = PACKAGE_IDS.includes(params.package as SolutionPackageId)
     ? (params.package as SolutionPackageId)
     : null;
@@ -60,6 +66,7 @@ export default async function CheckoutPage({
         initialVisitorSites={visitorSites}
         initialVehicleSites={vehicleSites}
         initialBilling={billing}
+        initialCurrency={currency}
         razorpayKeyId={getRazorpayKeyId()}
         razorpayReady={razorpayConfigured()}
       />

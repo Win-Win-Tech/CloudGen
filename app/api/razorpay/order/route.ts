@@ -4,7 +4,9 @@ import { sql } from "@/lib/db";
 import { quotePlan } from "@/lib/pricing";
 import { getRazorpay, getRazorpayKeyId, razorpayConfigured } from "@/lib/razorpay";
 import {
+  applyGst,
   GST_PERCENT_LABEL,
+  normalizePackageCurrency,
   PAID_PACKAGE_IDS,
   qtySummary,
   quotePackage,
@@ -23,6 +25,7 @@ const schema = z.object({
   visitorSites: z.number().int().min(1).max(50).optional(),
   vehicleSites: z.number().int().min(1).max(50).optional(),
   billing: z.enum(["monthly", "annual"]),
+  currency: z.enum(["INR", "USD"]).optional().default("USD"),
   fullName: z.string().min(2),
   email: z.string().email(),
   phone: z.string().optional(),
@@ -43,13 +46,19 @@ export async function POST(request: Request) {
     let description: string;
 
     if (body.packageId) {
-      const quote = quotePackage(body.packageId as SolutionPackageId, body.billing, {
-        users: body.users,
-        codes: body.codes,
-        sites: body.sites,
-        visitorSites: body.visitorSites,
-        vehicleSites: body.vehicleSites,
-      });
+      const currency = normalizePackageCurrency(body.currency);
+      const quote = quotePackage(
+        body.packageId as SolutionPackageId,
+        body.billing,
+        {
+          users: body.users,
+          codes: body.codes,
+          sites: body.sites,
+          visitorSites: body.visitorSites,
+          vehicleSites: body.vehicleSites,
+        },
+        currency,
+      );
       if (
         quote.needsQuote ||
         quote.inrDue == null ||
@@ -60,9 +69,12 @@ export async function POST(request: Request) {
           { status: 400 },
         );
       }
-      // USD packages: LUT zero-rated — charge INR conversion only, no GST.
       amountInr =
-        body.includeSetup === false ? quote.inrPeriod : quote.inrDue;
+        body.includeSetup === false
+          ? quote.taxMode === "gst"
+            ? applyGst(quote.inrPeriod).total
+            : quote.inrPeriod
+          : quote.inrDue;
       amountUsd =
         body.includeSetup === false
           ? quote.usdPeriod
@@ -70,7 +82,10 @@ export async function POST(request: Request) {
             ? quote.usdPeriod + quote.usdSetup
             : quote.usdPeriod;
       planKey = `pkg:${body.packageId}`;
-      description = `${quote.pkg.name} · ${qtySummary(quote.dims, quote.qty)} · ${body.billing} · USD · LUT (0% GST)`;
+      description =
+        quote.taxMode === "lut"
+          ? `${quote.pkg.name} · ${qtySummary(quote.dims, quote.qty)} · ${body.billing} · USD · LUT (0% GST)`
+          : `${quote.pkg.name} · ${qtySummary(quote.dims, quote.qty)} · ${body.billing} · INR · GST ${GST_PERCENT_LABEL}`;
       guards = quote.qty.users;
     } else if (body.planId && body.guards) {
       const quote = quotePlan(body.planId, body.guards, body.billing);
@@ -131,6 +146,12 @@ export async function POST(request: Request) {
         planId: planKey,
         guards: String(guards),
         billing: body.billing,
+        currency: body.packageId ? normalizePackageCurrency(body.currency) : "",
+        taxMode: body.packageId
+          ? normalizePackageCurrency(body.currency) === "INR"
+            ? "gst"
+            : "lut"
+          : "",
         organization: body.organization,
         eurDue: amountEur != null ? String(amountEur) : "",
         usdDue: amountUsd != null ? String(amountUsd) : "",

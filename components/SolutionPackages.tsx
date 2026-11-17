@@ -21,7 +21,8 @@ export function SolutionPackages({ showCatalogHint = true }: Props) {
           <p className="mt-3 text-[var(--steel)]">
             Buy a single Smart Patrol module, combine Face + QR, or take Site Ops Suite.
             Ticket Complaints Tracking is included on every package. Vision AI, Industry
-            Suite and Custom Build are quote-only. Checkout converts USD to INR for Razorpay (LUT — no GST).
+            Suite and Custom Build are quote-only. Choose USD (LUT) or INR (+GST) on Pricing /
+            Checkout; Razorpay always collects INR.
           </p>
         </div>
       ) : null}

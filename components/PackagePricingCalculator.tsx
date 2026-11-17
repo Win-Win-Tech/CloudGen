@@ -6,6 +6,7 @@ import {
   CODE_STEPS,
   formatUSD,
   formatINR,
+  GST_PERCENT_LABEL,
   packageDimensions,
   quotePackage,
   qtySummary,
@@ -14,6 +15,7 @@ import {
   SOLUTION_PACKAGES,
   USER_STEPS,
   type PackageBilling,
+  type PackageCurrency,
   type SolutionPackageId,
 } from "@/lib/solutions";
 
@@ -78,6 +80,7 @@ function CapacitySlider({
 export function PackagePricingCalculator() {
   const [packageId, setPackageId] = useState<SolutionPackageId>("site-ops");
   const [billing, setBilling] = useState<PackageBilling>("annual");
+  const [currency, setCurrency] = useState<PackageCurrency>("USD");
   const [userIdx, setUserIdx] = useState(0);
   const [codeIdx, setCodeIdx] = useState(0);
   const [visitorSiteIdx, setVisitorSiteIdx] = useState(0);
@@ -95,8 +98,8 @@ export function PackagePricingCalculator() {
   );
 
   const quote = useMemo(
-    () => quotePackage(packageId, billing, qty),
-    [packageId, billing, qty],
+    () => quotePackage(packageId, billing, qty, currency),
+    [packageId, billing, qty, currency],
   );
 
   const selected = quote.pkg;
@@ -118,7 +121,7 @@ export function PackagePricingCalculator() {
 
   const checkoutHref =
     !quote.needsQuote && quote.inrDue != null
-      ? `/checkout?package=${packageId}&billing=${billing}&users=${qty.users}&codes=${qty.codes}&visitorSites=${qty.visitorSites}&vehicleSites=${qty.vehicleSites}`
+      ? `/checkout?package=${packageId}&billing=${billing}&currency=${currency}&users=${qty.users}&codes=${qty.codes}&visitorSites=${qty.visitorSites}&vehicleSites=${qty.vehicleSites}`
       : `/demo?interest=${encodeURIComponent(selected.name + " quote")}`;
 
   return (
@@ -307,58 +310,101 @@ export function PackagePricingCalculator() {
               {qtySummary(dims, qty)}
             </p>
 
-            <div className="mt-5 inline-flex rounded-md border border-[var(--line)] bg-white p-1">
-              <button
-                type="button"
-                className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
-                  billing === "annual"
-                    ? "bg-[var(--ink)] text-white"
-                    : "text-[var(--steel)]"
-                }`}
-                onClick={() => setBilling("annual")}
-              >
-                Annually
-              </button>
-              <button
-                type="button"
-                className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
-                  billing === "monthly"
-                    ? "bg-[var(--ink)] text-white"
-                    : "text-[var(--steel)]"
-                }`}
-                onClick={() => setBilling("monthly")}
-              >
-                Monthly
-              </button>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <div className="inline-flex rounded-md border border-[var(--line)] bg-white p-1">
+                <button
+                  type="button"
+                  className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
+                    currency === "USD"
+                      ? "bg-[var(--teal-deep)] text-white"
+                      : "text-[var(--steel)]"
+                  }`}
+                  onClick={() => setCurrency("USD")}
+                >
+                  USD · LUT
+                </button>
+                <button
+                  type="button"
+                  className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
+                    currency === "INR"
+                      ? "bg-[var(--teal-deep)] text-white"
+                      : "text-[var(--steel)]"
+                  }`}
+                  onClick={() => setCurrency("INR")}
+                >
+                  INR · GST
+                </button>
+              </div>
+              <div className="inline-flex rounded-md border border-[var(--line)] bg-white p-1">
+                <button
+                  type="button"
+                  className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
+                    billing === "annual"
+                      ? "bg-[var(--ink)] text-white"
+                      : "text-[var(--steel)]"
+                  }`}
+                  onClick={() => setBilling("annual")}
+                >
+                  Annually
+                </button>
+                <button
+                  type="button"
+                  className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
+                    billing === "monthly"
+                      ? "bg-[var(--ink)] text-white"
+                      : "text-[var(--steel)]"
+                  }`}
+                  onClick={() => setBilling("monthly")}
+                >
+                  Monthly
+                </button>
+              </div>
             </div>
 
-            {quote.needsQuote || quote.usdPeriod == null ? (
+            {quote.needsQuote || quote.usdPeriod == null || quote.inrPeriod == null ? (
               <p className="display mt-6 text-3xl font-extrabold">Custom quote</p>
             ) : (
               <>
                 <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-[var(--steel)]">
-                  {billing === "annual" ? "Billed annually" : "Billed monthly"}
+                  {billing === "annual" ? "Billed annually" : "Billed monthly"} ·{" "}
+                  {currency === "USD" ? "Export (LUT)" : "India (GST)"}
                 </p>
                 <p className="display text-4xl font-extrabold text-[var(--ink)]">
-                  {formatUSD(quote.usdPeriod)}
+                  {currency === "USD"
+                    ? formatUSD(quote.usdPeriod)
+                    : formatINR(quote.inrPeriod)}
                   <span className="ml-1 text-sm font-semibold text-[var(--steel)]">
                     /{billing === "annual" ? "yr" : "mo"}
                   </span>
                 </p>
-                {quote.usdListPeriod != null &&
+                {currency === "USD" &&
+                quote.usdListPeriod != null &&
                 quote.usdListPeriod > quote.usdPeriod ? (
                   <p className="mt-1 text-sm text-[var(--steel)] line-through">
                     List {formatUSD(quote.usdListPeriod)}
                   </p>
                 ) : null}
                 <p className="mt-2 text-sm font-semibold text-[var(--navy)]">
-                  + setup {formatUSD(quote.usdSetup!)} (one-time)
+                  + setup{" "}
+                  {currency === "USD"
+                    ? formatUSD(quote.usdSetup!)
+                    : formatINR(quote.inrSetup!)}{" "}
+                  (one-time)
                 </p>
-                <p className="mt-1 text-sm text-[var(--navy)]">
+                {currency === "INR" && quote.inrGst != null && quote.inrGst > 0 ? (
+                  <p className="mt-1 text-sm text-[var(--navy)]">
+                    + GST {GST_PERCENT_LABEL} {formatINR(quote.inrGst)}
+                  </p>
+                ) : (
+                  <p className="mt-1 text-sm text-[var(--navy)]">GST Nil (LUT)</p>
+                )}
+                <p className="mt-2 text-sm font-bold text-[var(--ink)]">
                   Razorpay due {formatINR(quote.inrDue!)}
                 </p>
                 <p className="mt-1 text-xs text-[var(--steel)]">
-                  USD list converted to INR at checkout. LUT export — no GST.
+                  {currency === "USD"
+                    ? "USD list → INR at checkout. Export under LUT — no GST."
+                    : "Domestic INR billing with 18% GST. Paid via Razorpay in INR."}
                 </p>
               </>
             )}
