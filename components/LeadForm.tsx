@@ -39,26 +39,42 @@ const copy: Record<Kind, { title: string; submit: string; endpoint: string }> = 
 };
 
 /**
- * Browser-side FormSubmit fallback (when Resend/SMTP are not configured).
- * Use the FormSubmit activation hash — not a naked email — after clicking
- * "Activate Form" in the first FormSubmit email.
+ * Browser FormSubmit fallback when Resend/SMTP are not configured.
+ * Uses the activated FormSubmit hash (not a naked email).
  */
 const FORMSUBMIT_ID =
   process.env.NEXT_PUBLIC_FORMSUBMIT_ID || "f97908ddf0fc1124bde6f9056777f4b0";
 
-/** Fire-and-forget FormSubmit with a short timeout so the UI never waits on it. */
+/** Fire-and-forget — UI does not wait; keepalive lets the request finish. */
 function notifySalesInbox(payload: Record<string, FormDataEntryValue>) {
-  const subject =
-    payload.kind === "contact"
-      ? `New contact message — ${site.company}`
-      : payload.kind === "demo-test"
-        ? `New demo test request — ${site.product}`
-        : payload.kind === "register"
-          ? `New registration — ${site.product}`
-          : `New demo request — ${site.product}`;
+  const fullName = String(payload.fullName || "").trim();
+  const email = String(payload.email || "").trim();
+  const phone = String(payload.phone || "").trim() || "—";
+  const organization = String(payload.organization || "").trim() || "—";
+  const interest = String(payload.interest || "").trim() || "—";
+  const sites = String(payload.sites || "").trim() || "—";
+  const kind = String(payload.kind || "").trim() || "demo";
+  const userMessage = String(payload.message || "").trim() || "—";
 
-  const controller = new AbortController();
-  const timer = window.setTimeout(() => controller.abort(), 4000);
+  const subject =
+    kind === "contact"
+      ? `New contact — ${fullName || site.company}`
+      : kind === "register"
+        ? `New registration — ${fullName || site.product}`
+        : `New demo request — ${fullName || site.product}`;
+
+  // Put every field in `message` so the email always shows complete lead details.
+  const details = [
+    `Kind: ${kind}`,
+    `Name: ${fullName}`,
+    `Email: ${email}`,
+    `Phone: ${phone}`,
+    `Organization: ${organization}`,
+    `Interest: ${interest}`,
+    `Sites: ${sites}`,
+    `Message: ${userMessage}`,
+    `Source: ${site.url}`,
+  ].join("\n");
 
   void fetch(`https://formsubmit.co/ajax/${FORMSUBMIT_ID}`, {
     method: "POST",
@@ -66,24 +82,22 @@ function notifySalesInbox(payload: Record<string, FormDataEntryValue>) {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    signal: controller.signal,
+    keepalive: true,
     body: JSON.stringify({
-      name: String(payload.fullName || ""),
-      email: String(payload.email || ""),
-      phone: String(payload.phone || ""),
-      organization: String(payload.organization || ""),
-      interest: String(payload.interest || ""),
-      message: String(payload.message || ""),
-      sites: String(payload.sites || ""),
-      kind: String(payload.kind || ""),
+      name: fullName,
+      email,
+      phone,
+      organization,
+      interest,
+      sites,
+      kind,
+      message: details,
       _subject: subject,
       _template: "table",
-      _replyto: String(payload.email || ""),
+      _replyto: email,
       _captcha: "false",
     }),
-  })
-    .catch(() => undefined)
-    .finally(() => window.clearTimeout(timer));
+  }).catch(() => undefined);
 }
 
 export function LeadForm({
@@ -148,7 +162,7 @@ export function LeadForm({
       </label>
       <label className="block text-sm font-semibold">
         Mobile
-        <input className="input mt-1" name="phone" type="tel" />
+        <input className="input mt-1" name="phone" type="tel" required />
       </label>
       <label className="block text-sm font-semibold">
         Organization

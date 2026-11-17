@@ -17,16 +17,17 @@ function inbox() {
   return process.env.LEAD_INBOX?.trim() || site.email;
 }
 
-function subjectFor(kind: string) {
+function subjectFor(kind: string, fullName?: string) {
+  const who = fullName?.trim() || site.product;
   switch (kind) {
     case "contact":
-      return `New contact message — ${site.company}`;
+      return `New contact message — ${who}`;
     case "demo-test":
-      return `New demo test request — ${site.product}`;
+      return `New demo test request — ${who}`;
     case "register":
-      return `New registration — ${site.product}`;
+      return `New registration — ${who}`;
     default:
-      return `New demo request — ${site.product}`;
+      return `New demo request — ${who}`;
   }
 }
 
@@ -60,7 +61,7 @@ function htmlBody(payload: LeadMailPayload) {
   ];
   return `
     <div style="font-family:Segoe UI,Arial,sans-serif;line-height:1.5;color:#1a1f2c">
-      <h2 style="margin:0 0 12px">${subjectFor(payload.kind)}</h2>
+      <h2 style="margin:0 0 12px">${subjectFor(payload.kind, payload.fullName)}</h2>
       <table style="border-collapse:collapse;width:100%;max-width:560px">
         ${rows
           .map(
@@ -103,7 +104,7 @@ async function sendWithResend(payload: LeadMailPayload) {
       from,
       to: [inbox()],
       reply_to: payload.email,
-      subject: subjectFor(payload.kind),
+      subject: subjectFor(payload.kind, payload.fullName),
       text: textBody(payload),
       html: htmlBody(payload),
     }),
@@ -139,7 +140,7 @@ async function sendWithSmtp(payload: LeadMailPayload) {
     from,
     to: inbox(),
     replyTo: payload.email,
-    subject: subjectFor(payload.kind),
+    subject: subjectFor(payload.kind, payload.fullName),
     text: textBody(payload),
     html: htmlBody(payload),
   });
