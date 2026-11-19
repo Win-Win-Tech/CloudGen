@@ -145,6 +145,10 @@ export default function RootLayout({
 
   return (
     <html lang="en-IN">
+      <head>
+        {/* Official GA4 tag must be in <head> for Google stream detection */}
+        <Analytics />
+      </head>
       <body className={`${display.variable} ${body.variable} antialiased`}>
         <script
           type="application/ld+json"
@@ -155,7 +159,6 @@ export default function RootLayout({
         <Footer />
         <ClickToChat />
         <TawkTo />
-        <Analytics />
       </body>
     </html>
   );

@@ -4,7 +4,9 @@ import { usePathname, useSearchParams } from "next/navigation";
 import Script from "next/script";
 import { Suspense, useEffect } from "react";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+/** Public Measurement ID for stream cloudgentechnologies.com */
+const GA_ID =
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim() || "G-03VV49ENRJ";
 
 declare global {
   interface Window {
@@ -18,41 +20,39 @@ function GaPageViews() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (!GA_ID || typeof window.gtag !== "function") return;
+    if (typeof window.gtag !== "function") return;
 
     const query = searchParams?.toString();
     const pagePath = query ? `${pathname}?${query}` : pathname;
 
-    window.gtag("event", "page_view", {
+    window.gtag("config", GA_ID, {
       page_path: pagePath,
       page_location: window.location.href,
       page_title: document.title,
-      send_to: GA_ID,
     });
   }, [pathname, searchParams]);
 
   return null;
 }
 
-/** GA4 — requires NEXT_PUBLIC_GA_MEASUREMENT_ID. */
+/**
+ * Official Google tag in <head> (beforeInteractive) so GA's
+ * "Test your website" / stream detection can see it.
+ */
 export function Analytics() {
-  if (!GA_ID) return null;
-
   return (
     <>
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-        strategy="afterInteractive"
+        strategy="beforeInteractive"
       />
-      <Script id="ga4-init" strategy="afterInteractive">
+      <Script id="google-tag-gtag" strategy="beforeInteractive">
         {`
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 window.gtag = gtag;
 gtag('js', new Date());
-gtag('config', '${GA_ID}', {
-  send_page_view: true
-});
+gtag('config', '${GA_ID}');
 `}
       </Script>
       <Suspense fallback={null}>
