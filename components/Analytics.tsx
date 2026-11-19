@@ -1,12 +1,8 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import Script from "next/script";
 import { Suspense, useEffect } from "react";
-
-/** Public Measurement ID for stream cloudgentechnologies.com */
-const GA_ID =
-  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim() || "G-03VV49ENRJ";
+import { GA_ID } from "@/lib/analytics";
 
 declare global {
   interface Window {
@@ -35,29 +31,11 @@ function GaPageViews() {
   return null;
 }
 
-/**
- * Official Google tag in <head> (beforeInteractive) so GA's
- * "Test your website" / stream detection can see it.
- */
+/** App Router pageview helper — Google tag itself lives in layout <head>. */
 export function Analytics() {
   return (
-    <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-        strategy="beforeInteractive"
-      />
-      <Script id="google-tag-gtag" strategy="beforeInteractive">
-        {`
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-window.gtag = gtag;
-gtag('js', new Date());
-gtag('config', '${GA_ID}');
-`}
-      </Script>
-      <Suspense fallback={null}>
-        <GaPageViews />
-      </Suspense>
-    </>
+    <Suspense fallback={null}>
+      <GaPageViews />
+    </Suspense>
   );
 }

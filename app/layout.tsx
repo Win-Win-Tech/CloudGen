@@ -5,6 +5,7 @@ import { ClickToChat } from "@/components/ClickToChat";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { TawkTo } from "@/components/TawkTo";
+import { GA_ID } from "@/lib/analytics";
 import { absoluteUrl } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { SOLUTION_PACKAGES } from "@/lib/solutions";
@@ -146,8 +147,23 @@ export default function RootLayout({
   return (
     <html lang="en-IN">
       <head>
-        {/* Official GA4 tag must be in <head> for Google stream detection */}
-        <Analytics />
+        {/* Raw Google tag — must NOT use next/script (that wraps in self.__next_s and GA cannot detect it) */}
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+        />
+        <script
+          id="google-tag-gtag"
+          dangerouslySetInnerHTML={{
+            __html: `
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+window.gtag = gtag;
+gtag('js', new Date());
+gtag('config', '${GA_ID}');
+`,
+          }}
+        />
       </head>
       <body className={`${display.variable} ${body.variable} antialiased`}>
         <script
@@ -159,6 +175,7 @@ export default function RootLayout({
         <Footer />
         <ClickToChat />
         <TawkTo />
+        <Analytics />
       </body>
     </html>
   );
