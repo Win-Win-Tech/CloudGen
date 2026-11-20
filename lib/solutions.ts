@@ -417,8 +417,8 @@ export const RATE_CARD = {
   sitesMaxOnline: 10,
 } as const;
 
-/** Convert published USD package totals to INR for Razorpay. */
-export const USD_TO_INR = Number(process.env.NEXT_PUBLIC_USD_TO_INR || 83);
+/** Convert published USD package totals to INR for Razorpay (RBI/FBIL ref ~20 Nov 2026). */
+export const USD_TO_INR = Number(process.env.NEXT_PUBLIC_USD_TO_INR || 92.9699);
 
 /** Discrete bands for QR-Patrol-style drag (index → quantity). */
 export const USER_STEPS = [25, 50, 75, 100, 150, 200] as const;
