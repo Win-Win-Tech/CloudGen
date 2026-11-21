@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { LocalCurrencyHint } from "@/components/LocalCurrencyHint";
 import {
-  DEFAULT_DISPLAY_CURRENCY,
-  DISPLAY_CURRENCIES,
-  formatApproxFromUsd,
-  type DisplayCurrencyCode,
+  DEFAULT_PRICE_DISPLAY,
+  PRICE_DISPLAY_OPTIONS,
+  checkoutCurrencyForDisplay,
+  formatPriceDisplay,
+  isLocalDisplayCurrency,
+  type PriceDisplayCode,
 } from "@/lib/fxDisplay";
 import {
   ANNUAL_MONTHS_CHARGED,
@@ -22,8 +23,8 @@ import {
   SITE_STEPS,
   SOLUTION_PACKAGES,
   USER_STEPS,
+  usdToInr,
   type PackageBilling,
-  type PackageCurrency,
   type SolutionPackageId,
 } from "@/lib/solutions";
 
@@ -85,18 +86,21 @@ function CapacitySlider({
   );
 }
 
+function formatShown(usdAmount: number, display: PriceDisplayCode) {
+  return formatPriceDisplay(usdAmount, display, formatUSD, formatINR, usdToInr);
+}
+
 export function PackagePricingCalculator() {
   const [packageId, setPackageId] = useState<SolutionPackageId>("site-ops");
   const [billing, setBilling] = useState<PackageBilling>("annual");
-  const [currency, setCurrency] = useState<PackageCurrency>("USD");
-  const [localCurrency, setLocalCurrency] = useState<DisplayCurrencyCode>(
-    DEFAULT_DISPLAY_CURRENCY,
-  );
+  const [priceDisplay, setPriceDisplay] =
+    useState<PriceDisplayCode>(DEFAULT_PRICE_DISPLAY);
   const [userIdx, setUserIdx] = useState(0);
   const [codeIdx, setCodeIdx] = useState(0);
   const [visitorSiteIdx, setVisitorSiteIdx] = useState(0);
   const [vehicleSiteIdx, setVehicleSiteIdx] = useState(0);
 
+  const currency = checkoutCurrencyForDisplay(priceDisplay);
   const dims = packageDimensions(packageId);
   const qty = useMemo(
     () => ({
@@ -143,56 +147,27 @@ export function PackagePricingCalculator() {
             Display currency
           </p>
           <p className="mt-1 text-sm text-[var(--navy)]">
-            Checkout currency (USD LUT / INR GST) · local estimate always available.
+            Prices show in one currency. USD/INR set checkout tax; other codes are
+            planning estimates. Razorpay still collects INR.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <div
-            className="inline-flex rounded-md border border-[var(--line)] bg-white p-1"
-            role="group"
-            aria-label="Checkout currency"
+        <label className="inline-flex items-center gap-2 rounded-md border border-[var(--line)] bg-white px-3 py-2 text-xs font-semibold text-[var(--navy)]">
+          <span className="text-[var(--steel)]">Currency</span>
+          <select
+            className="min-w-[9.5rem] bg-transparent text-xs font-bold outline-none"
+            value={priceDisplay}
+            onChange={(e) =>
+              setPriceDisplay(e.target.value as PriceDisplayCode)
+            }
+            aria-label="Price display currency"
           >
-            <button
-              type="button"
-              className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
-                currency === "USD"
-                  ? "bg-[var(--teal-deep)] text-white"
-                  : "text-[var(--steel)]"
-              }`}
-              onClick={() => setCurrency("USD")}
-            >
-              USD · LUT
-            </button>
-            <button
-              type="button"
-              className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
-                currency === "INR"
-                  ? "bg-[var(--teal-deep)] text-white"
-                  : "text-[var(--steel)]"
-              }`}
-              onClick={() => setCurrency("INR")}
-            >
-              INR · GST
-            </button>
-          </div>
-          <label className="inline-flex items-center gap-2 rounded-md border border-[var(--line)] bg-white px-2 py-1.5 text-xs font-semibold text-[var(--navy)]">
-            <span className="text-[var(--steel)]">Approx</span>
-            <select
-              className="bg-transparent text-xs font-bold outline-none"
-              value={localCurrency}
-              onChange={(e) =>
-                setLocalCurrency(e.target.value as DisplayCurrencyCode)
-              }
-              aria-label="Local display currency"
-            >
-              {DISPLAY_CURRENCIES.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {c.code} · {c.label.split(" (")[0]}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
+            {PRICE_DISPLAY_OPTIONS.map((c) => (
+              <option key={c.code} value={c.code}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
       <div>
@@ -205,7 +180,6 @@ export function PackagePricingCalculator() {
             const active = packageId === pkg.id;
             const fromQuote = quotePackage(pkg.id, "monthly", undefined, currency);
             const fromUsd = fromQuote.usdPeriod ?? pkg.usdMonthly ?? 0;
-            const fromInr = fromQuote.inrPeriod;
             return (
               <button
                 key={pkg.id}
@@ -223,17 +197,14 @@ export function PackagePricingCalculator() {
                   </span>
                 ) : null}
                 <p className="display text-lg font-extrabold leading-snug">{pkg.name}</p>
-                <p className="mt-2 text-xs text-[var(--steel)]">from</p>
+                <p className="mt-2 text-xs text-[var(--steel)]">
+                  from{isLocalDisplayCurrency(priceDisplay) ? " · approx" : ""}
+                </p>
                 <p className="display text-2xl font-extrabold text-[var(--ink)]">
-                  {currency === "INR" && fromInr != null
-                    ? formatINR(fromInr)
-                    : formatUSD(fromUsd)}
+                  {formatShown(fromUsd, priceDisplay)}
                   <span className="ml-1 text-xs font-semibold text-[var(--steel)]">
                     /mo
                   </span>
-                </p>
-                <p className="mt-1 text-xs font-semibold text-[var(--teal-deep)]">
-                  ≈ {formatApproxFromUsd(fromUsd, localCurrency)} /mo
                 </p>
                 <p className="mt-2 text-xs text-[var(--steel)]">{pkg.unitLimit}</p>
               </button>
@@ -391,30 +362,6 @@ export function PackagePricingCalculator() {
                 <button
                   type="button"
                   className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
-                    currency === "USD"
-                      ? "bg-[var(--teal-deep)] text-white"
-                      : "text-[var(--steel)]"
-                  }`}
-                  onClick={() => setCurrency("USD")}
-                >
-                  USD · LUT
-                </button>
-                <button
-                  type="button"
-                  className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
-                    currency === "INR"
-                      ? "bg-[var(--teal-deep)] text-white"
-                      : "text-[var(--steel)]"
-                  }`}
-                  onClick={() => setCurrency("INR")}
-                >
-                  INR · GST
-                </button>
-              </div>
-              <div className="inline-flex rounded-md border border-[var(--line)] bg-white p-1">
-                <button
-                  type="button"
-                  className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
                     billing === "annual"
                       ? "bg-[var(--ink)] text-white"
                       : "text-[var(--steel)]"
@@ -446,28 +393,24 @@ export function PackagePricingCalculator() {
                     ? `Billed annually · ${ANNUAL_MONTHS_CHARGED} months cost (2 free)`
                     : "Billed monthly"}{" "}
                   · {currency === "USD" ? "Export (LUT)" : "India (GST)"}
+                  {isLocalDisplayCurrency(priceDisplay)
+                    ? ` · shown in ${priceDisplay}`
+                    : ""}
                 </p>
                 <p className="display text-4xl font-extrabold text-[var(--ink)]">
-                  {currency === "USD"
-                    ? formatUSD(quote.usdPeriod)
-                    : formatINR(quote.inrPeriod)}
+                  {formatShown(quote.usdPeriod, priceDisplay)}
                   <span className="ml-1 text-sm font-semibold text-[var(--steel)]">
                     /{billing === "annual" ? "yr" : "mo"}
                   </span>
                 </p>
-                {currency === "USD" &&
-                quote.usdListPeriod != null &&
+                {quote.usdListPeriod != null &&
                 quote.usdListPeriod > quote.usdPeriod ? (
                   <p className="mt-1 text-sm text-[var(--steel)] line-through">
-                    List {formatUSD(quote.usdListPeriod)}
+                    List {formatShown(quote.usdListPeriod, priceDisplay)}
                   </p>
                 ) : null}
                 <p className="mt-2 text-sm font-semibold text-[var(--navy)]">
-                  + setup{" "}
-                  {currency === "USD"
-                    ? formatUSD(quote.usdSetup!)
-                    : formatINR(quote.inrSetup!)}{" "}
-                  (one-time)
+                  + setup {formatShown(quote.usdSetup!, priceDisplay)} (one-time)
                 </p>
                 {currency === "INR" && quote.inrGst != null && quote.inrGst > 0 ? (
                   <p className="mt-1 text-sm text-[var(--navy)]">
@@ -480,17 +423,12 @@ export function PackagePricingCalculator() {
                   Razorpay due {formatINR(quote.inrDue!)}
                 </p>
                 <p className="mt-1 text-xs text-[var(--steel)]">
-                  {currency === "USD"
-                    ? "USD list → INR at checkout. Export under LUT — no GST."
-                    : "Domestic INR billing with 18% GST. Paid via Razorpay in INR."}
+                  {isLocalDisplayCurrency(priceDisplay)
+                    ? `${priceDisplay} is an estimate for planning. Checkout uses ${currency} tax mode; Razorpay collects INR.`
+                    : currency === "USD"
+                      ? "USD list → INR at checkout. Export under LUT — no GST."
+                      : "Domestic INR billing with 18% GST. Paid via Razorpay in INR."}
                 </p>
-                <LocalCurrencyHint
-                  className="mt-4"
-                  usdPeriod={quote.usdPeriod}
-                  usdSetup={quote.usdSetup}
-                  value={localCurrency}
-                  onChange={setLocalCurrency}
-                />
               </>
             )}
 

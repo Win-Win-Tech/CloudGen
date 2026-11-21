@@ -13,6 +13,9 @@ export type DisplayCurrencyCode =
   | "AUD"
   | "IDR";
 
+/** Includes checkout currencies plus local estimate codes. */
+export type PriceDisplayCode = "USD" | "INR" | DisplayCurrencyCode;
+
 export type DisplayCurrency = {
   code: DisplayCurrencyCode;
   label: string;
@@ -33,7 +36,20 @@ export const DISPLAY_CURRENCIES: DisplayCurrency[] = [
   { code: "IDR", label: "Indonesia (IDR)", perUsd: 16200, locale: "id-ID" },
 ];
 
+export const PRICE_DISPLAY_OPTIONS: {
+  code: PriceDisplayCode;
+  label: string;
+}[] = [
+  { code: "USD", label: "USD · LUT" },
+  { code: "INR", label: "INR · GST" },
+  ...DISPLAY_CURRENCIES.map((c) => ({
+    code: c.code as PriceDisplayCode,
+    label: `${c.code} · ${c.label.split(" (")[0]}`,
+  })),
+];
+
 export const DEFAULT_DISPLAY_CURRENCY: DisplayCurrencyCode = "MYR";
+export const DEFAULT_PRICE_DISPLAY: PriceDisplayCode = "USD";
 
 export function getDisplayCurrency(code: string | null | undefined) {
   const upper = (code || DEFAULT_DISPLAY_CURRENCY).toUpperCase();
@@ -41,6 +57,18 @@ export function getDisplayCurrency(code: string | null | undefined) {
     DISPLAY_CURRENCIES.find((c) => c.code === upper) ??
     DISPLAY_CURRENCIES[0]!
   );
+}
+
+export function isLocalDisplayCurrency(
+  code: PriceDisplayCode,
+): code is DisplayCurrencyCode {
+  return code !== "USD" && code !== "INR";
+}
+
+export function checkoutCurrencyForDisplay(
+  code: PriceDisplayCode,
+): "USD" | "INR" {
+  return code === "INR" ? "INR" : "USD";
 }
 
 export function usdToDisplayAmount(usd: number, code: DisplayCurrencyCode) {
@@ -61,4 +89,17 @@ export function formatDisplayCurrency(amount: number, code: DisplayCurrencyCode)
 
 export function formatApproxFromUsd(usd: number, code: DisplayCurrencyCode) {
   return formatDisplayCurrency(usdToDisplayAmount(usd, code), code);
+}
+
+/** Format a USD amount in the selected price-display currency (USD / INR / local). */
+export function formatPriceDisplay(
+  usdAmount: number,
+  code: PriceDisplayCode,
+  formatUsd: (n: number) => string,
+  formatInr: (n: number) => string,
+  usdToInr: (n: number) => number,
+) {
+  if (code === "USD") return formatUsd(usdAmount);
+  if (code === "INR") return formatInr(usdToInr(usdAmount));
+  return formatApproxFromUsd(usdAmount, code);
 }
