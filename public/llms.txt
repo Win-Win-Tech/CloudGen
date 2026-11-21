@@ -17,6 +17,7 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - /solutions/visitor-management-system Visitor management
 - /solutions/vehicle-management-system Vehicle management
 - /solutions/vision-ai-cctv Vision AI CCTV
+- /campaigns/visitor-management Visitor Management campaign video
 - /blog SmartPatrol guides
 - /privacy Privacy Policy
 - /pricing Pricing

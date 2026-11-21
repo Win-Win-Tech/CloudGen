@@ -17,6 +17,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: absoluteUrl("/demo"), lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: absoluteUrl("/blog"), lastModified: now, changeFrequency: "weekly", priority: 0.85 },
     { url: absoluteUrl("/privacy"), lastModified: now, changeFrequency: "yearly", priority: 0.4 },
+    {
+      url: absoluteUrl("/campaigns/visitor-management"),
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
   ];
 
   const pillars = PRODUCT_PILLARS.map((p) => ({
