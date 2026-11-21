@@ -43,11 +43,15 @@ export const metadata: Metadata = {
 const FEATURES = [
   {
     title: "Pre / Spot Registration",
-    body: "Register visitors ahead of arrival or instantly at the gate.",
+    body: "Register visitors ahead of arrival or instantly at the gate kiosk.",
   },
   {
     title: "QR Code Visitor Pass",
     body: "Generate secure digital passes for seamless entry.",
+  },
+  {
+    title: "Security QR Scan at Gate",
+    body: "Security scans the visitor pass in real time before allowing entry.",
   },
   {
     title: "Arrival & Approval SOS Alerts",
@@ -63,7 +67,7 @@ const FEATURES = [
   },
   {
     title: "Checkout by QR Scan",
-    body: "Close the visit securely by scanning the visitor QR pass.",
+    body: "Security scans the visitor QR pass to close the visit securely.",
   },
 ] as const;
 
