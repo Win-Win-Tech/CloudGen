@@ -141,7 +141,7 @@ export function PackagePricingCalculator() {
 
   return (
     <div className="space-y-10">
-      <div className="card-panel flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+      <div className="card-panel space-y-3 p-4 sm:p-5">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.12em] text-[var(--steel)]">
             Display currency
@@ -151,23 +151,29 @@ export function PackagePricingCalculator() {
             planning estimates. Razorpay still collects INR.
           </p>
         </div>
-        <label className="inline-flex items-center gap-2 rounded-md border border-[var(--line)] bg-white px-3 py-2 text-xs font-semibold text-[var(--navy)]">
-          <span className="text-[var(--steel)]">Currency</span>
-          <select
-            className="min-w-[9.5rem] bg-transparent text-xs font-bold outline-none"
-            value={priceDisplay}
-            onChange={(e) =>
-              setPriceDisplay(e.target.value as PriceDisplayCode)
-            }
-            aria-label="Price display currency"
-          >
-            {PRICE_DISPLAY_OPTIONS.map((c) => (
-              <option key={c.code} value={c.code}>
-                {c.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div
+          className="flex flex-wrap gap-2"
+          role="group"
+          aria-label="Price display currency"
+        >
+          {PRICE_DISPLAY_OPTIONS.map((c) => {
+            const active = priceDisplay === c.code;
+            return (
+              <button
+                key={c.code}
+                type="button"
+                onClick={() => setPriceDisplay(c.code)}
+                className={`rounded-md border px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition ${
+                  active
+                    ? "border-[var(--teal-deep)] bg-[var(--teal-deep)] text-white"
+                    : "border-[var(--line)] bg-white text-[var(--steel)] hover:border-[var(--teal)] hover:text-[var(--navy)]"
+                }`}
+              >
+                {c.code}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div>
