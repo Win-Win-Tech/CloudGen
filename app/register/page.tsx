@@ -5,6 +5,7 @@ import { LeadForm } from "@/components/LeadForm";
 export const metadata: Metadata = {
   title: "Register",
   description: "Register your organization for SmartPatrol access and onboarding.",
+  robots: { index: false, follow: false },
 };
 
 export default function RegisterPage() {

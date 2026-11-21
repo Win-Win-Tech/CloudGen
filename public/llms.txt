@@ -2,35 +2,31 @@
 
 > AI-powered SmartPatrol / Guards workforce platform — QR Code Checkpoint Scanning, Guard Tour Patrolling, Geofence Face Biometric Attendance, CCTV AI analytics, industry apps, and custom digital solutions.
 
-Site: https://cloudgentechnologies.com
+Site: https://www.cloudgentechnologies.com
 Product: SmartPatrol (Guards app)
 App: https://play.google.com/store/apps/details?id=com.guards.app
 
-## Site map (aligned with cloudgentechnologies.com)
+## Site map (canonical www)
 - / Home
 - /about About Us
-- /solutions Product (15 CloudGen solutions)
-- /solutions/face-biometric-attendance Face biometric attendance SEO page
-- /solutions/qr-checkpoint-guard-tour QR checkpoint guard tour SEO page
-- /solutions/visitor-management-system Visitor management SEO page
-- /solutions/vehicle-management-system Vehicle management SEO page
-- /solutions/vision-ai-cctv Vision AI CCTV SEO page
-- /blog SmartPatrol guides / SEO content cluster
-- /privacy Privacy Policy (CloudGen website + SmartPatrol / Guards app)
-- /pricing Pricing (Smart Patrol USD packages)
+- /solutions Product
+- /solutions/face-biometric-attendance Face biometric attendance
+- /solutions/qr-checkpoint-guard-tour QR checkpoint guard tour
+- /solutions/visitor-management-system Visitor management
+- /solutions/vehicle-management-system Vehicle management
+- /solutions/vision-ai-cctv Vision AI CCTV
+- /blog SmartPatrol guides
+- /privacy Privacy Policy
+- /pricing Pricing
 - /contact Contact
 - /app Get the App
 - /demo Book a live demo
-- /demo/test Free timed demo (default 7 days) — issues username/password stored in demo_accounts
-- /api/demo/validate Mobile app login check; rejects expired demos (kick-out)
-- /register Organization registration
-- /checkout Razorpay subscription payment (noindex)
 
 ## Guards app pillars
 - Guard Tour Patrolling System: GPS, QR/virtual checkpoints, multi-site, tickets
 - Geofence Face Biometric Attendance: geofence tracking, face attendance, payslips, photo reports
 
-## Solutions (15)
+## Solutions
 - Mobile App — Face Biometric Attendance System
 - Mobile App — Visitor Management System
 - Mobile App — Vehicle Management System
@@ -39,13 +35,8 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - Mobile App — AI Chatbot Doctor Appointment Booking
 - Mobile App — Availability Command Centre (Ticket Complaints Tracking System)
 - Web App — Pharmacy Billing System
-- Custom — Web App Development
-- Custom — Mobile App Development
-- Custom — Website Development
-- CCTV — Attendance System
-- CCTV — People Counting
-- CCTV — ANPR (Automatic Number Plate Recognition)
-- CCTV / Mobile — OCR (ID number, name, phone, address)
+- Custom — Web App / Mobile App / Website Development
+- CCTV — Attendance, People Counting, ANPR, OCR
 
 ## Smart Patrol packages (USD catalog; checkout INR or USD mode)
 - Smart Patrol Attendance — $49/mo · $490/yr (upto 25 users)
@@ -58,16 +49,11 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - Smart Patrol Vision AI / Industry Suite / Custom Build — Quote
 - Ticket Complaints Tracking included on every package
 - Annual billing = 10× monthly (2 months free)
-- Checkout: USD + LUT (0% GST) or INR + 18% GST; Razorpay always collects INR
 
-## What CloudGen delivers
-- Matches the 15 SmartPatrol solutions above, sold as Smart Patrol modules and suites
-
-## Primary SEO topics (organic)
+## Primary SEO topics
 - guard tour system India / QR checkpoint patrol software
 - face biometric attendance software India / geofence attendance
 - visitor management system India / society visitor management
 - vehicle entry exit software / gate vehicle tracking
 - CCTV attendance / ANPR software India
 - security operations Madurai / guard management Tamil Nadu
-- Keyword checklist (internal): /seo-keyword-checklist.txt

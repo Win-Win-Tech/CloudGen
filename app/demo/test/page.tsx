@@ -7,6 +7,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Free Demo Test",
   description: `Start a ${DEMO_DURATION_DAYS}-day SmartPatrol demo test — download the app, sign in with timed credentials, and try checkpoints, attendance and tickets.`,
+  robots: { index: false, follow: false },
 };
 
 export default function DemoTestPage() {
