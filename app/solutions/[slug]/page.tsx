@@ -145,11 +145,11 @@ export default async function ProductPillarPage({ params }: Props) {
               controls
               playsInline
               preload="metadata"
-              poster="/campaigns/visitor-management-campaign-poster.jpg"
-              aria-label="Visitor Management System campaign video"
+              poster="/campaigns/visitor-management-animated-vo-poster.jpg"
+              aria-label="Animated Visitor Management System campaign with voice-over"
             >
               <source
-                src="/campaigns/visitor-management-campaign.mp4"
+                src="/campaigns/visitor-management-animated-vo.mp4"
                 type="video/mp4"
               />
             </video>

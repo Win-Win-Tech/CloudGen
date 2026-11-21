@@ -3,22 +3,27 @@ import Link from "next/link";
 import { absoluteUrl } from "@/lib/seo";
 import { site } from "@/lib/site";
 
+const PRIMARY_VIDEO = "/campaigns/visitor-management-animated-vo.mp4";
+const PRIMARY_POSTER = "/campaigns/visitor-management-animated-vo-poster.jpg";
+const SILENT_VIDEO = "/campaigns/visitor-management-campaign.mp4";
+const SILENT_POSTER = "/campaigns/visitor-management-campaign-poster.jpg";
+
 export const metadata: Metadata = {
   title: "Visitor Management Campaign Video",
   description:
-    "Watch the CloudGen SmartPatrol Visitor Management System campaign — pre/spot registration, QR visitor passes, host SOS alerts, restricted-zone and long-stay alerts, and QR checkout.",
+    "Animated SmartPatrol Visitor Management campaign with voice-over — pre/spot registration, QR visitor passes, host SOS alerts, restricted-zone and long-stay alerts, and QR checkout.",
   alternates: {
     canonical: absoluteUrl("/campaigns/visitor-management"),
   },
   openGraph: {
     title: "Visitor Management System Campaign | CloudGen SmartPatrol",
     description:
-      "Campaign video for SmartPatrol Visitor Management — registration, QR passes, SOS alerts and checkout.",
+      "Animated campaign video with voice-over for SmartPatrol Visitor Management.",
     url: absoluteUrl("/campaigns/visitor-management"),
     type: "website",
     videos: [
       {
-        url: absoluteUrl("/campaigns/visitor-management-campaign.mp4"),
+        url: absoluteUrl(PRIMARY_VIDEO),
         type: "video/mp4",
         width: 1920,
         height: 1080,
@@ -26,10 +31,10 @@ export const metadata: Metadata = {
     ],
     images: [
       {
-        url: absoluteUrl("/campaigns/visitor-management-campaign-poster.jpg"),
+        url: absoluteUrl(PRIMARY_POSTER),
         width: 1920,
         height: 1080,
-        alt: "SmartPatrol Visitor Management System campaign",
+        alt: "SmartPatrol Visitor Management System animated campaign",
       },
     ],
   },
@@ -63,19 +68,17 @@ const FEATURES = [
 ] as const;
 
 export default function VisitorManagementCampaignPage() {
-  const videoUrl = "/campaigns/visitor-management-campaign.mp4";
-  const posterUrl = "/campaigns/visitor-management-campaign-poster.jpg";
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "VideoObject",
-    name: "SmartPatrol Visitor Management System Campaign",
+    name: "SmartPatrol Visitor Management System — Animated Campaign",
     description:
-      "Campaign video for CloudGen SmartPatrol Visitor Management System covering registration, QR passes, SOS alerts and checkout.",
-    thumbnailUrl: absoluteUrl(posterUrl),
-    contentUrl: absoluteUrl(videoUrl),
+      "Animated campaign with voice-over for CloudGen SmartPatrol Visitor Management System.",
+    thumbnailUrl: absoluteUrl(PRIMARY_POSTER),
+    contentUrl: absoluteUrl(PRIMARY_VIDEO),
     embedUrl: absoluteUrl("/campaigns/visitor-management"),
     uploadDate: "2026-11-21",
+    duration: "PT1M18S",
     publisher: {
       "@type": "Organization",
       name: site.company,
@@ -94,23 +97,31 @@ export default function VisitorManagementCampaignPage() {
         <div className="shell grid gap-8 py-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#d4af55]">
-              Campaign · SmartPatrol Visitor
+              Animated campaign · Voice-over
             </p>
             <h1 className="display mt-3 text-4xl font-extrabold leading-tight md:text-5xl">
               Visitor Management System
             </h1>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-white/80">
-              Powered by pre/spot registration, QR visitor passes, host approval SOS alerts,
-              restricted-zone and long-stay SOS, and QR checkout — from {site.company}.
+              Watch the animated SmartPatrol visitor journey with narration —
+              registration, QR passes, host approval SOS, restricted-zone and
+              long-stay alerts, then QR checkout.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/demo" className="btn-primary">
                 Book a demo
               </Link>
-              <Link href="/solutions/visitor-management-system" className="btn-outline border-white/30 text-white hover:bg-white/10">
+              <Link
+                href="/solutions/visitor-management-system"
+                className="btn-outline border-white/30 text-white hover:bg-white/10"
+              >
                 Product details
               </Link>
-              <a href={videoUrl} download className="btn-outline border-white/30 text-white hover:bg-white/10">
+              <a
+                href={PRIMARY_VIDEO}
+                download
+                className="btn-outline border-white/30 text-white hover:bg-white/10"
+              >
                 Download MP4
               </a>
             </div>
@@ -122,10 +133,10 @@ export default function VisitorManagementCampaignPage() {
               controls
               playsInline
               preload="metadata"
-              poster={posterUrl}
-              aria-label="Visitor Management System campaign video"
+              poster={PRIMARY_POSTER}
+              aria-label="Animated Visitor Management System campaign with voice-over"
             >
-              <source src={videoUrl} type="video/mp4" />
+              <source src={PRIMARY_VIDEO} type="video/mp4" />
             </video>
           </div>
         </div>
@@ -136,7 +147,7 @@ export default function VisitorManagementCampaignPage() {
           What this campaign covers
         </h2>
         <p className="mt-2 max-w-2xl text-[var(--steel)]">
-          Six visitor-ops capabilities packaged for security teams, facilities and societies.
+          Six visitor-ops capabilities narrated for security teams, facilities and societies.
         </p>
         <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((item, index) => (
@@ -149,6 +160,27 @@ export default function VisitorManagementCampaignPage() {
             </li>
           ))}
         </ol>
+      </section>
+
+      <section className="shell pb-14">
+        <h2 className="display text-2xl font-extrabold text-[var(--ink)]">
+          Silent motion version
+        </h2>
+        <p className="mt-2 max-w-2xl text-sm text-[var(--steel)]">
+          Prefer a shorter cut without narration? Use this version for social posts and mute autoplay.
+        </p>
+        <div className="mt-6 max-w-3xl overflow-hidden rounded-2xl border border-[var(--line)] bg-black">
+          <video
+            className="aspect-video w-full"
+            controls
+            playsInline
+            preload="metadata"
+            poster={SILENT_POSTER}
+            aria-label="Silent Visitor Management campaign video"
+          >
+            <source src={SILENT_VIDEO} type="video/mp4" />
+          </video>
+        </div>
       </section>
 
       <section className="border-t border-[var(--line)] bg-[#eef2f6]">
@@ -164,7 +196,10 @@ export default function VisitorManagementCampaignPage() {
               Mobile: {site.phone}
               <br />
               Email:{" "}
-              <a href="mailto:ravit@cloudgentechnologies.com" className="font-semibold text-[var(--teal-deep)]">
+              <a
+                href="mailto:ravit@cloudgentechnologies.com"
+                className="font-semibold text-[var(--teal-deep)]"
+              >
                 ravit@cloudgentechnologies.com
               </a>
               <br />
