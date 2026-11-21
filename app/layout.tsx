@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { TawkTo } from "@/components/TawkTo";
 import { GA_ID } from "@/lib/analytics";
 import { absoluteUrl } from "@/lib/seo";
+import { PRIMARY_META_KEYWORDS } from "@/lib/seoKeywords";
 import { site } from "@/lib/site";
 import { SOLUTION_PACKAGES } from "@/lib/solutions";
 import "./globals.css";
@@ -26,35 +27,24 @@ const body = Source_Sans_3({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.company} | ${site.product} Guards App`,
+    default: `Guard Tour & Attendance Software India | ${site.product} by ${site.company}`,
     template: `%s | ${site.company}`,
   },
   description: site.description,
   applicationName: site.product,
-  keywords: [
-    "CloudGen Technologies",
-    "SmartPatrol",
-    "Guards app",
-    "guard tour system India",
-    "QR checkpoint patrol software",
-    "face biometric attendance",
-    "geofence attendance",
-    "visitor management system",
-    "vehicle entry exit software",
-    "security operations Madurai",
-  ],
+  keywords: PRIMARY_META_KEYWORDS,
   authors: [{ name: site.company, url: site.companyUrl }],
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: site.url,
     siteName: site.company,
-    title: `${site.company} — ${site.product} AI-powered smart patrol solutions`,
+    title: `Guard Tour, QR Patrol & Face Attendance | ${site.product}`,
     description: site.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.company} — ${site.product} AI-powered smart patrol solutions`,
+    title: `Guard Tour, QR Patrol & Face Attendance | ${site.product}`,
     description: site.description,
   },
   robots: {
@@ -65,6 +55,7 @@ export const metadata: Metadata = {
       follow: true,
       "max-image-preview": "large",
       "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
   alternates: {

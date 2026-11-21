@@ -5,8 +5,13 @@ import { OpenTawkButton } from "@/components/OpenTawkButton";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: `Contact ${site.company} for SmartPatrol demos, pricing, and custom digital solutions.`,
+  title: "Contact CloudGen | SmartPatrol Demo & Pricing India",
+  description: `Contact ${site.company} (Madurai) for SmartPatrol demos, guard tour software pricing, visitor management and Vision AI quotes.`,
+  keywords: [
+    "CloudGen Technologies contact",
+    "SmartPatrol demo",
+    "guard tour system demo India",
+  ],
 };
 
 export default async function ContactPage({

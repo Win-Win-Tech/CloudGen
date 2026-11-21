@@ -37,8 +37,11 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
       "SmartPatrol face biometric attendance with geofence checks, liveness detection and mobile punch — built for Indian workforce and guard operations.",
     keywords: [
       "face biometric attendance software",
+      "face biometric attendance software India",
       "geofence attendance app India",
       "guard attendance system",
+      "face recognition attendance app",
+      "security guard attendance app",
     ],
     packageHref: "/pricing",
     highlights: [
@@ -83,6 +86,9 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
       "guard tour system India",
       "QR checkpoint patrol software",
       "security guard patrolling app",
+      "QR code checkpoint scanning system",
+      "digital guard tour system",
+      "patrol management software India",
     ],
     packageHref: "/pricing",
     highlights: [
@@ -127,6 +133,9 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
       "visitor management system India",
       "visitor management for society",
       "digital visitor pass software",
+      "apartment visitor management system",
+      "society gate visitor system",
+      "visitor management system for residential society",
     ],
     packageHref: "/pricing",
     highlights: [
@@ -171,6 +180,8 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
       "vehicle management system",
       "vehicle entry exit software",
       "gate vehicle tracking India",
+      "vehicle entry exit management system",
+      "factory gate vehicle management",
     ],
     packageHref: "/pricing",
     highlights: [
@@ -215,6 +226,8 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
       "ANPR software India",
       "CCTV people counting",
       "ID card OCR",
+      "automatic number plate recognition India",
+      "CCTV AI attendance",
     ],
     packageHref: "/contact",
     highlights: [

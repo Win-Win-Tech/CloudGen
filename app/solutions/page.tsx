@@ -9,9 +9,17 @@ import {
 } from "@/lib/solutions";
 
 export const metadata: Metadata = {
-  title: "Solutions",
+  keywords: [
+    "security guard management software India",
+    "guard tour system India",
+    "face biometric attendance software India",
+    "visitor management system India",
+    "vehicle entry exit software",
+    "SmartPatrol solutions",
+  ],
+  title: "Security Guard Management Software India | SmartPatrol Solutions",
   description:
-    "Fifteen CloudGen SmartPatrol solutions — workforce, security ops, CCTV AI, industry apps and custom development — packaged with competitive USD pricing.",
+    "SmartPatrol solutions for India — guard tour QR patrol, face biometric attendance, visitor & vehicle gate software, CCTV Vision AI and custom builds.",
   alternates: { canonical: absoluteUrl("/solutions") },
 };
 

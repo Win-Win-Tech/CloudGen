@@ -4,8 +4,14 @@ import { PlanComparison } from "@/components/PlanComparison";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Pricing",
-  description: `${site.product} packages — drag users, QR codes and sites for pro-rata pricing on Smart Patrol Attendance, Checkpoint, Visitor, Vehicle, Duo bundles and Site Ops Suite.`,
+  title: "SmartPatrol Pricing | Guard Tour & Attendance Packages India",
+  description: `${site.product} pricing — Attendance, Checkpoint, Visitor, Vehicle, Workforce Duo, Gate Duo and Site Ops Suite. USD LUT or INR GST. Ticket Complaints Tracking included.`,
+  keywords: [
+    "SmartPatrol pricing",
+    "Smart Patrol packages",
+    "guard tour software pricing India",
+    "security workforce software subscription",
+  ],
 };
 
 export default function PricingPage() {

@@ -4,8 +4,14 @@ import { site } from "@/lib/site";
 import { SOLUTIONS, type Solution } from "@/lib/solutions";
 
 export const metadata: Metadata = {
-  title: "About Us",
-  description: `About ${site.company} — builders of the Guards / SmartPatrol workforce and security operations platform in Madurai, India.`,
+  title: "About CloudGen Technologies Madurai | SmartPatrol",
+  description: `About ${site.company} in Madurai, Tamil Nadu — builders of SmartPatrol / Guards guard tour, face attendance, visitor and vehicle software for India.`,
+  keywords: [
+    "CloudGen Technologies Madurai",
+    "SmartPatrol Madurai",
+    "security software Madurai",
+    "guard management Tamil Nadu",
+  ],
 };
 
 const CATEGORY_LABELS: Record<Solution["category"], string> = {

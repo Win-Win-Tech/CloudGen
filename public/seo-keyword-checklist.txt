@@ -1,0 +1,114 @@
+CloudGen Technologies — SEO keyword checklist (manual SERP test)
+================================================================
+How to test position:
+1. Open Google Chrome Incognito
+2. Set region to India if prompted (or use google.co.in)
+3. Search the exact phrase below (in quotes for brand/exact tests)
+4. Note page number + position (e.g. page 1 #4, or "not in top 50")
+5. Prefer Search Console → Performance for real rankings over time
+
+Canonical site: https://www.cloudgentechnologies.com
+Sitemap: https://www.cloudgentechnologies.com/sitemap.xml
+
+--- BRAND ---
+CloudGen Technologies
+CloudGen Technologies Madurai
+SmartPatrol
+Smart Patrol app
+Guards app CloudGen
+com.guards.app
+cloudgentechnologies.com
+
+--- GUARD TOUR / QR ---
+guard tour system India
+QR checkpoint patrol software
+security guard patrolling app
+QR code checkpoint scanning system
+guard tour patrolling software
+digital guard tour system
+security patrol checkpoint app
+guard monitoring system India
+patrol management software India
+Target URL: /solutions/qr-checkpoint-guard-tour
+
+--- FACE ATTENDANCE ---
+face biometric attendance software
+face biometric attendance software India
+geofence attendance app India
+guard attendance system
+face recognition attendance app
+mobile face attendance system
+geofence face attendance
+security guard attendance app
+biometric attendance for security staff
+workforce attendance app India
+Target URL: /solutions/face-biometric-attendance
+
+--- VISITOR ---
+visitor management system India
+visitor management for society
+digital visitor pass software
+apartment visitor management system
+society gate visitor system
+visitor management system for residential society
+visitor entry management software
+digital visitor register India
+Target URL: /solutions/visitor-management-system
+
+--- VEHICLE ---
+vehicle management system
+vehicle entry exit software
+gate vehicle tracking India
+vehicle entry exit management system
+parking vehicle log software
+factory gate vehicle management
+campus vehicle entry system
+Target URL: /solutions/vehicle-management-system
+
+--- CCTV / VISION AI ---
+CCTV attendance system
+ANPR software India
+CCTV people counting
+ID card OCR
+automatic number plate recognition India
+CCTV AI attendance
+vision AI security cameras India
+Target URL: /solutions/vision-ai-cctv
+
+--- LOCAL (MADURAI / TN) ---
+security operations Madurai
+security software Madurai
+guard management Tamil Nadu
+visitor management Madurai
+CloudGen Madurai
+SmartPatrol Madurai
+security company software Tamil Nadu
+guard tour system Madurai
+Target URL: /blog/security-operations-software-madurai
+
+--- PRICING / PACKAGES ---
+SmartPatrol pricing
+Smart Patrol packages
+guard tour software pricing India
+security workforce software subscription
+Site Ops Suite SmartPatrol
+Workforce Duo SmartPatrol
+Target URL: /pricing
+
+--- CATEGORY ---
+security guard management software India
+workforce security app India
+facility security software India
+security operations software India
+patrol management system for security agencies
+best guard tour app India
+best visitor management system for society India
+Target URL: /solutions
+
+--- GUIDES ---
+how QR checkpoint patrol works
+guard tour compliance checklist India
+CCTV attendance vs mobile face attendance
+visitor management for apartments India
+face biometric attendance for security guards
+Target URL: /blog
