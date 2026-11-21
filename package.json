@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.16",
+    "@google-analytics/data": "^7.3.0",
     "next": "^16.4.6",
     "nodemailer": "^10.5.0",
     "pg": "^8.23.1",

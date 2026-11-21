@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { fetchGaDailyReport, gaReportConfigured } from "@/lib/gaReport";
 import { mailConfigured } from "@/lib/mail";
 import { runSeoHealthCheck } from "@/lib/seoDaily";
 import { sendSeoDailyDigest } from "@/lib/seoDigestMail";
@@ -15,9 +16,10 @@ function authorized(req: Request) {
 }
 
 /**
- * Daily SEO automation (Vercel Cron).
- * - Checks marketing URLs return OK
- * - Emails a digest with today's keyword focus + GSC links
+ * Daily SEO + GA4 automation (Vercel Cron).
+ * - URL health check
+ * - GA4 Data API traffic snapshot
+ * - Email digest with keyword focus + GSC links
  *
  * Schedule: vercel.json → 30 3 * * * (09:00 IST)
  */
@@ -26,18 +28,24 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const report = await runSeoHealthCheck();
+  const [report, ga] = await Promise.all([
+    runSeoHealthCheck(),
+    gaReportConfigured()
+      ? fetchGaDailyReport()
+      : Promise.resolve(null),
+  ]);
+
   let mail: { sent: boolean; provider: string } = {
     sent: false,
     provider: "none",
   };
 
   if (mailConfigured()) {
-    mail = await sendSeoDailyDigest(report);
+    mail = await sendSeoDailyDigest(report, ga);
   }
 
   return NextResponse.json({
-    ok: report.failing.length === 0,
+    ok: report.failing.length === 0 && !(ga?.error && !ga.yesterday),
     checkedAt: report.checkedAt,
     total: report.total,
     okCount: report.okCount,
@@ -51,6 +59,17 @@ export async function GET(req: Request) {
       primaryUrl: report.focus.primaryUrl,
       keywords: report.focus.keywords.slice(0, 8),
     },
+    analytics: ga
+      ? {
+          configured: ga.configured,
+          propertyId: ga.propertyId,
+          error: ga.error,
+          yesterday: ga.yesterday,
+          last7Days: ga.last7Days,
+          topPages: ga.topPages.slice(0, 5),
+          topChannels: ga.topChannels.slice(0, 5),
+        }
+      : { configured: false },
     mail,
   });
 }
