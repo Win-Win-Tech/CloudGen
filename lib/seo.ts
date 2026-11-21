@@ -217,10 +217,10 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
   },
   {
     slug: "vision-ai-cctv",
-    title: "CCTV Vision AI Attendance ANPR OCR",
-    h1: "CCTV Vision AI for attendance, counting, ANPR and ID OCR",
+    title: "CCTV Attendance System & ANPR Software India | Vision AI",
+    h1: "CCTV attendance system, people counting, ANPR and ID OCR for Indian sites",
     description:
-      "SmartPatrol Vision AI uses existing cameras for attendance, people counting, ANPR and ID card OCR — scoped per camera set for Indian sites.",
+      "SmartPatrol Vision AI is a CCTV attendance system and ANPR software for India — people counting, automatic number plate recognition and ID card OCR on cameras you already run.",
     keywords: [
       "CCTV attendance system",
       "ANPR software India",
@@ -228,36 +228,60 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
       "ID card OCR",
       "automatic number plate recognition India",
       "CCTV AI attendance",
+      "vision AI security cameras India",
     ],
     packageHref: "/contact",
     highlights: [
-      "Attendance and counting from CCTV",
-      "ANPR number-plate recognition",
-      "ID OCR for faster document capture",
+      "CCTV AI attendance at fixed gates",
+      "CCTV people counting for footfall",
+      "ANPR software India — plate reads at entry",
+      "ID card OCR for faster gate documents",
     ],
     sections: [
       {
-        heading: "Use cameras you already installed",
+        heading: "CCTV attendance system on cameras you already own",
         body: [
-          "Vision AI is for sites with camera infrastructure that want automated attendance, footfall counting, plate reads or ID extraction without rebuilding the whole security stack.",
-          "Every Vision AI engagement is quote-scoped around camera count, lighting and the outcomes you need.",
+          "A CCTV attendance system works best at well-lit choke points — main gates, turnstiles and shift change lanes — where every person passes a fixed camera. SmartPatrol Vision AI marks presence from video so supervisors get CCTV AI attendance without a phone punch at that lane.",
+          "We scope lighting, camera angle, headcount volume and privacy policy before go-live. Quote-only engagements keep accuracy expectations honest for Indian factories, campuses and societies.",
+        ],
+      },
+      {
+        heading: "CCTV people counting and ID card OCR",
+        body: [
+          "CCTV people counting helps operations teams see peak load at lobbies, canteens and event zones — useful for staffing and compliance reports.",
+          "ID card OCR speeds visitor and contractor onboarding: capture name, ID number and related fields from a document image instead of retyping at the desk. Pair with our visitor workflows when you need both camera automation and mobile gate apps.",
+        ],
+      },
+      {
+        heading: "ANPR software India — automatic number plate recognition",
+        body: [
+          "ANPR software India deployments read plates at vehicle gates for entry/exit logs and exception alerts. Automatic number plate recognition India projects need clear camera placement, plate angle and night lighting — we design that during discovery.",
+          "Start with Vision AI ANPR alone, or combine with SmartPatrol Vehicle management for operational gate workflows. See also our guide on CCTV attendance vs mobile face attendance when you are choosing camera vs phone punch.",
         ],
       },
       {
         heading: "Where Vision AI fits beside mobile Smart Patrol",
         body: [
-          "Many customers keep Guards app modules for field patrol and add Vision AI where fixed cameras can automate choke points. We design the mix during discovery.",
+          "Keep the Guards app for field patrol, QR checkpoints and geofence face attendance; add vision AI security cameras India where fixed CCTV can automate gates. CloudGen scopes the mix for Madurai and pan-India sites so you do not buy cameras you do not need.",
         ],
       },
     ],
     faqs: [
       {
-        q: "Is Vision AI available as a fixed monthly SKU?",
-        a: "It is quote-only because camera sets and accuracy requirements vary. Contact us for a scoped proposal.",
+        q: "How does a CCTV attendance system work with existing cameras?",
+        a: "We connect to cameras that already cover a choke point, validate lighting and framing, then run CCTV AI attendance models that log presence events for supervisors. Poor angles or night glare are fixed in the scope before production use.",
       },
       {
-        q: "Can we start with only ANPR?",
-        a: "Yes — we can scope a single Vision AI outcome first, then expand.",
+        q: "What is included in ANPR software India with SmartPatrol Vision AI?",
+        a: "Automatic number plate recognition India covers plate reads at configured lanes, entry/exit timestamps and exception handling. Camera count, IR/night needs and integration with vehicle gate workflows are quoted per site.",
+      },
+      {
+        q: "Can we start with only CCTV people counting or ID card OCR?",
+        a: "Yes. Many sites pilot one Vision AI outcome — people counting, ID card OCR, ANPR or attendance — then expand once the first camera set is stable.",
+      },
+      {
+        q: "Is Vision AI available as a fixed monthly SKU?",
+        a: "It is quote-only because camera sets and accuracy requirements vary. Contact us for a scoped proposal for your site.",
       },
     ],
   },
