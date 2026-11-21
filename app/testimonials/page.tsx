@@ -7,7 +7,7 @@ import { TESTIMONIALS, testimonialInitials } from "@/lib/testimonials";
 export const metadata: Metadata = {
   title: "Customer Testimonials | SmartPatrol Feedback",
   description:
-    "Customer feedback on CloudGen SmartPatrol from EverGreen Management System, EOX Secure, Hi-Tech Arai, Indus Garments and Golden Win Solution.",
+    "Customer feedback on CloudGen SmartPatrol from Evergreen Management Services Private Limited, EOX Secure, Hi-Tech Arai, Indus Garments and Golden Win Solution.",
   keywords: [
     "SmartPatrol testimonials",
     "guard tour software reviews",

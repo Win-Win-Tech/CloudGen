@@ -15,7 +15,7 @@ export const TESTIMONIALS: Testimonial[] = [
     id: "evergreen",
     personName: "Mr. ArmStrong",
     role: "HRD & Admin Head",
-    company: "EverGreen Management System",
+    company: "Evergreen Management Services Private Limited",
     address: "Chennai, Tamil Nadu, India",
     quote:
       "SmartPatrol helped us digitize multi-site guard attendance and checkpoint rounds. Face biometric with geofencing cut proxy punching, and daily email reports reach our clients without manual follow-ups. The team onboarded quickly on the Guards app.",
