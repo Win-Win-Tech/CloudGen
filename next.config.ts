@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
-/** Legacy / dead paths Google still crawls → current canonical pages (clears GSC 404s). */
+/**
+ * Legacy Hostinger/WordPress paths Google still crawls → current pages.
+ * Do NOT add case-only redirects (e.g. /About → /about): Vercel matching is
+ * case-insensitive and that creates infinite 308 loops.
+ */
 const legacyRedirects = [
+  // Generic old paths
   { source: "/home", destination: "/" },
   { source: "/index.html", destination: "/" },
   { source: "/pricing.html", destination: "/pricing" },
@@ -37,15 +42,22 @@ const legacyRedirects = [
   { source: "/solutions/visitor", destination: "/solutions/visitor-management-system" },
   { source: "/solutions/vehicle", destination: "/solutions/vehicle-management-system" },
   { source: "/solutions/cctv", destination: "/solutions/vision-ai-cctv" },
-  // Case variants Hostinger / old CMS often linked
-  { source: "/About", destination: "/about" },
-  { source: "/Pricing", destination: "/pricing" },
-  { source: "/Contact", destination: "/contact" },
-  { source: "/Solutions", destination: "/solutions" },
-  { source: "/Blog", destination: "/blog" },
-  { source: "/Privacy", destination: "/privacy" },
-  { source: "/Demo", destination: "/demo" },
-  { source: "/App", destination: "/app" },
+
+  // GSC “Not found (404)” — old WordPress URLs
+  { source: "/comments/feed", destination: "/blog" },
+  { source: "/comments/feed/:path*", destination: "/blog" },
+  { source: "/about-us", destination: "/about" },
+  { source: "/sample-page", destination: "/" },
+  { source: "/amenities", destination: "/" },
+  { source: "/full-stack-web-development", destination: "/solutions" },
+  { source: "/best-ui-ux-design-services-in-madurai", destination: "/contact" },
+  { source: "/best-artificial-intelligence-services-in-madurai", destination: "/solutions/vision-ai-cctv" },
+  { source: "/custom-flutter-app-development-in-madurai", destination: "/solutions" },
+  { source: "/top-mobile-app-development-services-in-madurai", destination: "/solutions" },
+  { source: "/best-automation-testing-services-in-madurai", destination: "/contact" },
+  { source: "/cloud-transformation-services-in-madurai", destination: "/solutions" },
+  { source: "/top-cloud-service-providers-in-madurai", destination: "/solutions" },
+  { source: "/best-iot-integration-services-in-madurai", destination: "/solutions" },
 ] as const;
 
 const nextConfig: NextConfig = {
