@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { absoluteUrl } from "@/lib/seo";
-import { TESTIMONIALS } from "@/lib/testimonials";
+import { TESTIMONIALS, testimonialInitials } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
   title: "Customer Testimonials | SmartPatrol Feedback",
@@ -42,7 +42,7 @@ export default function TestimonialsPage() {
           name: "SmartPatrol",
           applicationCategory: "BusinessApplication",
         },
-        image: absoluteUrl(item.image),
+        ...(item.image ? { image: absoluteUrl(item.image) } : {}),
       },
     })),
   };
@@ -71,15 +71,19 @@ export default function TestimonialsPage() {
         {TESTIMONIALS.map((item, index) => (
           <article key={item.id} className="card-panel flex flex-col overflow-hidden p-6 sm:p-8">
             <div className="flex items-start gap-4">
-              <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full bg-[#0b2a3d] ring-2 ring-[rgba(15,143,154,0.25)] sm:h-24 sm:w-24">
-                <Image
-                  src={item.image}
-                  alt={item.imageAlt}
-                  fill
-                  sizes="96px"
-                  className="object-cover"
-                  priority={index < 2}
-                />
+              <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[linear-gradient(145deg,#0b2a3d,#0f6b74)] text-xl font-extrabold text-white ring-2 ring-[rgba(15,143,154,0.25)] sm:h-24 sm:w-24 sm:text-2xl">
+                {item.image ? (
+                  <Image
+                    src={item.image}
+                    alt={`${item.personName}, ${item.role}, ${item.company}`}
+                    fill
+                    sizes="96px"
+                    className="object-cover"
+                    priority={index < 2}
+                  />
+                ) : (
+                  <span aria-hidden="true">{testimonialInitials(item.personName)}</span>
+                )}
               </div>
               <div className="min-w-0 pt-1">
                 <p className="text-xs font-bold tracking-[0.14em] text-[var(--teal)]">
