@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { SolutionPackages } from "@/components/SolutionPackages";
 import { site } from "@/lib/site";
@@ -83,9 +84,14 @@ export default function HomePage() {
           </div>
           <div className="card-panel bg-white/95 p-5 text-[var(--ink)] shadow-xl">
             <div className="flex items-start gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--ink)] text-lg font-extrabold text-white">
-                CG
-              </div>
+              <Image
+                src={site.logo}
+                alt="Smart Patrol logo"
+                width={64}
+                height={64}
+                className="h-16 w-16 rounded-2xl object-contain shadow-sm"
+                priority
+              />
               <div>
                 <p className="display text-2xl font-extrabold">{site.product}</p>
                 <p className="text-sm text-[var(--steel)]">{site.company}</p>

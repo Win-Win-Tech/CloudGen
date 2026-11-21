@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { PRODUCT_PILLARS } from "@/lib/seo";
 import { site } from "@/lib/site";
@@ -7,10 +8,21 @@ export function Footer() {
     <footer className="border-t border-[var(--line)] bg-[#eef2f6]">
       <div className="shell grid gap-8 py-10 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
         <div>
-          <p className="display text-xl font-extrabold uppercase">{site.company}</p>
-          <p className="mt-1 text-sm text-[var(--steel)]">
-            {site.product} · {site.appName} workforce app
-          </p>
+          <div className="flex items-center gap-3">
+            <Image
+              src={site.logo}
+              alt="Smart Patrol logo"
+              width={52}
+              height={52}
+              className="h-[52px] w-[52px] object-contain"
+            />
+            <div>
+              <p className="display text-xl font-extrabold uppercase">{site.company}</p>
+              <p className="mt-1 text-sm text-[var(--steel)]">
+                {site.product} · {site.appName} workforce app
+              </p>
+            </div>
+          </div>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-[var(--steel)]">
             Smart Patrol packages for attendance, checkpoints, visitors, vehicles,
             Vision AI, industry apps and custom builds — from Madurai, India.

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { nav, site } from "@/lib/site";
@@ -10,13 +11,23 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-white/90 backdrop-blur">
       <div className="shell flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="min-w-0">
-          <div className="display text-lg font-extrabold uppercase tracking-wide text-[var(--ink)]">
-            {site.company}
-          </div>
-          <div className="truncate text-[11px] font-medium text-[var(--steel)]">
-            {site.product} · {site.appName} app
-          </div>
+        <Link href="/" className="flex min-w-0 items-center gap-2.5" aria-label={`${site.company} home`}>
+          <Image
+            src={site.logo}
+            alt="Smart Patrol logo"
+            width={44}
+            height={44}
+            className="h-11 w-11 shrink-0 object-contain"
+            priority
+          />
+          <span className="min-w-0">
+            <span className="display block text-lg font-extrabold uppercase tracking-wide text-[var(--ink)]">
+              {site.company}
+            </span>
+            <span className="block truncate text-[11px] font-medium text-[var(--steel)]">
+              {site.product} · {site.appName} app
+            </span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-5 md:flex">

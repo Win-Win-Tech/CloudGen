@@ -65,6 +65,11 @@ export const metadata: Metadata = {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
   },
   category: "technology",
+  icons: {
+    icon: [{ url: site.logo, type: "image/jpeg" }],
+    apple: [{ url: site.logo }],
+    shortcut: [site.logo],
+  },
 };
 
 export default function RootLayout({
@@ -81,6 +86,8 @@ export default function RootLayout({
         url: site.url,
         email: site.email,
         telephone: site.phone,
+        logo: absoluteUrl(site.logo),
+        image: absoluteUrl(site.logo),
         sameAs: [site.playStoreUrl, site.companyUrl],
         address: {
           "@type": "PostalAddress",
@@ -94,7 +101,7 @@ export default function RootLayout({
       {
         "@type": "LocalBusiness",
         name: site.company,
-        image: absoluteUrl("/opengraph-image"),
+        image: absoluteUrl(site.logo),
         url: site.url,
         telephone: site.phone,
         email: site.email,

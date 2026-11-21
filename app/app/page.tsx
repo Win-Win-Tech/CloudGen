@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/lib/site";
 
@@ -21,9 +22,14 @@ export default function AppPage() {
     <div className="pb-16">
       <section className="border-b border-[var(--line)] bg-white">
         <div className="shell grid gap-8 py-10 lg:grid-cols-[auto_1fr] lg:items-start">
-          <div className="flex h-28 w-28 items-center justify-center rounded-[28px] bg-[var(--ink)] text-3xl font-extrabold text-white shadow-lg">
-            SP
-          </div>
+          <Image
+            src={site.logo}
+            alt="Smart Patrol logo"
+            width={112}
+            height={112}
+            className="h-28 w-28 rounded-[28px] object-contain shadow-lg"
+            priority
+          />
           <div>
             <h1 className="display text-4xl font-extrabold">SMART PATROL</h1>
             <p className="mt-1 text-lg font-semibold text-[var(--teal-deep)]">

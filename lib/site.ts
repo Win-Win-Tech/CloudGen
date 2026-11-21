@@ -28,6 +28,7 @@ export const site = {
   appVersion: "1.0.6",
   appSize: "77 MB",
   appRequires: "Android 7.0+",
+  logo: "/brand/smartpatrol-logo.jpg",
 } as const;
 
 /** Primary nav aligned with cloudgentechnologies.com */
