@@ -143,8 +143,7 @@ export function PackagePricingCalculator() {
             Display currency
           </p>
           <p className="mt-1 text-sm text-[var(--navy)]">
-            Checkout currency (USD LUT / INR GST)
-            {currency === "USD" ? " · optional local estimate" : ""}.
+            Checkout currency (USD LUT / INR GST) · local estimate always available.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -176,25 +175,23 @@ export function PackagePricingCalculator() {
               INR · GST
             </button>
           </div>
-          {currency === "USD" ? (
-            <label className="inline-flex items-center gap-2 rounded-md border border-[var(--line)] bg-white px-2 py-1.5 text-xs font-semibold text-[var(--navy)]">
-              <span className="text-[var(--steel)]">Approx</span>
-              <select
-                className="bg-transparent text-xs font-bold outline-none"
-                value={localCurrency}
-                onChange={(e) =>
-                  setLocalCurrency(e.target.value as DisplayCurrencyCode)
-                }
-                aria-label="Local display currency"
-              >
-                {DISPLAY_CURRENCIES.map((c) => (
-                  <option key={c.code} value={c.code}>
-                    {c.code} · {c.label.split(" (")[0]}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ) : null}
+          <label className="inline-flex items-center gap-2 rounded-md border border-[var(--line)] bg-white px-2 py-1.5 text-xs font-semibold text-[var(--navy)]">
+            <span className="text-[var(--steel)]">Approx</span>
+            <select
+              className="bg-transparent text-xs font-bold outline-none"
+              value={localCurrency}
+              onChange={(e) =>
+                setLocalCurrency(e.target.value as DisplayCurrencyCode)
+              }
+              aria-label="Local display currency"
+            >
+              {DISPLAY_CURRENCIES.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.code} · {c.label.split(" (")[0]}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
       </div>
 
@@ -235,11 +232,9 @@ export function PackagePricingCalculator() {
                     /mo
                   </span>
                 </p>
-                {currency === "USD" ? (
-                  <p className="mt-1 text-xs font-semibold text-[var(--teal-deep)]">
-                    ≈ {formatApproxFromUsd(fromUsd, localCurrency)} /mo
-                  </p>
-                ) : null}
+                <p className="mt-1 text-xs font-semibold text-[var(--teal-deep)]">
+                  ≈ {formatApproxFromUsd(fromUsd, localCurrency)} /mo
+                </p>
                 <p className="mt-2 text-xs text-[var(--steel)]">{pkg.unitLimit}</p>
               </button>
             );
@@ -489,15 +484,13 @@ export function PackagePricingCalculator() {
                     ? "USD list → INR at checkout. Export under LUT — no GST."
                     : "Domestic INR billing with 18% GST. Paid via Razorpay in INR."}
                 </p>
-                {currency === "USD" ? (
-                  <LocalCurrencyHint
-                    className="mt-4"
-                    usdPeriod={quote.usdPeriod}
-                    usdSetup={quote.usdSetup}
-                    value={localCurrency}
-                    onChange={setLocalCurrency}
-                  />
-                ) : null}
+                <LocalCurrencyHint
+                  className="mt-4"
+                  usdPeriod={quote.usdPeriod}
+                  usdSetup={quote.usdSetup}
+                  value={localCurrency}
+                  onChange={setLocalCurrency}
+                />
               </>
             )}
 
