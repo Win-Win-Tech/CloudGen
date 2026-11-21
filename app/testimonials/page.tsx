@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { absoluteUrl } from "@/lib/seo";
 import { TESTIMONIALS } from "@/lib/testimonials";
@@ -36,6 +37,7 @@ export default function TestimonialsPage() {
           name: "SmartPatrol",
           applicationCategory: "BusinessApplication",
         },
+        image: absoluteUrl(item.image),
       },
     })),
   };
@@ -62,28 +64,40 @@ export default function TestimonialsPage() {
 
       <section className="shell grid gap-6 py-12 lg:grid-cols-2">
         {TESTIMONIALS.map((item, index) => (
-          <article key={item.id} className="card-panel flex flex-col p-6 sm:p-8">
-            <p className="text-xs font-bold tracking-[0.14em] text-[var(--teal)]">
-              {String(index + 1).padStart(2, "0")}
-            </p>
-            <blockquote className="mt-3 flex-1 text-[1.05rem] leading-relaxed text-[var(--navy)]">
-              “{item.quote}”
-            </blockquote>
-            <div className="mt-6 border-t border-[var(--line)] pt-5">
-              <p className="display text-xl font-bold">{item.company}</p>
-              <p className="mt-1 text-sm font-semibold text-[var(--teal-deep)]">
-                {item.location}
+          <article key={item.id} className="card-panel flex flex-col overflow-hidden">
+            <div className="relative aspect-[16/9] w-full bg-[#0b2a3d]">
+              <Image
+                src={item.image}
+                alt={item.imageAlt}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+                priority={index < 2}
+              />
+            </div>
+            <div className="flex flex-1 flex-col p-6 sm:p-8">
+              <p className="text-xs font-bold tracking-[0.14em] text-[var(--teal)]">
+                {String(index + 1).padStart(2, "0")}
               </p>
-              <p className="mt-1 text-sm text-[var(--steel)]">{item.role}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {item.focus.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full border border-[var(--line)] bg-[#eef6f7] px-3 py-1 text-xs font-semibold text-[var(--teal-deep)]"
-                  >
-                    {tag}
-                  </span>
-                ))}
+              <blockquote className="mt-3 flex-1 text-[1.05rem] leading-relaxed text-[var(--navy)]">
+                “{item.quote}”
+              </blockquote>
+              <div className="mt-6 border-t border-[var(--line)] pt-5">
+                <p className="display text-xl font-bold">{item.company}</p>
+                <p className="mt-1 text-sm font-semibold text-[var(--teal-deep)]">
+                  {item.location}
+                </p>
+                <p className="mt-1 text-sm text-[var(--steel)]">{item.role}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {item.focus.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-[var(--line)] bg-[#eef6f7] px-3 py-1 text-xs font-semibold text-[var(--teal-deep)]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </article>

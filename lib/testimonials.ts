@@ -5,6 +5,8 @@ export type Testimonial = {
   role: string;
   quote: string;
   focus: string[];
+  image: string;
+  imageAlt: string;
 };
 
 export const TESTIMONIALS: Testimonial[] = [
@@ -16,6 +18,8 @@ export const TESTIMONIALS: Testimonial[] = [
     quote:
       "SmartPatrol helped us digitize multi-site guard attendance and checkpoint rounds. Face biometric with geofencing cut proxy punching, and daily email reports reach our clients without manual follow-ups. The team onboarded quickly on the Guards app.",
     focus: ["Geofence attendance", "QR checkpoint patrol", "Client daily reports"],
+    image: "/testimonials/evergreen-chennai.jpg",
+    imageAlt: "EverGreen Management System facility in Chennai",
   },
   {
     id: "eox-secure",
@@ -25,6 +29,8 @@ export const TESTIMONIALS: Testimonial[] = [
     quote:
       "As a Madurai-based security company, we needed live proof of patrols and faster incident escalation. SmartPatrol’s QR checkpoints, tickets with WhatsApp alerts, and real-time visibility have improved accountability across our deployments.",
     focus: ["QR patrols", "Incident tickets", "WhatsApp / IVR alerts"],
+    image: "/testimonials/eox-secure-madurai.jpg",
+    imageAlt: "EOX Secure operations building in Madurai",
   },
   {
     id: "hi-tech-arai",
@@ -34,6 +40,8 @@ export const TESTIMONIALS: Testimonial[] = [
     quote:
       "We use SmartPatrol for plant-side workforce discipline and gate control. Shift attendance, perimeter checkpoints and vehicle logs are now auditable in one place — much cleaner than paper registers for compliance reviews.",
     focus: ["Shift attendance", "Perimeter checkpoints", "Vehicle gate logs"],
+    image: "/testimonials/hitech-arai-chennai.jpg",
+    imageAlt: "Hi-Tech Arai manufacturing plant in Chennai",
   },
   {
     id: "indus-garments",
@@ -43,6 +51,8 @@ export const TESTIMONIALS: Testimonial[] = [
     quote:
       "For our garment unit, SmartPatrol brought clear guard presence on the floor and yard. Geofenced checkout, scheduled rounds and ticketed issues give supervisors confidence during night shifts and peak production days.",
     focus: ["Manufacturing security", "Night-shift patrols", "Floor incident tickets"],
+    image: "/testimonials/indus-garments-dhalavaipuram.jpg",
+    imageAlt: "Indus Garments manufacturing unit in Dhalavaipuram",
   },
   {
     id: "golden-win",
@@ -52,5 +62,7 @@ export const TESTIMONIALS: Testimonial[] = [
     quote:
       "We evaluated SmartPatrol for cross-border security operations support. The mobile-first Guards workflow, multi-site roles and automated reporting make it practical to standardize patrol SOPs and share status with stakeholders.",
     focus: ["Multi-site operations", "Mobile Guards app", "Automated reporting"],
+    image: "/testimonials/golden-win-malaysia.jpg",
+    imageAlt: "Golden Win Solution office building in Malaysia",
   },
 ];
