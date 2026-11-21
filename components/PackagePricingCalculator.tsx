@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import { LocalCurrencyHint } from "@/components/LocalCurrencyHint";
 import {
   DEFAULT_DISPLAY_CURRENCY,
+  DISPLAY_CURRENCIES,
+  formatApproxFromUsd,
   type DisplayCurrencyCode,
 } from "@/lib/fxDisplay";
 import {
@@ -135,6 +137,67 @@ export function PackagePricingCalculator() {
 
   return (
     <div className="space-y-10">
+      <div className="card-panel flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-[var(--steel)]">
+            Display currency
+          </p>
+          <p className="mt-1 text-sm text-[var(--navy)]">
+            Checkout currency (USD LUT / INR GST)
+            {currency === "USD" ? " · optional local estimate" : ""}.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <div
+            className="inline-flex rounded-md border border-[var(--line)] bg-white p-1"
+            role="group"
+            aria-label="Checkout currency"
+          >
+            <button
+              type="button"
+              className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
+                currency === "USD"
+                  ? "bg-[var(--teal-deep)] text-white"
+                  : "text-[var(--steel)]"
+              }`}
+              onClick={() => setCurrency("USD")}
+            >
+              USD · LUT
+            </button>
+            <button
+              type="button"
+              className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
+                currency === "INR"
+                  ? "bg-[var(--teal-deep)] text-white"
+                  : "text-[var(--steel)]"
+              }`}
+              onClick={() => setCurrency("INR")}
+            >
+              INR · GST
+            </button>
+          </div>
+          {currency === "USD" ? (
+            <label className="inline-flex items-center gap-2 rounded-md border border-[var(--line)] bg-white px-2 py-1.5 text-xs font-semibold text-[var(--navy)]">
+              <span className="text-[var(--steel)]">Approx</span>
+              <select
+                className="bg-transparent text-xs font-bold outline-none"
+                value={localCurrency}
+                onChange={(e) =>
+                  setLocalCurrency(e.target.value as DisplayCurrencyCode)
+                }
+                aria-label="Local display currency"
+              >
+                {DISPLAY_CURRENCIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.code} · {c.label.split(" (")[0]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
+        </div>
+      </div>
+
       <div>
         <p className="eyebrow">Step 1</p>
         <h2 className="display mt-1 text-2xl font-extrabold sm:text-3xl">
@@ -143,7 +206,9 @@ export function PackagePricingCalculator() {
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {PAID_PACKAGES.map((pkg) => {
             const active = packageId === pkg.id;
-            const fromQuote = quotePackage(pkg.id, "monthly");
+            const fromQuote = quotePackage(pkg.id, "monthly", undefined, currency);
+            const fromUsd = fromQuote.usdPeriod ?? pkg.usdMonthly ?? 0;
+            const fromInr = fromQuote.inrPeriod;
             return (
               <button
                 key={pkg.id}
@@ -163,11 +228,18 @@ export function PackagePricingCalculator() {
                 <p className="display text-lg font-extrabold leading-snug">{pkg.name}</p>
                 <p className="mt-2 text-xs text-[var(--steel)]">from</p>
                 <p className="display text-2xl font-extrabold text-[var(--ink)]">
-                  {formatUSD(fromQuote.usdPeriod ?? pkg.usdMonthly ?? 0)}
+                  {currency === "INR" && fromInr != null
+                    ? formatINR(fromInr)
+                    : formatUSD(fromUsd)}
                   <span className="ml-1 text-xs font-semibold text-[var(--steel)]">
                     /mo
                   </span>
                 </p>
+                {currency === "USD" ? (
+                  <p className="mt-1 text-xs font-semibold text-[var(--teal-deep)]">
+                    ≈ {formatApproxFromUsd(fromUsd, localCurrency)} /mo
+                  </p>
+                ) : null}
                 <p className="mt-2 text-xs text-[var(--steel)]">{pkg.unitLimit}</p>
               </button>
             );

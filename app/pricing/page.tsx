@@ -13,16 +13,15 @@ export default function PricingPage() {
     <div className="pb-16">
       <section className="border-b border-[var(--line)] bg-white py-12">
         <div className="shell mx-auto max-w-3xl text-center">
-          <p className="eyebrow">SmartPatrol pricelist · USD</p>
+          <p className="eyebrow">SmartPatrol pricelist · multi-currency</p>
           <h1 className="display mt-2 text-4xl font-extrabold sm:text-5xl">
             Pricing
           </h1>
           <p className="mt-3 text-[var(--steel)]">
-            Choose a package, pick USD (LUT export) or INR (domestic + GST), drag
-            capacity beyond the base band, and pay pro-rata. In USD mode, see an
-            approximate MYR/SGD/AED (and more) conversion for planning. Ticket Complaints
-            Tracking is included on every package. Vision AI, Industry Suite and Custom
-            Build are quote-only.
+            Choose USD (LUT export) or INR (domestic + GST) at the top, optionally
+            preview MYR/SGD/AED and more, then drag capacity beyond the base band for
+            pro-rata pricing. Ticket Complaints Tracking is included on every package.
+            Vision AI, Industry Suite and Custom Build are quote-only.
           </p>
         </div>
       </section>
