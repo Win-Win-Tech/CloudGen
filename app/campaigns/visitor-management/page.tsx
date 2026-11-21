@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CampaignVideoTabs } from "@/components/CampaignVideoTabs";
 import { absoluteUrl } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 const PRIMARY_VIDEO = "/campaigns/visitor-management-animated-vo.mp4";
 const PRIMARY_POSTER = "/campaigns/visitor-management-animated-vo-poster.jpg";
-const SILENT_VIDEO = "/campaigns/visitor-management-campaign.mp4";
-const SILENT_POSTER = "/campaigns/visitor-management-campaign-poster.jpg";
 
 export const metadata: Metadata = {
   title: "Visitor Management Campaign Video",
@@ -82,7 +81,7 @@ export default function VisitorManagementCampaignPage() {
     contentUrl: absoluteUrl(PRIMARY_VIDEO),
     embedUrl: absoluteUrl("/campaigns/visitor-management"),
     uploadDate: "2026-11-21",
-    duration: "PT1M18S",
+    duration: "PT1M23S",
     publisher: {
       "@type": "Organization",
       name: site.company,
@@ -98,10 +97,10 @@ export default function VisitorManagementCampaignPage() {
       />
 
       <section className="border-b border-[var(--line)] bg-[linear-gradient(160deg,#0b1f36_0%,#123552_48%,#0d2a40_100%)] text-white">
-        <div className="shell grid gap-8 py-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+        <div className="shell grid gap-8 py-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#d4af55]">
-              Animated campaign · Voice-over
+              Campaign · Animated + Voice
             </p>
             <h1 className="display mt-3 text-4xl font-extrabold leading-tight md:text-5xl">
               Visitor Management System
@@ -121,28 +120,10 @@ export default function VisitorManagementCampaignPage() {
               >
                 Product details
               </Link>
-              <a
-                href={PRIMARY_VIDEO}
-                download
-                className="btn-outline border-white/30 text-white hover:bg-white/10"
-              >
-                Download MP4
-              </a>
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-white/15 bg-black shadow-2xl">
-            <video
-              className="aspect-video w-full"
-              controls
-              playsInline
-              preload="metadata"
-              poster={PRIMARY_POSTER}
-              aria-label="Animated Visitor Management System campaign with voice-over"
-            >
-              <source src={PRIMARY_VIDEO} type="video/mp4" />
-            </video>
-          </div>
+          <CampaignVideoTabs variant="hero" />
         </div>
       </section>
 
@@ -164,27 +145,6 @@ export default function VisitorManagementCampaignPage() {
             </li>
           ))}
         </ol>
-      </section>
-
-      <section className="shell pb-14">
-        <h2 className="display text-2xl font-extrabold text-[var(--ink)]">
-          Silent motion version
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm text-[var(--steel)]">
-          Prefer a shorter cut without narration? Use this version for social posts and mute autoplay.
-        </p>
-        <div className="mt-6 max-w-3xl overflow-hidden rounded-2xl border border-[var(--line)] bg-black">
-          <video
-            className="aspect-video w-full"
-            controls
-            playsInline
-            preload="metadata"
-            poster={SILENT_POSTER}
-            aria-label="Silent Visitor Management campaign video"
-          >
-            <source src={SILENT_VIDEO} type="video/mp4" />
-          </video>
-        </div>
       </section>
 
       <section className="border-t border-[var(--line)] bg-[#eef2f6]">
