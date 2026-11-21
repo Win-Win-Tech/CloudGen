@@ -11,6 +11,7 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - /about About Us
 - /solutions Product
 - /industries Industry domains & how SmartPatrol is leveraged
+- /testimonials Customer feedback (EverGreen, EOX Secure, Hi-Tech Arai, Indus Garments, Golden Win Solution)
 - /solutions/face-biometric-attendance Face biometric attendance
 - /solutions/qr-checkpoint-guard-tour QR checkpoint guard tour
 - /solutions/visitor-management-system Visitor management
