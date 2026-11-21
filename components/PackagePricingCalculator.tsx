@@ -140,48 +140,39 @@ export function PackagePricingCalculator() {
       : `/demo?interest=${encodeURIComponent(selected.name + " quote")}`;
 
   return (
-    <div className="space-y-10">
-      <div className="card-panel space-y-3 p-4 sm:p-5">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.12em] text-[var(--steel)]">
-            Display currency
-          </p>
-          <p className="mt-1 text-sm text-[var(--navy)]">
-            Prices show in one currency. USD/INR set checkout tax; other codes are
-            planning estimates. Razorpay still collects INR.
-          </p>
-        </div>
-        <div
-          className="flex flex-wrap gap-2"
-          role="group"
-          aria-label="Price display currency"
-        >
-          {PRICE_DISPLAY_OPTIONS.map((c) => {
-            const active = priceDisplay === c.code;
-            return (
-              <button
-                key={c.code}
-                type="button"
-                onClick={() => setPriceDisplay(c.code)}
-                className={`rounded-md border px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition ${
-                  active
-                    ? "border-[var(--teal-deep)] bg-[var(--teal-deep)] text-white"
-                    : "border-[var(--line)] bg-white text-[var(--steel)] hover:border-[var(--teal)] hover:text-[var(--navy)]"
-                }`}
-              >
-                {c.code}
-              </button>
-            );
-          })}
-        </div>
+    <div className="space-y-5">
+      <div
+        className="flex flex-wrap items-center gap-2"
+        role="group"
+        aria-label="Price display currency"
+      >
+        <span className="mr-1 text-xs font-bold uppercase tracking-[0.12em] text-[var(--steel)]">
+          Currency
+        </span>
+        {PRICE_DISPLAY_OPTIONS.map((c) => {
+          const active = priceDisplay === c.code;
+          return (
+            <button
+              key={c.code}
+              type="button"
+              onClick={() => setPriceDisplay(c.code)}
+              className={`rounded-md border px-2.5 py-1 text-xs font-bold uppercase tracking-wide transition ${
+                active
+                  ? "border-[var(--teal-deep)] bg-[var(--teal-deep)] text-white"
+                  : "border-[var(--line)] bg-white text-[var(--steel)] hover:border-[var(--teal)] hover:text-[var(--navy)]"
+              }`}
+            >
+              {c.code}
+            </button>
+          );
+        })}
       </div>
 
       <div>
-        <p className="eyebrow">Step 1</p>
-        <h2 className="display mt-1 text-2xl font-extrabold sm:text-3xl">
-          Choose the desired package
+        <h2 className="display text-lg font-extrabold sm:text-xl">
+          1 · Choose package
         </h2>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {PAID_PACKAGES.map((pkg) => {
             const active = packageId === pkg.id;
             const fromQuote = quotePackage(pkg.id, "monthly", undefined, currency);
@@ -191,67 +182,58 @@ export function PackagePricingCalculator() {
                 key={pkg.id}
                 type="button"
                 onClick={() => selectPackage(pkg.id)}
-                className={`card-panel relative flex flex-col p-5 text-left transition ${
+                className={`card-panel relative flex flex-col p-3.5 text-left transition ${
                   active
                     ? "ring-2 ring-[var(--teal)] shadow-[0_12px_28px_rgba(15,143,154,0.12)]"
                     : "hover:border-[var(--teal)]"
                 }`}
               >
                 {pkg.popular ? (
-                  <span className="absolute -top-2.5 right-3 rounded-full bg-[var(--orange)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+                  <span className="absolute -top-2 right-2 rounded-full bg-[var(--orange)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
                     Popular
                   </span>
                 ) : null}
-                <p className="display text-lg font-extrabold leading-snug">{pkg.name}</p>
-                <p className="mt-2 text-xs text-[var(--steel)]">
-                  from{isLocalDisplayCurrency(priceDisplay) ? " · approx" : ""}
-                </p>
-                <p className="display text-2xl font-extrabold text-[var(--ink)]">
+                <p className="display text-base font-extrabold leading-snug">{pkg.name}</p>
+                <p className="mt-1.5 display text-xl font-extrabold text-[var(--ink)]">
                   {formatShown(fromUsd, priceDisplay)}
                   <span className="ml-1 text-xs font-semibold text-[var(--steel)]">
                     /mo
+                    {isLocalDisplayCurrency(priceDisplay) ? " · approx" : ""}
                   </span>
                 </p>
-                <p className="mt-2 text-xs text-[var(--steel)]">{pkg.unitLimit}</p>
+                <p className="mt-1 text-[11px] text-[var(--steel)]">{pkg.unitLimit}</p>
               </button>
             );
           })}
         </div>
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="mt-3 flex flex-wrap gap-2">
           {QUOTE_PACKAGES.map((pkg) => (
             <Link
               key={pkg.id}
               href={`/demo?interest=${encodeURIComponent(pkg.name + " quote")}`}
-              className="card-panel flex flex-col p-4 transition hover:border-[var(--teal)]"
+              className="rounded-md border border-[var(--line)] bg-white px-3 py-2 text-xs font-semibold text-[var(--navy)] transition hover:border-[var(--teal)]"
             >
-              <p className="text-xs font-bold uppercase tracking-wide text-[var(--steel)]">
-                Quote
-              </p>
-              <p className="display mt-1 text-base font-extrabold">{pkg.name}</p>
-              <p className="mt-1 text-xs text-[var(--steel)]">{pkg.blurb}</p>
+              Quote · {pkg.name}
             </Link>
           ))}
         </div>
       </div>
 
-      <div className="card-panel p-6 sm:p-8">
-        <p className="eyebrow">Step 2</p>
-        <h2 className="display mt-1 text-2xl font-extrabold sm:text-3xl">
-          Select capacity on the slider
-          {atOnlineCap ? (
-            <span className="ml-2 text-base font-semibold text-[var(--orange-deep)]">
-              · need more? request a quote
-            </span>
-          ) : null}
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm text-[var(--steel)]">
-          Drag to scale beyond the base band ({selected.unitLimit}). Gate Duo and
-          Site Ops let you set Visitor and Vehicle site counts independently.
-          Bundle discounts stay applied on Duo and Site Ops packages.
-        </p>
-
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
-          <div className="space-y-7">
+      <div className="card-panel p-4 sm:p-5">
+        <div className="grid gap-5 lg:grid-cols-[1fr_20rem] lg:items-start xl:grid-cols-[1.2fr_22rem]">
+          <div>
+            <h2 className="display text-lg font-extrabold sm:text-xl">
+              2 · Capacity
+              {atOnlineCap ? (
+                <span className="ml-2 text-sm font-semibold text-[var(--orange-deep)]">
+                  · need more? request a quote
+                </span>
+              ) : null}
+            </h2>
+            <p className="mt-1 text-xs text-[var(--steel)]">
+              {selected.name} · {selected.unitLimit}
+            </p>
+            <div className="mt-4 space-y-5">
             {dims.users ? (
               <label className="block">
                 <div className="mb-3 flex items-end justify-between gap-3">
@@ -351,59 +333,54 @@ export function PackagePricingCalculator() {
             ) : null}
 
             {!hasCapacity ? (
-              <p className="rounded-md bg-[var(--mist)] px-4 py-3 text-sm text-[var(--steel)]">
-                This package is scoped per engagement — request a quote for pricing.
+              <p className="rounded-md bg-[var(--mist)] px-3 py-2 text-sm text-[var(--steel)]">
+                Scoped per engagement — request a quote.
               </p>
             ) : null}
+            </div>
           </div>
 
-          <div className="rounded-xl border border-[var(--line)] bg-[linear-gradient(165deg,#ffffff_0%,#f3f8fb_100%)] p-6">
-            <p className="text-sm font-semibold text-[var(--navy)]">{selected.name}</p>
-            <p className="mt-1 text-xs text-[var(--steel)]">
-              {qtySummary(dims, qty)}
-            </p>
+          <aside className="rounded-xl border border-[var(--line)] bg-[linear-gradient(165deg,#ffffff_0%,#f3f8fb_100%)] p-4 lg:sticky lg:top-24">
+            <p className="display text-base font-extrabold">3 · Subscription</p>
+            <p className="mt-1 text-xs text-[var(--steel)]">{qtySummary(dims, qty)}</p>
 
-            <div className="mt-5 flex flex-wrap gap-2">
-              <div className="inline-flex rounded-md border border-[var(--line)] bg-white p-1">
-                <button
-                  type="button"
-                  className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
-                    billing === "annual"
-                      ? "bg-[var(--ink)] text-white"
-                      : "text-[var(--steel)]"
-                  }`}
-                  onClick={() => setBilling("annual")}
-                >
-                  Annually
-                </button>
-                <button
-                  type="button"
-                  className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
-                    billing === "monthly"
-                      ? "bg-[var(--ink)] text-white"
-                      : "text-[var(--steel)]"
-                  }`}
-                  onClick={() => setBilling("monthly")}
-                >
-                  Monthly
-                </button>
-              </div>
+            <div className="mt-3 inline-flex rounded-md border border-[var(--line)] bg-white p-1">
+              <button
+                type="button"
+                className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
+                  billing === "annual"
+                    ? "bg-[var(--ink)] text-white"
+                    : "text-[var(--steel)]"
+                }`}
+                onClick={() => setBilling("annual")}
+              >
+                Annually
+              </button>
+              <button
+                type="button"
+                className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
+                  billing === "monthly"
+                    ? "bg-[var(--ink)] text-white"
+                    : "text-[var(--steel)]"
+                }`}
+                onClick={() => setBilling("monthly")}
+              >
+                Monthly
+              </button>
             </div>
 
             {quote.needsQuote || quote.usdPeriod == null || quote.inrPeriod == null ? (
-              <p className="display mt-6 text-3xl font-extrabold">Custom quote</p>
+              <p className="display mt-4 text-2xl font-extrabold">Custom quote</p>
             ) : (
               <>
-                <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-[var(--steel)]">
+                <p className="mt-4 text-[11px] font-semibold uppercase tracking-wide text-[var(--steel)]">
                   {billing === "annual"
-                    ? `Billed annually · ${ANNUAL_MONTHS_CHARGED} months cost (2 free)`
-                    : "Billed monthly"}{" "}
-                  · {currency === "USD" ? "Export (LUT)" : "India (GST)"}
-                  {isLocalDisplayCurrency(priceDisplay)
-                    ? ` · shown in ${priceDisplay}`
-                    : ""}
+                    ? `Annual · ${ANNUAL_MONTHS_CHARGED} mo billed`
+                    : "Monthly"}{" "}
+                  · {currency === "USD" ? "LUT" : "GST"}
+                  {isLocalDisplayCurrency(priceDisplay) ? ` · ${priceDisplay}` : ""}
                 </p>
-                <p className="display text-4xl font-extrabold text-[var(--ink)]">
+                <p className="display text-3xl font-extrabold text-[var(--ink)]">
                   {formatShown(quote.usdPeriod, priceDisplay)}
                   <span className="ml-1 text-sm font-semibold text-[var(--steel)]">
                     /{billing === "annual" ? "yr" : "mo"}
@@ -411,38 +388,28 @@ export function PackagePricingCalculator() {
                 </p>
                 {quote.usdListPeriod != null &&
                 quote.usdListPeriod > quote.usdPeriod ? (
-                  <p className="mt-1 text-sm text-[var(--steel)] line-through">
+                  <p className="mt-0.5 text-sm text-[var(--steel)] line-through">
                     List {formatShown(quote.usdListPeriod, priceDisplay)}
                   </p>
                 ) : null}
-                <p className="mt-2 text-sm font-semibold text-[var(--navy)]">
-                  + setup {formatShown(quote.usdSetup!, priceDisplay)} (one-time)
+                <p className="mt-1.5 text-sm font-semibold text-[var(--navy)]">
+                  + setup {formatShown(quote.usdSetup!, priceDisplay)}
                 </p>
                 {currency === "INR" && quote.inrGst != null && quote.inrGst > 0 ? (
-                  <p className="mt-1 text-sm text-[var(--navy)]">
+                  <p className="mt-0.5 text-sm text-[var(--navy)]">
                     + GST {GST_PERCENT_LABEL} {formatINR(quote.inrGst)}
                   </p>
                 ) : (
-                  <p className="mt-1 text-sm text-[var(--navy)]">GST Nil (LUT)</p>
+                  <p className="mt-0.5 text-sm text-[var(--navy)]">GST Nil (LUT)</p>
                 )}
-                <p className="mt-2 text-sm font-bold text-[var(--ink)]">
-                  Razorpay due {formatINR(quote.inrDue!)}
-                </p>
-                <p className="mt-1 text-xs text-[var(--steel)]">
-                  {isLocalDisplayCurrency(priceDisplay)
-                    ? `${priceDisplay} is an estimate for planning. Checkout uses ${currency} tax mode; Razorpay collects INR.`
-                    : currency === "USD"
-                      ? "USD list → INR at checkout. Export under LUT — no GST."
-                      : "Domestic INR billing with 18% GST. Paid via Razorpay in INR."}
+                <p className="mt-1.5 text-sm font-bold text-[var(--ink)]">
+                  Due {formatINR(quote.inrDue!)}
                 </p>
               </>
             )}
 
-            <div className="mt-6 flex flex-col gap-2">
-              <Link
-                href={checkoutHref}
-                className="btn-primary w-full text-center"
-              >
+            <div className="mt-4 flex flex-col gap-2">
+              <Link href={checkoutHref} className="btn-primary w-full text-center">
                 {quote.needsQuote ? "Request quote" : "Subscribe"}
               </Link>
               <Link
@@ -452,7 +419,7 @@ export function PackagePricingCalculator() {
                 Request demo
               </Link>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
     </div>
