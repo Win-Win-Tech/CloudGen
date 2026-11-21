@@ -10,6 +10,7 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - / Home
 - /about About Us
 - /solutions Product
+- /campaigns/visitor-management Campaign (animated VMS video with voice-over)
 - /industries Industry domains & how SmartPatrol is leveraged
 - /testimonials Customer feedback (Evergreen Management Services Private Limited, EOX Secure, Hi-Tech Arai, Indus Garments, Golden Win Solution)
 - /solutions/face-biometric-attendance Face biometric attendance
