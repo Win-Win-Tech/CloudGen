@@ -161,6 +161,86 @@ export function mailConfigured() {
   );
 }
 
+export type SimpleMail = {
+  to?: string;
+  subject: string;
+  text: string;
+  html: string;
+};
+
+async function sendSimpleWithResend(mail: SimpleMail) {
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  if (!apiKey) return false;
+
+  const from =
+    process.env.MAIL_FROM?.trim() ||
+    `${site.company} <onboarding@resend.dev>`;
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to: [mail.to?.trim() || inbox()],
+      subject: mail.subject,
+      text: mail.text,
+      html: mail.html,
+    }),
+  });
+
+  if (!res.ok) {
+    const detail = await res.text();
+    throw new Error(`Resend failed: ${detail}`);
+  }
+  return true;
+}
+
+async function sendSimpleWithSmtp(mail: SimpleMail) {
+  const host = process.env.SMTP_HOST?.trim();
+  const user = process.env.SMTP_USER?.trim();
+  const pass = process.env.SMTP_PASS?.trim();
+  if (!host || !user || !pass) return false;
+
+  const port = Number(process.env.SMTP_PORT || 465);
+  const secure = process.env.SMTP_SECURE === "true" || port === 465;
+  const from =
+    process.env.MAIL_FROM?.trim() ||
+    `"${site.company}" <${user}>`;
+
+  const transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure,
+    auth: { user, pass },
+    connectionTimeout: 12_000,
+    greetingTimeout: 12_000,
+    socketTimeout: 20_000,
+  });
+
+  await transporter.sendMail({
+    from,
+    to: mail.to?.trim() || inbox(),
+    subject: mail.subject,
+    text: mail.text,
+    html: mail.html,
+  });
+  return true;
+}
+
+/** Generic transactional email (SEO digests, alerts). Uses same Resend/SMTP as leads. */
+export async function sendSimpleEmail(mail: SimpleMail) {
+  if (await sendSimpleWithResend(mail)) {
+    return { sent: true as const, provider: "resend" as const };
+  }
+  if (await sendSimpleWithSmtp(mail)) {
+    return { sent: true as const, provider: "smtp" as const };
+  }
+  return { sent: false as const, provider: "none" as const };
+}
+
 /**
  * Notify sales inbox via Resend or SMTP only.
  * FormSubmit was removed — Cloudflare blocks server-side calls ("Just a moment...").
