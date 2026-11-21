@@ -28,9 +28,14 @@ export default function TestimonialsPage() {
         "@type": "Review",
         reviewBody: item.quote,
         author: {
-          "@type": "Organization",
-          name: item.company,
-          address: item.location,
+          "@type": "Person",
+          name: item.personName,
+          jobTitle: item.role,
+          worksFor: {
+            "@type": "Organization",
+            name: item.company,
+            address: item.address,
+          },
         },
         itemReviewed: {
           "@type": "SoftwareApplication",
@@ -83,11 +88,14 @@ export default function TestimonialsPage() {
                 “{item.quote}”
               </blockquote>
               <div className="mt-6 border-t border-[var(--line)] pt-5">
-                <p className="display text-xl font-bold">{item.company}</p>
-                <p className="mt-1 text-sm font-semibold text-[var(--teal-deep)]">
-                  {item.location}
+                <p className="display text-xl font-bold">{item.personName}</p>
+                <p className="mt-1 text-sm font-semibold text-[var(--navy)]">
+                  {item.role}
                 </p>
-                <p className="mt-1 text-sm text-[var(--steel)]">{item.role}</p>
+                <p className="mt-2 text-base font-bold text-[var(--teal-deep)]">
+                  {item.company}
+                </p>
+                <p className="mt-1 text-sm text-[var(--steel)]">{item.address}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {item.focus.map((tag) => (
                     <span
