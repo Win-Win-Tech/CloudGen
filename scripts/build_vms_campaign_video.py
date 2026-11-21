@@ -206,7 +206,7 @@ def slide_feature(
     logo = rounded_logo(96)
     img.paste(logo, (70, 50), logo)
     draw.text((190, 70), "SmartPatrol Visitor", font=font(FONT_BOLD, 28), fill=WHITE)
-    draw.text((190, 108), "CloudGen Technologies", font=font(FONT_REG, 20), fill=MUTED)
+    draw.text((190, 108), "CloudGen Technologies", font=font(FONT_REG, 20), fill=SILVER)
 
     badge(draw, step, 250)
     feature_icon(draw, icon, W // 2, 420, 62)
