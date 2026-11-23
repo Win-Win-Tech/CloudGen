@@ -15,7 +15,14 @@ export const site = {
   whatsappUrl:
     "https://wa.me/918248359796?text=" +
     encodeURIComponent("Hi CloudGen, I would like to chat about SmartPatrol solutions."),
-  /** Tawk.to property/widget (override via env if needed). */
+  /**
+   * Tawk.to property/widget (override via env if needed).
+   * For visitors outside Tamil Nadu / India to appear in Monitoring:
+   * Tawk → Administration → Chat Widget → Availability Restriction →
+   * Country Restriction must be OFF (and clear any Countries filter in
+   * Active → Visitors). Also allow domains: www.cloudgentechnologies.com,
+   * cloudgentechnologies.com, and the Vercel preview host if used.
+   */
   tawkPropertyId:
     process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID || "6afb3da16e876a3cc05f8f42",
   tawkWidgetId: process.env.NEXT_PUBLIC_TAWK_WIDGET_ID || "default",
