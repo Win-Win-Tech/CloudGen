@@ -141,31 +141,83 @@ export function PackagePricingCalculator() {
 
   return (
     <div className="space-y-5">
-      <div
-        className="flex flex-wrap items-center gap-2"
-        role="group"
-        aria-label="Price display currency"
-      >
-        <span className="mr-1 text-xs font-bold uppercase tracking-[0.12em] text-[var(--steel)]">
-          Currency
-        </span>
-        {PRICE_DISPLAY_OPTIONS.map((c) => {
-          const active = priceDisplay === c.code;
-          return (
+      <div className="flex flex-col gap-4 rounded-xl border border-[var(--line)] bg-[linear-gradient(165deg,#ffffff_0%,#f4f8fb_100%)] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--steel)]">
+            Billing cycle
+          </p>
+          <div
+            className="mt-2 inline-flex rounded-lg border border-[var(--line)] bg-white p-1 shadow-sm"
+            role="group"
+            aria-label="Billing cycle"
+          >
             <button
-              key={c.code}
               type="button"
-              onClick={() => setPriceDisplay(c.code)}
-              className={`rounded-md border px-2.5 py-1 text-xs font-bold uppercase tracking-wide transition ${
-                active
-                  ? "border-[var(--teal-deep)] bg-[var(--teal-deep)] text-white"
-                  : "border-[var(--line)] bg-white text-[var(--steel)] hover:border-[var(--teal)] hover:text-[var(--navy)]"
+              className={`rounded-md px-4 py-2 text-sm font-bold transition ${
+                billing === "monthly"
+                  ? "bg-[var(--ink)] text-white shadow-sm"
+                  : "text-[var(--steel)] hover:text-[var(--navy)]"
               }`}
+              onClick={() => setBilling("monthly")}
+              aria-pressed={billing === "monthly"}
             >
-              {c.code}
+              Monthly
             </button>
-          );
-        })}
+            <button
+              type="button"
+              className={`rounded-md px-4 py-2 text-sm font-bold transition ${
+                billing === "annual"
+                  ? "bg-[var(--ink)] text-white shadow-sm"
+                  : "text-[var(--steel)] hover:text-[var(--navy)]"
+              }`}
+              onClick={() => setBilling("annual")}
+              aria-pressed={billing === "annual"}
+            >
+              Annual
+              <span
+                className={`ml-2 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                  billing === "annual"
+                    ? "bg-[#d4af55] text-[var(--ink)]"
+                    : "bg-[var(--mist)] text-[var(--teal-deep)]"
+                }`}
+              >
+                2 months free
+              </span>
+            </button>
+          </div>
+          <p className="mt-2 text-xs text-[var(--steel)]">
+            {billing === "annual"
+              ? `Pay for ${ANNUAL_MONTHS_CHARGED} months · get 12 months access`
+              : "Billed every month · switch to Annual anytime"}
+          </p>
+        </div>
+
+        <div
+          className="flex flex-wrap items-center gap-2 sm:justify-end"
+          role="group"
+          aria-label="Price display currency"
+        >
+          <span className="mr-1 text-xs font-bold uppercase tracking-[0.12em] text-[var(--steel)]">
+            Currency
+          </span>
+          {PRICE_DISPLAY_OPTIONS.map((c) => {
+            const active = priceDisplay === c.code;
+            return (
+              <button
+                key={c.code}
+                type="button"
+                onClick={() => setPriceDisplay(c.code)}
+                className={`rounded-md border px-2.5 py-1 text-xs font-bold uppercase tracking-wide transition ${
+                  active
+                    ? "border-[var(--teal-deep)] bg-[var(--teal-deep)] text-white"
+                    : "border-[var(--line)] bg-white text-[var(--steel)] hover:border-[var(--teal)] hover:text-[var(--navy)]"
+                }`}
+              >
+                {c.code}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div>
@@ -175,8 +227,11 @@ export function PackagePricingCalculator() {
         <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {PAID_PACKAGES.map((pkg) => {
             const active = packageId === pkg.id;
-            const fromQuote = quotePackage(pkg.id, "monthly", undefined, currency);
-            const fromUsd = fromQuote.usdPeriod ?? pkg.usdMonthly ?? 0;
+            const fromQuote = quotePackage(pkg.id, billing, undefined, currency);
+            const fromUsd = fromQuote.usdPeriod ?? (billing === "annual" ? pkg.usdAnnual : pkg.usdMonthly) ?? 0;
+            const monthlyUsd = pkg.usdMonthly ?? 0;
+            const showAnnualSave =
+              billing === "annual" && monthlyUsd > 0 && fromUsd > 0;
             return (
               <button
                 key={pkg.id}
@@ -197,10 +252,15 @@ export function PackagePricingCalculator() {
                 <p className="mt-1.5 display text-xl font-extrabold text-[var(--ink)]">
                   {formatShown(fromUsd, priceDisplay)}
                   <span className="ml-1 text-xs font-semibold text-[var(--steel)]">
-                    /mo
+                    /{billing === "annual" ? "yr" : "mo"}
                     {isLocalDisplayCurrency(priceDisplay) ? " · approx" : ""}
                   </span>
                 </p>
+                {showAnnualSave ? (
+                  <p className="mt-1 text-[11px] font-semibold text-[var(--teal-deep)]">
+                    Equals {formatShown(fromUsd / 12, priceDisplay)}/mo · save 2 months
+                  </p>
+                ) : null}
                 <p className="mt-1 text-[11px] text-[var(--steel)]">{pkg.unitLimit}</p>
               </button>
             );
@@ -343,31 +403,14 @@ export function PackagePricingCalculator() {
           <aside className="rounded-xl border border-[var(--line)] bg-[linear-gradient(165deg,#ffffff_0%,#f3f8fb_100%)] p-4 lg:sticky lg:top-24">
             <p className="display text-base font-extrabold">3 · Subscription</p>
             <p className="mt-1 text-xs text-[var(--steel)]">{qtySummary(dims, qty)}</p>
-
-            <div className="mt-3 inline-flex rounded-md border border-[var(--line)] bg-white p-1">
-              <button
-                type="button"
-                className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
-                  billing === "annual"
-                    ? "bg-[var(--ink)] text-white"
-                    : "text-[var(--steel)]"
-                }`}
-                onClick={() => setBilling("annual")}
-              >
-                Annually
-              </button>
-              <button
-                type="button"
-                className={`rounded px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${
-                  billing === "monthly"
-                    ? "bg-[var(--ink)] text-white"
-                    : "text-[var(--steel)]"
-                }`}
-                onClick={() => setBilling("monthly")}
-              >
-                Monthly
-              </button>
-            </div>
+            <p className="mt-2 inline-flex items-center gap-2 rounded-md border border-[var(--line)] bg-white px-2.5 py-1.5 text-xs font-bold text-[var(--navy)]">
+              {billing === "annual" ? "Annual billing" : "Monthly billing"}
+              {billing === "annual" ? (
+                <span className="rounded-full bg-[rgba(212,175,85,0.2)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[var(--teal-deep)]">
+                  2 months free
+                </span>
+              ) : null}
+            </p>
 
             {quote.needsQuote || quote.usdPeriod == null || quote.inrPeriod == null ? (
               <p className="display mt-4 text-2xl font-extrabold">Custom quote</p>
@@ -386,6 +429,11 @@ export function PackagePricingCalculator() {
                     /{billing === "annual" ? "yr" : "mo"}
                   </span>
                 </p>
+                {billing === "annual" ? (
+                  <p className="mt-0.5 text-sm text-[var(--teal-deep)]">
+                    ≈ {formatShown(quote.usdPeriod / 12, priceDisplay)}/mo effective
+                  </p>
+                ) : null}
                 {quote.usdListPeriod != null &&
                 quote.usdListPeriod > quote.usdPeriod ? (
                   <p className="mt-0.5 text-sm text-[var(--steel)] line-through">
