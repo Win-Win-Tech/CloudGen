@@ -20,6 +20,10 @@ export default function PricingPage() {
       <section className="border-b border-[var(--line)] bg-white py-6">
         <div className="shell">
           <h1 className="display text-2xl font-extrabold sm:text-3xl">Pricing</h1>
+          <p className="mt-2 max-w-2xl text-sm text-[var(--steel)]">
+            Choose Monthly or Annual (2 months free), then pick a currency — package
+            amounts update instantly for USD, INR and local estimates.
+          </p>
         </div>
       </section>
 
