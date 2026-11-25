@@ -227,6 +227,6 @@ export async function sendSeoDailyDigest(
   const to =
     process.env.SEO_DIGEST_TO?.trim() ||
     process.env.LEAD_INBOX?.trim() ||
-    site.email;
+    site.leadEmails.join(",");
   return sendSimpleEmail({ to, subject, text, html });
 }
