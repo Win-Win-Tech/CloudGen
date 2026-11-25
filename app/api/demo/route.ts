@@ -14,20 +14,54 @@ import {
 } from "@/lib/demo";
 import { sendLeadEmail } from "@/lib/mail";
 import { site } from "@/lib/site";
+import {
+  assessLeadSpam,
+  silentSpamResponse,
+} from "@/lib/spamGuard";
 
 const schema = z.object({
-  fullName: z.string().min(2),
-  email: z.string().email(),
-  phone: z.string().min(7, "Mobile number is required"),
-  organization: z.string().min(2),
-  interest: z.string().min(2),
-  message: z.string().optional(),
+  fullName: z.string().min(2).max(120),
+  email: z.string().email().max(200),
+  phone: z.string().min(7, "Mobile number is required").max(30),
+  organization: z.string().min(2).max(160),
+  interest: z.string().min(2).max(200),
+  message: z.string().max(4000).optional(),
+  website: z.string().optional(),
+  companyUrl: z.string().optional(),
+  formStartedAt: z.union([z.number(), z.string()]).optional(),
   kind: z.enum(["demo", "demo-test", "register", "contact"]).default("demo"),
 });
 
 export async function POST(request: Request) {
   try {
     const body = schema.parse(await request.json());
+
+    const verdict = assessLeadSpam(
+      {
+        fullName: body.fullName,
+        email: body.email,
+        phone: body.phone,
+        organization: body.organization,
+        interest: body.interest,
+        message: body.message,
+        website: body.website,
+        companyUrl: body.companyUrl,
+        formStartedAt: body.formStartedAt,
+      },
+      request,
+    );
+
+    if (verdict.spam) {
+      console.warn("[spam] demo/contact blocked", verdict.reason, body.kind, body.email);
+      return NextResponse.json({
+        ...silentSpamResponse(),
+        message:
+          body.kind === "contact"
+            ? "Message received. Our team will follow up shortly."
+            : "Demo request received. We will contact you to schedule a walkthrough.",
+      });
+    }
+
     const id = crypto.randomUUID();
     const storedKind =
       body.kind === "register" || body.kind === "contact" ? "demo" : body.kind;
