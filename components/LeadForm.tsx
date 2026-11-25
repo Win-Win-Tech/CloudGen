@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { site } from "@/lib/site";
 
 type Kind = "register" | "demo" | "demo-test" | "contact";
@@ -49,6 +49,11 @@ export function LeadForm({
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
   const [demo, setDemo] = useState<DemoPayload | null>(null);
+  const [formStartedAt, setFormStartedAt] = useState(() => Date.now());
+
+  useEffect(() => {
+    setFormStartedAt(Date.now());
+  }, [kind]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -62,7 +67,11 @@ export function LeadForm({
       const res = await fetch(meta.endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...payload, kind }),
+        body: JSON.stringify({
+          ...payload,
+          kind,
+          formStartedAt,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Request failed");
@@ -78,6 +87,7 @@ export function LeadForm({
       );
       if (data.demo) setDemo(data.demo as DemoPayload);
       formEl.reset();
+      setFormStartedAt(Date.now());
     } catch (err) {
       setStatus("error");
       setMessage(err instanceof Error ? err.message : "Something went wrong");
@@ -85,28 +95,83 @@ export function LeadForm({
   }
 
   return (
-    <form className="card-panel space-y-4 p-6" onSubmit={onSubmit}>
+    <form className="card-panel space-y-4 p-6" onSubmit={onSubmit} autoComplete="on">
       <h2 className="display text-2xl font-bold">{meta.title}</h2>
+
+      {/* Honeypot — hidden from humans; bots often fill it. */}
+      <div
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-0 w-0 overflow-hidden opacity-0"
+        tabIndex={-1}
+      >
+        <label>
+          Website
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            defaultValue=""
+          />
+        </label>
+        <label>
+          Company URL
+          <input
+            type="url"
+            name="companyUrl"
+            tabIndex={-1}
+            autoComplete="off"
+            defaultValue=""
+          />
+        </label>
+      </div>
+
       <label className="block text-sm font-semibold">
         Full name
-        <input className="input mt-1" name="fullName" required />
+        <input className="input mt-1" name="fullName" required minLength={2} autoComplete="name" />
       </label>
       <label className="block text-sm font-semibold">
         Work email
-        <input className="input mt-1" name="email" type="email" required />
+        <input
+          className="input mt-1"
+          name="email"
+          type="email"
+          required
+          autoComplete="email"
+        />
       </label>
       <label className="block text-sm font-semibold">
         Mobile
-        <input className="input mt-1" name="phone" type="tel" required />
+        <input
+          className="input mt-1"
+          name="phone"
+          type="tel"
+          required
+          minLength={10}
+          autoComplete="tel"
+          placeholder="+91 …"
+        />
       </label>
       <label className="block text-sm font-semibold">
         Organization
-        <input className="input mt-1" name="organization" required />
+        <input
+          className="input mt-1"
+          name="organization"
+          required
+          minLength={2}
+          autoComplete="organization"
+        />
       </label>
       {kind === "register" ? (
         <label className="block text-sm font-semibold">
           Number of sites
-          <input className="input mt-1" name="sites" placeholder="e.g. 3" />
+          <input
+            className="input mt-1"
+            name="sites"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            placeholder="e.g. 3"
+          />
         </label>
       ) : (
         <>
