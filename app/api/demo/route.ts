@@ -106,7 +106,7 @@ export async function POST(request: Request) {
         mailed,
         message: mailed
           ? body.kind === "contact"
-            ? "Message received and emailed to sales@cloudgentechnologies.com. We will get back to you shortly."
+            ? "Message received and emailed to sales@ and ravit@cloudgentechnologies.com. We will get back to you shortly."
             : "Demo request received and emailed to our sales team. We will contact you to schedule a walkthrough."
           : body.kind === "contact"
             ? "Message received and saved. Our team will follow up shortly."

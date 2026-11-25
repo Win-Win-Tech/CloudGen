@@ -13,8 +13,26 @@ export type LeadMailPayload = {
   id: string;
 };
 
+/**
+ * Lead notification recipients.
+ * LEAD_INBOX may be a single address or comma/semicolon-separated list.
+ * Default: sales@ and ravit@ so both mailboxes receive form leads.
+ */
+export function leadRecipients(): string[] {
+  const raw = process.env.LEAD_INBOX?.trim();
+  if (raw) {
+    const parsed = raw
+      .split(/[,;]+/)
+      .map((s) => s.trim().toLowerCase())
+      .filter((s) => s.includes("@"));
+    if (parsed.length) return [...new Set(parsed)];
+  }
+  return [...site.leadEmails];
+}
+
+/** @deprecated use leadRecipients() — kept for call sites expecting a string */
 function inbox() {
-  return process.env.LEAD_INBOX?.trim() || site.email;
+  return leadRecipients().join(", ");
 }
 
 function subjectFor(kind: string, fullName?: string) {
@@ -46,6 +64,7 @@ function textBody(payload: LeadMailPayload) {
     `Reference: ${payload.id}`,
     "",
     `Sent from ${site.url}`,
+    `Notify: ${leadRecipients().join(", ")}`,
   ].join("\n");
 }
 
@@ -104,7 +123,7 @@ async function sendWithResend(payload: LeadMailPayload) {
     },
     body: JSON.stringify({
       from,
-      to: [inbox()],
+      to: leadRecipients(),
       reply_to: payload.email,
       subject: subjectFor(payload.kind, payload.fullName),
       text: textBody(payload),
@@ -143,7 +162,7 @@ async function sendWithSmtp(payload: LeadMailPayload) {
 
   await transporter.sendMail({
     from,
-    to: inbox(),
+    to: leadRecipients(),
     replyTo: payload.email,
     subject: subjectFor(payload.kind, payload.fullName),
     text: textBody(payload),
@@ -162,11 +181,24 @@ export function mailConfigured() {
 }
 
 export type SimpleMail = {
-  to?: string;
+  to?: string | string[];
   subject: string;
   text: string;
   html: string;
 };
+
+function normalizeTo(to: string | string[] | undefined) {
+  if (Array.isArray(to)) {
+    return to.map((s) => s.trim()).filter(Boolean);
+  }
+  if (to?.trim()) {
+    return to
+      .split(/[,;]+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+  return leadRecipients();
+}
 
 async function sendSimpleWithResend(mail: SimpleMail) {
   const apiKey = process.env.RESEND_API_KEY?.trim();
@@ -184,7 +216,7 @@ async function sendSimpleWithResend(mail: SimpleMail) {
     },
     body: JSON.stringify({
       from,
-      to: [mail.to?.trim() || inbox()],
+      to: normalizeTo(mail.to),
       subject: mail.subject,
       text: mail.text,
       html: mail.html,
@@ -222,7 +254,7 @@ async function sendSimpleWithSmtp(mail: SimpleMail) {
 
   await transporter.sendMail({
     from,
-    to: mail.to?.trim() || inbox(),
+    to: normalizeTo(mail.to),
     subject: mail.subject,
     text: mail.text,
     html: mail.html,
@@ -242,7 +274,7 @@ export async function sendSimpleEmail(mail: SimpleMail) {
 }
 
 /**
- * Notify sales inbox via Resend or SMTP only.
+ * Notify sales + founder inboxes via Resend or SMTP.
  * FormSubmit was removed — Cloudflare blocks server-side calls ("Just a moment...").
  * When no provider is set, returns { sent:false } so the API can still save the lead.
  */
@@ -258,6 +290,8 @@ export async function sendLeadEmail(payload: LeadMailPayload) {
     "[mail] No Resend/SMTP configured. Lead saved to DB only.",
     payload.id,
     payload.kind,
+    "recipients=",
+    inbox(),
   );
   return { sent: false as const, provider: "none" as const };
 }

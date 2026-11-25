@@ -161,10 +161,17 @@ export default function VisitorManagementCampaignPage() {
               <br />
               Email:{" "}
               <a
-                href="mailto:ravit@cloudgentechnologies.com"
+                href={`mailto:${site.email}`}
                 className="font-semibold text-[var(--teal-deep)]"
               >
-                ravit@cloudgentechnologies.com
+                {site.email}
+              </a>
+              {" · "}
+              <a
+                href={`mailto:${site.founderEmail}`}
+                className="font-semibold text-[var(--teal-deep)]"
+              >
+                {site.founderEmail}
               </a>
               <br />
               Website:{" "}
