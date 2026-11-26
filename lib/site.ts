@@ -7,15 +7,16 @@ export const site = {
   description:
     "SmartPatrol by CloudGen Technologies — guard tour system, QR checkpoint patrol, face biometric & geofence attendance, visitor & vehicle gate software, and CCTV Vision AI for security teams across India.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.cloudgentechnologies.com",
-  /** Primary public contact (sales). */
+  /** Primary public contact + automated lead inbox (sales). */
   email: "sales@cloudgentechnologies.com",
-  /** Founder / ops contact — also receives lead notifications. */
+  /**
+   * Founder / ops contact (mailto on site only).
+   * Do NOT auto-CC lead/spam mail here — Hostinger locks the mailbox on volume.
+   * Opt in with LEAD_COPY_FOUNDER=true if needed.
+   */
   founderEmail: "ravit@cloudgentechnologies.com",
-  /** Default lead notification recipients (override with LEAD_INBOX env). */
-  leadEmails: [
-    "sales@cloudgentechnologies.com",
-    "ravit@cloudgentechnologies.com",
-  ] as const,
+  /** Default automated lead recipients (override with LEAD_INBOX env). */
+  leadEmails: ["sales@cloudgentechnologies.com"] as const,
   supportEmail: "info@smartpatrol.asia",
   phone: "+91 82483 59796",
   phoneHref: "tel:+918248359796",

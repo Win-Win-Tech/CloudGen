@@ -224,9 +224,8 @@ export async function sendSeoDailyDigest(
   ga?: GaDailyReport | null,
 ) {
   const { subject, text, html } = formatSeoDigest(report, ga);
+  // Prefer explicit SEO_DIGEST_TO; otherwise sales@ only (never auto-CC founder).
   const to =
-    process.env.SEO_DIGEST_TO?.trim() ||
-    process.env.LEAD_INBOX?.trim() ||
-    site.leadEmails.join(",");
+    process.env.SEO_DIGEST_TO?.trim() || site.email;
   return sendSimpleEmail({ to, subject, text, html });
 }
