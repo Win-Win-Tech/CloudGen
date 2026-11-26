@@ -166,13 +166,6 @@ export default function VisitorManagementCampaignPage() {
               >
                 {site.email}
               </a>
-              {" · "}
-              <a
-                href={`mailto:${site.founderEmail}`}
-                className="font-semibold text-[var(--teal-deep)]"
-              >
-                {site.founderEmail}
-              </a>
               <br />
               Website:{" "}
               <a href={site.companyUrl} className="font-semibold text-[var(--teal-deep)]">

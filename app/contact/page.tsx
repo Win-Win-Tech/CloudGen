@@ -73,12 +73,6 @@ export default async function ContactPage({
             >
               {site.email}
             </a>
-            <a
-              className="mt-1 block text-lg font-bold text-[var(--teal-deep)]"
-              href={`mailto:${site.founderEmail}`}
-            >
-              {site.founderEmail}
-            </a>
           </div>
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-[var(--steel)]">
