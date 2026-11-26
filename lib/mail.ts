@@ -16,18 +16,29 @@ export type LeadMailPayload = {
 /**
  * Lead notification recipients.
  * LEAD_INBOX may be a single address or comma/semicolon-separated list.
- * Default: sales@ and ravit@ so both mailboxes receive form leads.
+ * Default: sales@ only. Founder (ravit@) is excluded unless LEAD_COPY_FOUNDER=true
+ * so Hostinger does not lock that mailbox when bots flood the forms.
  */
 export function leadRecipients(): string[] {
   const raw = process.env.LEAD_INBOX?.trim();
+  let list: string[];
   if (raw) {
     const parsed = raw
       .split(/[,;]+/)
       .map((s) => s.trim().toLowerCase())
       .filter((s) => s.includes("@"));
-    if (parsed.length) return [...new Set(parsed)];
+    list = parsed.length ? [...new Set(parsed)] : [...site.leadEmails];
+  } else {
+    list = [...site.leadEmails];
   }
-  return [...site.leadEmails];
+
+  const founder = site.founderEmail.toLowerCase();
+  const copyFounder = process.env.LEAD_COPY_FOUNDER?.trim().toLowerCase() === "true";
+  if (!copyFounder) {
+    list = list.filter((addr) => addr !== founder);
+  }
+  if (!list.length) list = [site.email.toLowerCase()];
+  return list;
 }
 
 /** @deprecated use leadRecipients() — kept for call sites expecting a string */

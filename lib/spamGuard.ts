@@ -3,12 +3,16 @@
  * Bots that pass Zod still get stopped here so Hostinger SMTP is not flooded.
  */
 
-const MIN_FORM_MS = 2_500;
+const MIN_FORM_MS = 3_500;
 const RATE_WINDOW_MS = 15 * 60 * 1000;
-const RATE_MAX_PER_IP = 5;
+const RATE_MAX_PER_IP = 3;
+/** Soft global cap across warm instances — stops distributed bot storms. */
+const GLOBAL_WINDOW_MS = 60 * 1000;
+const GLOBAL_MAX = 20;
 
 /** Best-effort in-memory rate limit (warm serverless instances). */
 const hitsByIp = new Map<string, number[]>();
+const globalHits: number[] = [];
 
 const DISPOSABLE_DOMAINS = new Set([
   "mailinator.com",
@@ -21,6 +25,17 @@ const DISPOSABLE_DOMAINS = new Set([
   "sharklasers.com",
   "getnada.com",
   "discard.email",
+  "mailnesia.com",
+  "maildrop.cc",
+  "tempail.com",
+  "throwaway.email",
+  "fakeinbox.com",
+  "emailondeck.com",
+  "moakt.com",
+  "inboxkitten.com",
+  "guerrillamailblock.com",
+  "spam4.me",
+  "grr.la",
 ]);
 
 export type LeadSpamInput = {
@@ -71,6 +86,9 @@ export function looksLikeGibberish(raw: string) {
   const shifts = (letters.match(/[a-z][A-Z]|[A-Z][a-z]/g) || []).length;
   if (letters.length >= 10 && shifts >= 4 && ratio < 0.35) return true;
 
+  // Mostly consonants with almost no spaces / words.
+  if (letters.length >= 8 && !/\s/.test(cleaned) && ratio < 0.28) return true;
+
   return false;
 }
 
@@ -80,10 +98,26 @@ function emailDomain(email: string) {
   return email.slice(at + 1).toLowerCase().trim();
 }
 
+function emailLocal(email: string) {
+  const at = email.lastIndexOf("@");
+  if (at < 0) return "";
+  return email.slice(0, at).toLowerCase().trim();
+}
+
 function isDisposableEmail(email: string) {
   const domain = emailDomain(email);
   if (!domain) return true;
   return DISPOSABLE_DOMAINS.has(domain);
+}
+
+function emailLooksFake(email: string) {
+  const local = emailLocal(email);
+  if (!local || local.length < 2) return true;
+  // Random local parts: long strings of consonants / digits.
+  if (looksLikeGibberish(local.replace(/[._+-]/g, ""))) return true;
+  const digits = (local.match(/\d/g) || []).length;
+  if (local.length >= 8 && digits / local.length >= 0.45) return true;
+  return false;
 }
 
 function phoneLooksFake(phone: string) {
@@ -115,6 +149,15 @@ function rateLimited(ip: string) {
     for (const [key] of oldest) hitsByIp.delete(key);
   }
   return prev.length > RATE_MAX_PER_IP;
+}
+
+function globalRateLimited() {
+  const now = Date.now();
+  while (globalHits.length && now - globalHits[0]! >= GLOBAL_WINDOW_MS) {
+    globalHits.shift();
+  }
+  globalHits.push(now);
+  return globalHits.length > GLOBAL_MAX;
 }
 
 function originAllowed(request: Request) {
@@ -159,23 +202,32 @@ export function assessLeadSpam(
   }
 
   const started = Number(input.formStartedAt);
-  if (Number.isFinite(started) && started > 0) {
-    const elapsed = Date.now() - started;
-    if (elapsed >= 0 && elapsed < MIN_FORM_MS) {
-      return { spam: true, reason: "too-fast" };
-    }
+  // Real LeadForm always sends formStartedAt. Bots that omit it are spam.
+  if (!Number.isFinite(started) || started <= 0) {
+    return { spam: true, reason: "no-timing" };
   }
-
-  const ip = clientIp(request);
-  if (rateLimited(ip)) {
-    return { spam: true, reason: "rate-limit" };
+  const elapsed = Date.now() - started;
+  if (elapsed < 0 || elapsed < MIN_FORM_MS) {
+    return { spam: true, reason: "too-fast" };
+  }
+  // Stale / forged timestamps (form open > 6h).
+  if (elapsed > 6 * 60 * 60 * 1000) {
+    return { spam: true, reason: "stale-timing" };
   }
 
   if (!originAllowed(request)) {
     return { spam: true, reason: "bad-origin" };
   }
 
-  if (isDisposableEmail(input.email)) {
+  const ip = clientIp(request);
+  if (rateLimited(ip)) {
+    return { spam: true, reason: "rate-limit" };
+  }
+  if (globalRateLimited()) {
+    return { spam: true, reason: "global-rate" };
+  }
+
+  if (isDisposableEmail(input.email) || emailLooksFake(input.email)) {
     return { spam: true, reason: "email" };
   }
 
