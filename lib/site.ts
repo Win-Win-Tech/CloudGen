@@ -10,9 +10,9 @@ export const site = {
   /** Primary public contact + automated lead inbox (sales). */
   email: "sales@cloudgentechnologies.com",
   /**
-   * Founder / ops contact (mailto on site only).
-   * Do NOT auto-CC lead/spam mail here — Hostinger locks the mailbox on volume.
-   * Opt in with LEAD_COPY_FOUNDER=true if needed.
+   * Internal founder address — never shown on the website.
+   * Used only to exclude this mailbox from automated lead CCs
+   * (unless LEAD_COPY_FOUNDER=true).
    */
   founderEmail: "ravit@cloudgentechnologies.com",
   /** Default automated lead recipients (override with LEAD_INBOX env). */

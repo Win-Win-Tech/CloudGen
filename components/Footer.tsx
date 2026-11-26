@@ -83,14 +83,6 @@ export function Footer() {
                 {site.email}
               </a>
             </p>
-            <p>
-              <a
-                className="font-semibold text-[var(--teal-deep)]"
-                href={`mailto:${site.founderEmail}`}
-              >
-                {site.founderEmail}
-              </a>
-            </p>
             <p className="text-[var(--steel)]">{site.address}</p>
             <p>
               <a
