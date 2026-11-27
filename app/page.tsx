@@ -79,20 +79,6 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-
-          <div className="home-fade-delay pointer-events-none absolute bottom-0 right-0 hidden w-[min(48%,520px)] lg:block">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-tl-[2rem] opacity-90 shadow-2xl">
-              <Image
-                src="/campaigns/visitor-management-campaign-poster.jpg"
-                alt="SmartPatrol on site — visitor and security operations"
-                fill
-                className="object-cover object-center"
-                sizes="520px"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0d1c2e] via-transparent to-transparent" />
-            </div>
-          </div>
         </div>
       </section>
 
