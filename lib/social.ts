@@ -30,7 +30,9 @@ export function getSocialLinks(): SocialLink[] {
     {
       id: "x",
       label: "X",
-      href: process.env.NEXT_PUBLIC_SOCIAL_X?.trim() || "",
+      href:
+        process.env.NEXT_PUBLIC_SOCIAL_X?.trim() ||
+        "https://x.com/cloudgtech",
     },
     {
       id: "youtube",
@@ -40,14 +42,16 @@ export function getSocialLinks(): SocialLink[] {
     {
       id: "facebook",
       label: "Facebook",
-      // No default — old guess URLs pointed at unrelated pages.
-      href: process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK?.trim() || "",
+      href:
+        process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK?.trim() ||
+        "https://www.facebook.com/cloudgentech/",
     },
     {
       id: "instagram",
       label: "Instagram",
-      // No default — @smartpatrol was not CloudGen’s account.
-      href: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM?.trim() || "",
+      href:
+        process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM?.trim() ||
+        "https://www.instagram.com/cloudgentech/",
     },
     {
       id: "whatsapp",
