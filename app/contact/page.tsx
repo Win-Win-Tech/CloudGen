@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { OpenTawkButton } from "@/components/OpenTawkButton";
+import { SocialLinks } from "@/components/SocialLinks";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -93,6 +94,7 @@ export default async function ContactPage({
               cloudgentechnologies.com
             </a>
           </div>
+          <SocialLinks />
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">

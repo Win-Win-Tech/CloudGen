@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { SocialLinks } from "@/components/SocialLinks";
 import { PRODUCT_PILLARS } from "@/lib/seo";
 import { site } from "@/lib/site";
 
@@ -27,6 +28,7 @@ export function Footer() {
             Smart Patrol packages for attendance, checkpoints, visitors, vehicles,
             Vision AI, industry apps and custom builds — from Madurai, India.
           </p>
+          <SocialLinks className="mt-5" />
           <p className="mt-4 text-xs text-[var(--steel)]">
             Copyright © {new Date().getFullYear()} {site.company}
           </p>
