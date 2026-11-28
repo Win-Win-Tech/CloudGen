@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { upsertCrmLead } from "@/lib/crm";
 import { sql } from "@/lib/db";
 import { sendLeadEmail } from "@/lib/mail";
 import { verifyPaymentSignature } from "@/lib/razorpay";
@@ -49,6 +50,31 @@ export async function POST(request: Request) {
     );
     const row = rows[0];
     if (row) {
+      try {
+        const contact = await upsertCrmLead({
+          fullName: row.full_name,
+          email: row.email,
+          phone: row.phone,
+          organization: row.organization,
+          source: "payment",
+          interest: `Paid subscription · ${row.plan_id} · ${row.billing}`,
+          message: `Razorpay payment ${body.razorpay_payment_id} · Order ${body.razorpay_order_id} · ₹${row.amount_inr} · guards=${row.guards}`,
+          sourceId: body.subscriptionId,
+        });
+        await sql(
+          `UPDATE crm_contacts SET stage = 'won', score = score + 50, updated_at = NOW() WHERE id = $1`,
+          [contact.id],
+        );
+        await sql(
+          `UPDATE crm_sequence_enrollments SET
+             status = 'stopped', stopped_reason = 'won', next_send_at = NULL
+           WHERE contact_id = $1 AND status = 'active'`,
+          [contact.id],
+        );
+      } catch (crmError) {
+        console.error("[crm] payment", crmError);
+      }
+
       try {
         await sendLeadEmail({
           id: body.subscriptionId,
