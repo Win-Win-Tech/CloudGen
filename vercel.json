@@ -7,10 +7,6 @@
     {
       "path": "/api/cron/social-daily",
       "schedule": "0 4 * * *"
-    },
-    {
-      "path": "/api/cron/crm-followups",
-      "schedule": "0 */2 * * *"
     }
   ]
 }
