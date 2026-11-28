@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { sql } from "@/lib/db";
+import { processDueFollowups, upsertCrmLead } from "@/lib/crm";
 import { sendLeadEmail } from "@/lib/mail";
 import {
   assessLeadSpam,
@@ -61,6 +62,21 @@ export async function POST(request: Request) {
         body.sites?.trim() || null,
       ],
     );
+
+    try {
+      await upsertCrmLead({
+        fullName: body.fullName.trim(),
+        email: body.email.trim().toLowerCase(),
+        phone: body.phone.trim(),
+        organization: body.organization.trim(),
+        source: "register",
+        sites: body.sites?.trim(),
+        sourceId: id,
+      });
+      await processDueFollowups(5);
+    } catch (crmError) {
+      console.error("[crm]", crmError);
+    }
 
     let mailed = false;
     try {

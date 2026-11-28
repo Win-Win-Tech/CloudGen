@@ -12,6 +12,7 @@ import {
   hashDemoPassword,
   type DemoAccountRecord,
 } from "@/lib/demo";
+import { processDueFollowups, upsertCrmLead } from "@/lib/crm";
 import { sendLeadEmail } from "@/lib/mail";
 import { site } from "@/lib/site";
 import {
@@ -83,6 +84,23 @@ export async function POST(request: Request) {
 
     // Live demo booking / contact — save first; email is best-effort.
     if (body.kind !== "demo-test") {
+      try {
+        await upsertCrmLead({
+          fullName: body.fullName,
+          email: body.email,
+          phone: body.phone,
+          organization: body.organization,
+          source: body.kind === "contact" ? "contact" : "demo",
+          interest: body.interest,
+          message: body.message,
+          sourceId: id,
+        });
+        // Send day-0 thank-you immediately when due.
+        await processDueFollowups(5);
+      } catch (crmError) {
+        console.error("[crm]", crmError);
+      }
+
       let mailed = false;
       try {
         const mail = await sendLeadEmail({
@@ -193,6 +211,22 @@ export async function POST(request: Request) {
             `Install the app: ${site.playStoreUrl}`,
             "Use the password from your earlier demo email. Request again after expiry for a new password.",
           ].join("\n");
+
+    try {
+      await upsertCrmLead({
+        fullName: body.fullName,
+        email: body.email,
+        phone: body.phone,
+        organization: body.organization,
+        source: "demo-test",
+        interest: body.interest,
+        message: body.message,
+        sourceId: account.id,
+      });
+      await processDueFollowups(5);
+    } catch (crmError) {
+      console.error("[crm]", crmError);
+    }
 
     let mailed = false;
     try {
