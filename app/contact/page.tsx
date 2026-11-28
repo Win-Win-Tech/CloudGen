@@ -42,18 +42,10 @@ export default async function ContactPage({
               Click to chat
             </p>
             <div className="mt-2 flex flex-wrap gap-3">
-              <a
-                href={site.whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn bg-[#25D366] text-white hover:bg-[#1ebe57]"
-              >
-                WhatsApp
-              </a>
               <OpenTawkButton className="btn-primary" />
             </div>
             <p className="mt-2 text-xs text-[var(--steel)]">
-              Use the floating Click to chat button anytime, or WhatsApp {site.phone}.
+              Use the floating Click to chat button anytime, or call {site.phone}.
             </p>
           </div>
           <div>

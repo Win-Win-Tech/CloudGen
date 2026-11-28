@@ -16,7 +16,7 @@ function authorized(req: Request) {
 
 /**
  * Daily social content pack (Vercel Cron).
- * Emails ready-to-post copy for LinkedIn, X, Facebook, Instagram, WhatsApp, YouTube.
+ * Emails ready-to-post copy for X, Facebook, Instagram, YouTube.
  * Schedule: vercel.json → 0 4 * * * (09:30 IST)
  */
 export async function GET(req: Request) {
@@ -39,14 +39,7 @@ export async function GET(req: Request) {
     dateKey: pack.dateKey,
     theme: pack.theme,
     pageUrl: pack.pageUrl,
-    networks: [
-      "linkedin",
-      "x",
-      "facebook",
-      "instagram",
-      "whatsapp",
-      "youtube",
-    ],
+    networks: ["x", "facebook", "instagram", "youtube"],
     mail,
   });
 }
