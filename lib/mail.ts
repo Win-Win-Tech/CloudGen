@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { site } from "@/lib/site";
+import { isUnsafeOutboundRecipient } from "@/lib/spamGuard";
 
 export type LeadMailPayload = {
   kind: string;
@@ -33,7 +34,8 @@ export function leadRecipients(): string[] {
   }
 
   const founder = site.founderEmail.toLowerCase();
-  const copyFounder = process.env.LEAD_COPY_FOUNDER?.trim().toLowerCase() === "true";
+  const copyFounder =
+    process.env.LEAD_COPY_FOUNDER?.trim().toLowerCase() === "true";
   if (!copyFounder) {
     list = list.filter((addr) => addr !== founder);
   }
@@ -44,6 +46,43 @@ export function leadRecipients(): string[] {
 /** @deprecated use leadRecipients() — kept for call sites expecting a string */
 function inbox() {
   return leadRecipients().join(", ");
+}
+
+function extractEmail(raw: string) {
+  const angle = raw.match(/<\s*([^>]+@[^>]+)\s*>/);
+  if (angle?.[1]) return angle[1].trim().toLowerCase();
+  return raw.trim().toLowerCase();
+}
+
+/**
+ * Never send as founder (ravit@). Hostinger / MailChannels will spam-lock that
+ * mailbox when it is used for bulk or bot-driven outbound.
+ */
+export function outboundFromAddress(): string {
+  const sales = site.email.toLowerCase();
+  const founder = site.founderEmail.toLowerCase();
+  const configured = process.env.MAIL_FROM?.trim();
+  if (configured) {
+    const addr = extractEmail(configured);
+    if (addr && addr !== founder) return configured;
+    console.warn(
+      "[mail] MAIL_FROM used founder address — forcing sales@ outbound From",
+    );
+  }
+  return `"${site.company}" <${sales}>`;
+}
+
+function smtpAuthUser(): string | null {
+  const user = process.env.SMTP_USER?.trim();
+  if (!user) return null;
+  const founder = site.founderEmail.toLowerCase();
+  if (extractEmail(user) === founder) {
+    console.error(
+      "[mail] SMTP_USER is founder mailbox — refusing to send. Set SMTP_USER=sales@cloudgentechnologies.com",
+    );
+    return null;
+  }
+  return user;
 }
 
 function subjectFor(kind: string, fullName?: string) {
@@ -122,10 +161,6 @@ async function sendWithResend(payload: LeadMailPayload) {
   const apiKey = process.env.RESEND_API_KEY?.trim();
   if (!apiKey) return false;
 
-  const from =
-    process.env.MAIL_FROM?.trim() ||
-    `${site.company} <onboarding@resend.dev>`;
-
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -133,7 +168,7 @@ async function sendWithResend(payload: LeadMailPayload) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from,
+      from: outboundFromAddress(),
       to: leadRecipients(),
       reply_to: payload.email,
       subject: subjectFor(payload.kind, payload.fullName),
@@ -151,15 +186,12 @@ async function sendWithResend(payload: LeadMailPayload) {
 
 async function sendWithSmtp(payload: LeadMailPayload) {
   const host = process.env.SMTP_HOST?.trim();
-  const user = process.env.SMTP_USER?.trim();
+  const user = smtpAuthUser();
   const pass = process.env.SMTP_PASS?.trim();
   if (!host || !user || !pass) return false;
 
   const port = Number(process.env.SMTP_PORT || 465);
   const secure = process.env.SMTP_SECURE === "true" || port === 465;
-  const from =
-    process.env.MAIL_FROM?.trim() ||
-    `"${site.company}" <${user}>`;
 
   const transporter = nodemailer.createTransport({
     host,
@@ -172,7 +204,7 @@ async function sendWithSmtp(payload: LeadMailPayload) {
   });
 
   await transporter.sendMail({
-    from,
+    from: outboundFromAddress(),
     to: leadRecipients(),
     replyTo: payload.email,
     subject: subjectFor(payload.kind, payload.fullName),
@@ -186,7 +218,7 @@ export function mailConfigured() {
   return Boolean(
     process.env.RESEND_API_KEY?.trim() ||
       (process.env.SMTP_HOST?.trim() &&
-        process.env.SMTP_USER?.trim() &&
+        smtpAuthUser() &&
         process.env.SMTP_PASS?.trim()),
   );
 }
@@ -211,13 +243,22 @@ function normalizeTo(to: string | string[] | undefined) {
   return leadRecipients();
 }
 
+/** Drop unsafe customer recipients so we never mail spam traps / junk. */
+export function filterOutboundRecipients(to: string | string[] | undefined) {
+  const list = normalizeTo(to);
+  const safe = list.filter((addr) => !isUnsafeOutboundRecipient(addr));
+  return [...new Set(safe.map((a) => a.toLowerCase()))];
+}
+
 async function sendSimpleWithResend(mail: SimpleMail) {
   const apiKey = process.env.RESEND_API_KEY?.trim();
   if (!apiKey) return false;
 
-  const from =
-    process.env.MAIL_FROM?.trim() ||
-    `${site.company} <onboarding@resend.dev>`;
+  const to = filterOutboundRecipients(mail.to);
+  if (!to.length) {
+    console.warn("[mail] Resend skipped — no safe recipients", mail.subject);
+    return false;
+  }
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -226,8 +267,8 @@ async function sendSimpleWithResend(mail: SimpleMail) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from,
-      to: normalizeTo(mail.to),
+      from: outboundFromAddress(),
+      to,
       subject: mail.subject,
       text: mail.text,
       html: mail.html,
@@ -243,15 +284,18 @@ async function sendSimpleWithResend(mail: SimpleMail) {
 
 async function sendSimpleWithSmtp(mail: SimpleMail) {
   const host = process.env.SMTP_HOST?.trim();
-  const user = process.env.SMTP_USER?.trim();
+  const user = smtpAuthUser();
   const pass = process.env.SMTP_PASS?.trim();
   if (!host || !user || !pass) return false;
 
+  const to = filterOutboundRecipients(mail.to);
+  if (!to.length) {
+    console.warn("[mail] SMTP skipped — no safe recipients", mail.subject);
+    return false;
+  }
+
   const port = Number(process.env.SMTP_PORT || 465);
   const secure = process.env.SMTP_SECURE === "true" || port === 465;
-  const from =
-    process.env.MAIL_FROM?.trim() ||
-    `"${site.company}" <${user}>`;
 
   const transporter = nodemailer.createTransport({
     host,
@@ -264,8 +308,8 @@ async function sendSimpleWithSmtp(mail: SimpleMail) {
   });
 
   await transporter.sendMail({
-    from,
-    to: normalizeTo(mail.to),
+    from: outboundFromAddress(),
+    to,
     subject: mail.subject,
     text: mail.text,
     html: mail.html,
@@ -285,8 +329,7 @@ export async function sendSimpleEmail(mail: SimpleMail) {
 }
 
 /**
- * Notify sales + founder inboxes via Resend or SMTP.
- * FormSubmit was removed — Cloudflare blocks server-side calls ("Just a moment...").
+ * Notify sales inbox via Resend or SMTP.
  * When no provider is set, returns { sent:false } so the API can still save the lead.
  */
 export async function sendLeadEmail(payload: LeadMailPayload) {

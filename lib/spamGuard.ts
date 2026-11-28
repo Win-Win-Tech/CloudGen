@@ -110,6 +110,45 @@ function isDisposableEmail(email: string) {
   return DISPOSABLE_DOMAINS.has(domain);
 }
 
+/**
+ * Domains that commonly appear in bounce/spam-trap traffic
+ * (e.g. MailChannels 550 SDC blocks to l3@support.com).
+ * Never send CRM nurture / marketing mail here.
+ */
+const BLOCKED_OUTBOUND_DOMAINS = new Set([
+  "support.com",
+  "email.com",
+  "mail.com",
+  "tester.com",
+  "test.com",
+  "example.com",
+  "example.org",
+  "example.net",
+  "localhost",
+  "invalid",
+  "localdomain",
+  ...DISPOSABLE_DOMAINS,
+]);
+
+/**
+ * True when we must NOT send customer-facing email to this address.
+ * Used by CRM follow-ups and sendSimpleEmail recipient filtering.
+ */
+export function isUnsafeOutboundRecipient(email: string) {
+  const addr = String(email || "").trim().toLowerCase();
+  if (!addr.includes("@") || addr.includes(" ")) return true;
+  const domain = emailDomain(addr);
+  if (!domain || BLOCKED_OUTBOUND_DOMAINS.has(domain)) return true;
+  // Single-label / nonsense hosts
+  if (!domain.includes(".")) return true;
+  if (isDisposableEmail(addr) || emailLooksFake(addr)) return true;
+  // Very short random locals like l3@… are common spam-trap probes
+  const local = emailLocal(addr);
+  if (local.length <= 2 && !/^(me|hi|it|hr|cx|ceo)$/i.test(local)) return true;
+  if (/^[a-z]\d{1,3}$/i.test(local)) return true; // l3, a1, x99
+  return false;
+}
+
 function emailLooksFake(email: string) {
   const local = emailLocal(email);
   if (!local || local.length < 2) return true;

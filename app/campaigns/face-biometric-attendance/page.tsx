@@ -178,10 +178,10 @@ export default function FaceBiometricAttendanceCampaignPage() {
               <br />
               Email:{" "}
               <a
-                href="mailto:ravit@cloudgentechnologies.com"
+                href={`mailto:${site.email}`}
                 className="font-semibold text-[var(--teal-deep)]"
               >
-                ravit@cloudgentechnologies.com
+                {site.email}
               </a>
               <br />
               Website:{" "}

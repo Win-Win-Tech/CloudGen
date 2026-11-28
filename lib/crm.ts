@@ -6,6 +6,7 @@ import {
 } from "@/lib/followupSequence";
 import { sendSimpleEmail } from "@/lib/mail";
 import { site } from "@/lib/site";
+import { isUnsafeOutboundRecipient } from "@/lib/spamGuard";
 
 export type CrmLeadInput = {
   fullName: string;
@@ -112,6 +113,9 @@ async function createTask(
  */
 export async function upsertCrmLead(input: CrmLeadInput): Promise<CrmContact> {
   const email = normalizeEmail(input.email);
+  if (isUnsafeOutboundRecipient(email)) {
+    throw new Error(`Unsafe CRM recipient blocked: ${email}`);
+  }
   const existing = await sql<CrmContact>(
     `SELECT * FROM crm_contacts WHERE lower(email) = lower($1) LIMIT 1`,
     [email],
@@ -334,6 +338,35 @@ export async function processDueFollowups(
         email: row.email,
         step: "—",
         status: "skipped_unsubscribed",
+      });
+      continue;
+    }
+
+    if (isUnsafeOutboundRecipient(row.email)) {
+      await sql(
+        `UPDATE crm_sequence_enrollments SET
+           status = 'stopped', stopped_reason = 'unsafe_recipient', next_send_at = NULL
+         WHERE id = $1`,
+        [row.enrollment_id],
+      );
+      await sql(
+        `UPDATE crm_contacts SET
+           stage = 'lost',
+           updated_at = NOW()
+         WHERE id = $1`,
+        [row.contact_id],
+      );
+      await logActivity(
+        row.contact_id,
+        "sequence_stopped",
+        "unsafe_recipient",
+        `Blocked outbound to ${row.email}`,
+      );
+      result.skipped += 1;
+      result.details.push({
+        email: row.email,
+        step: "—",
+        status: "skipped_unsafe_recipient",
       });
       continue;
     }
