@@ -44,6 +44,12 @@ export function Footer() {
             <Link href="/testimonials">Testimonials</Link>
             <Link href="/pricing">Pricing</Link>
             <Link href="/blog">Guides</Link>
+            <Link href="/blog/best-guard-tour-app-india">
+              Best guard tour app India
+            </Link>
+            <Link href="/blog/security-guard-management-software-india">
+              Guard management software
+            </Link>
             <Link href="/contact">Contact</Link>
             <Link href="/app">Get the App</Link>
             <Link href="/demo">Book a Demo</Link>

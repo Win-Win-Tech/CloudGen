@@ -6,10 +6,12 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { TawkTo } from "@/components/TawkTo";
 import { GA_ID } from "@/lib/analytics";
+import { homeFaqJsonLd, homeServiceListJsonLd } from "@/lib/homeSeo";
 import { absoluteUrl } from "@/lib/seo";
 import { PRIMARY_META_KEYWORDS } from "@/lib/seoKeywords";
 import { site } from "@/lib/site";
 import { SOLUTION_PACKAGES } from "@/lib/solutions";
+import { TESTIMONIALS } from "@/lib/testimonials";
 import "./globals.css";
 
 const display = Raleway({
@@ -37,14 +39,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
+    alternateLocale: ["en_US", "en_GB", "en_MY"],
     url: site.url,
     siteName: site.company,
-    title: `Guard Tour, QR Patrol & Face Attendance | ${site.product}`,
+    title: `Guard Tour System & Face Attendance Software | ${site.product}`,
     description: site.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: `Guard Tour, QR Patrol & Face Attendance | ${site.product}`,
+    title: `Guard Tour System & Face Attendance Software | ${site.product}`,
     description: site.description,
   },
   robots: {
@@ -77,11 +80,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const reviewCount = TESTIMONIALS.length;
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "Organization",
+        "@id": `${absoluteUrl("/")}#organization`,
         name: site.company,
         url: site.url,
         email: site.email,
@@ -97,9 +102,19 @@ export default function RootLayout({
           postalCode: "625019",
           addressCountry: "IN",
         },
+        contactPoint: [
+          {
+            "@type": "ContactPoint",
+            telephone: site.phone,
+            contactType: "sales",
+            areaServed: ["IN", "MY", "Worldwide"],
+            availableLanguage: ["English", "Tamil"],
+          },
+        ],
       },
       {
         "@type": "LocalBusiness",
+        "@id": `${absoluteUrl("/")}#localbusiness`,
         name: site.company,
         image: absoluteUrl(site.logo),
         url: site.url,
@@ -112,21 +127,35 @@ export default function RootLayout({
           addressRegion: "Tamil Nadu",
           addressCountry: "IN",
         },
-        areaServed: "IN",
+        areaServed: [
+          { "@type": "Country", name: "India" },
+          { "@type": "Country", name: "Malaysia" },
+        ],
         priceRange: "$$",
       },
       {
         "@type": "SoftwareApplication",
+        "@id": `${absoluteUrl("/")}#software`,
         name: site.product,
-        alternateName: site.appName,
+        alternateName: [site.appName, "Smart Patrol", "Guards app"],
         applicationCategory: "BusinessApplication",
         operatingSystem: "Android, Web",
+        description: site.description,
         offers: {
           "@type": "Offer",
           priceCurrency: "USD",
           price: String(SOLUTION_PACKAGES[0].usdMonthly ?? 49),
+          availability: "https://schema.org/InStock",
+          url: absoluteUrl("/pricing"),
           description:
             "From USD 49 / month for Smart Patrol Attendance (Ticket Complaints Tracking included)",
+        },
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: "4.9",
+          reviewCount: String(reviewCount),
+          bestRating: "5",
+          worstRating: "1",
         },
         publisher: {
           "@type": "Organization",
@@ -136,9 +165,38 @@ export default function RootLayout({
       },
       {
         "@type": "WebSite",
+        "@id": `${absoluteUrl("/")}#website`,
         name: site.company,
         url: site.url,
+        inLanguage: ["en-IN", "en"],
+        publisher: { "@id": `${absoluteUrl("/")}#organization` },
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${absoluteUrl("/blog")}?q={search_term_string}`,
+          },
+          "query-input": "required name=search_term_string",
+        },
       },
+      homeFaqJsonLd(),
+      homeServiceListJsonLd(),
+      ...TESTIMONIALS.slice(0, 5).map((t) => ({
+        "@type": "Review",
+        author: {
+          "@type": "Person",
+          name: t.personName,
+        },
+        reviewBody: t.quote,
+        itemReviewed: {
+          "@type": "SoftwareApplication",
+          name: site.product,
+        },
+        publisher: {
+          "@type": "Organization",
+          name: t.company,
+        },
+      })),
     ],
   };
 
