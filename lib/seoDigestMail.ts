@@ -1,5 +1,7 @@
 import type { GaDailyReport } from "@/lib/gaReport";
 import { formatDuration, formatPct } from "@/lib/gaReport";
+import type { GscDailyReport, GscQueryRow } from "@/lib/gscReport";
+import { formatCtr, formatPosition } from "@/lib/gscReport";
 import type { SeoDailyReport } from "@/lib/seoDaily";
 import { sendSimpleEmail } from "@/lib/mail";
 import { site } from "@/lib/site";
@@ -84,6 +86,107 @@ function gaTextBlock(ga: GaDailyReport | null | undefined) {
   ];
 }
 
+function gscTableText(rows: GscQueryRow[], empty: string) {
+  if (!rows.length) return [empty];
+  return [
+    "Keyword / page | Clicks | Impressions | CTR | Avg position",
+    ...rows.map(
+      (r) =>
+        `${r.query} | ${r.clicks} | ${r.impressions} | ${formatCtr(r.ctr)} | ${formatPosition(r.position)}`,
+    ),
+  ];
+}
+
+function gscTableHtml(rows: GscQueryRow[], empty: string, firstCol: string) {
+  if (!rows.length) {
+    return `<p style="color:#5c6b7a">${escapeHtml(empty)}</p>`;
+  }
+  const head = `
+    <tr>
+      <th align="left" style="padding:6px 8px;border-bottom:1px solid #d9e2ec">${escapeHtml(firstCol)}</th>
+      <th align="right" style="padding:6px 8px;border-bottom:1px solid #d9e2ec">Clicks</th>
+      <th align="right" style="padding:6px 8px;border-bottom:1px solid #d9e2ec">Impressions</th>
+      <th align="right" style="padding:6px 8px;border-bottom:1px solid #d9e2ec">CTR</th>
+      <th align="right" style="padding:6px 8px;border-bottom:1px solid #d9e2ec">Avg pos</th>
+    </tr>`;
+  const body = rows
+    .map(
+      (r) => `
+    <tr>
+      <td style="padding:6px 8px;border-bottom:1px solid #eef2f6;max-width:280px;word-break:break-word">${escapeHtml(r.query)}</td>
+      <td align="right" style="padding:6px 8px;border-bottom:1px solid #eef2f6"><strong>${r.clicks}</strong></td>
+      <td align="right" style="padding:6px 8px;border-bottom:1px solid #eef2f6">${r.impressions}</td>
+      <td align="right" style="padding:6px 8px;border-bottom:1px solid #eef2f6">${escapeHtml(formatCtr(r.ctr))}</td>
+      <td align="right" style="padding:6px 8px;border-bottom:1px solid #eef2f6">${escapeHtml(formatPosition(r.position))}</td>
+    </tr>`,
+    )
+    .join("");
+  return `<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;font-size:13px;margin:8px 0 16px">${head}${body}</table>`;
+}
+
+function gscTextBlock(gsc: GscDailyReport | null | undefined) {
+  if (!gsc) {
+    return ["Google Search keywords:", "- Not included in this run."];
+  }
+  if (!gsc.configured) {
+    return [
+      "Google Search keywords:",
+      `- Not configured (${gsc.error || "set GA_SERVICE_ACCOUNT_JSON + add the service account to Search Console"})`,
+    ];
+  }
+  if (gsc.error && !gsc.totals) {
+    return ["Google Search keywords:", `- API error: ${gsc.error}`];
+  }
+
+  const t = gsc.totals!;
+  return [
+    "Google Search keywords (Search Console)",
+    `Property: ${gsc.siteUrl}`,
+    `Period: ${gsc.startDate} → ${gsc.endDate} (GSC data lags ~2–3 days)`,
+    "",
+    "People from Google Search (period totals):",
+    `- Clicks (visited from Google): ${t.clicks}`,
+    `- Impressions (showed in Google results): ${t.impressions}`,
+    `- CTR: ${formatCtr(t.ctr)}`,
+    `- Avg position: ${formatPosition(t.position)}`,
+    "",
+    "Top keywords customers typed in Google:",
+    ...gscTableText(gsc.topQueries, "No keyword data yet for this period."),
+    "",
+    "Top landing pages from Google:",
+    ...gscTableText(gsc.topPages, "No page data yet for this period."),
+  ];
+}
+
+function gscHtmlBlock(gsc: GscDailyReport | null | undefined) {
+  if (!gsc) {
+    return `<p style="color:#5c6b7a">Not included in this run.</p>`;
+  }
+  if (!gsc.configured) {
+    return `<p style="color:#b45309">Not configured — set <code>GA_SERVICE_ACCOUNT_JSON</code>, enable Search Console API in GCP, and add the service account email as a user on the Search Console property${gsc.error ? ` (${escapeHtml(gsc.error)})` : ""}.</p>`;
+  }
+  if (gsc.error && !gsc.totals) {
+    return `<p style="color:#b91c1c">API error: ${escapeHtml(gsc.error)}</p>`;
+  }
+
+  const t = gsc.totals!;
+  return `
+    <p style="color:#5c6b7a;margin:0 0 8px">Property <code>${escapeHtml(String(gsc.siteUrl))}</code><br/>
+    Period <strong>${escapeHtml(String(gsc.startDate))}</strong> → <strong>${escapeHtml(String(gsc.endDate))}</strong> (Search Console lags ~2–3 days)</p>
+    <h4 style="margin:12px 0 6px">People from Google Search</h4>
+    <ul>
+      <li>Clicks (visited from Google): <strong>${t.clicks}</strong></li>
+      <li>Impressions (appeared in Google): <strong>${t.impressions}</strong></li>
+      <li>CTR: <strong>${escapeHtml(formatCtr(t.ctr))}</strong></li>
+      <li>Avg position: <strong>${escapeHtml(formatPosition(t.position))}</strong></li>
+    </ul>
+    <h4 style="margin:12px 0 6px">Keywords customers searched on Google</h4>
+    ${gscTableHtml(gsc.topQueries, "No keyword data yet for this period.", "Keyword")}
+    <h4 style="margin:12px 0 6px">Landing pages from Google</h4>
+    ${gscTableHtml(gsc.topPages, "No page data yet for this period.", "Page")}
+  `;
+}
+
 function gaHtmlBlock(ga: GaDailyReport | null | undefined) {
   if (!ga) {
     return `<p style="color:#5c6b7a">Not included in this run.</p>`;
@@ -131,6 +234,7 @@ function gaHtmlBlock(ga: GaDailyReport | null | undefined) {
 export function formatSeoDigest(
   report: SeoDailyReport,
   ga?: GaDailyReport | null,
+  gsc?: GscDailyReport | null,
 ) {
   const date = report.checkedAt.slice(0, 10);
   const statusLabel =
@@ -138,10 +242,13 @@ export function formatSeoDigest(
       ? "All clear"
       : `${report.failing.length} URL issue(s)`;
 
+  const gscClicks = gsc?.totals?.clicks;
   const trafficHint =
-    ga?.yesterday && ga.yesterday.sessions > 0
-      ? ` · ${ga.yesterday.sessions} sess yesterday`
-      : "";
+    typeof gscClicks === "number" && gscClicks > 0
+      ? ` · ${gscClicks} Google clicks`
+      : ga?.yesterday && ga.yesterday.sessions > 0
+        ? ` · ${ga.yesterday.sessions} sess yesterday`
+        : "";
 
   const subject = `[SEO daily] ${statusLabel}${trafficHint} · ${site.product} · ${date}`;
 
@@ -165,12 +272,14 @@ export function formatSeoDigest(
     "Failing URLs:",
     ...failLines,
     "",
+    ...gscTextBlock(gsc),
+    "",
     ...gaTextBlock(ga),
     "",
     "Today's keyword focus (optimize titles/H1/FAQ or a short guide):",
     ...kw,
     "",
-    "Search Console:",
+    "Search Console links:",
     `- Performance: ${report.gscLinks.performance}`,
     `- Indexing: ${report.gscLinks.indexing}`,
     `- Removals: ${report.gscLinks.removals}`,
@@ -194,7 +303,7 @@ export function formatSeoDigest(
     .join("")}</ul>`;
 
   const html = `
-    <div style="font-family:Segoe UI,Arial,sans-serif;line-height:1.5;color:#1a1f2c;max-width:640px">
+    <div style="font-family:Segoe UI,Arial,sans-serif;line-height:1.5;color:#1a1f2c;max-width:720px">
       <h2 style="margin:0 0 8px">Daily SEO + Analytics digest</h2>
       <p style="margin:0 0 16px;color:#5c6b7a">${escapeHtml(date)} · ${escapeHtml(site.product)}</p>
       <p><strong>Health:</strong> ${report.okCount}/${report.total} OK</p>
@@ -202,11 +311,13 @@ export function formatSeoDigest(
          <strong>Primary page:</strong> <code>${escapeHtml(report.focus.primaryUrl)}</code></p>
       <h3 style="margin:20px 0 8px">Failing URLs</h3>
       ${failHtml}
+      <h3 style="margin:20px 0 8px">Google Search keywords</h3>
+      ${gscHtmlBlock(gsc)}
       <h3 style="margin:20px 0 8px">Google Analytics</h3>
       ${gaHtmlBlock(ga)}
       <h3 style="margin:20px 0 8px">Keyword focus today</h3>
       ${kwHtml}
-      <h3 style="margin:20px 0 8px">Search Console</h3>
+      <h3 style="margin:20px 0 8px">Search Console links</h3>
       <ul>
         <li><a href="${report.gscLinks.performance}">Performance</a></li>
         <li><a href="${report.gscLinks.indexing}">Indexing</a></li>
@@ -222,8 +333,9 @@ export function formatSeoDigest(
 export async function sendSeoDailyDigest(
   report: SeoDailyReport,
   ga?: GaDailyReport | null,
+  gsc?: GscDailyReport | null,
 ) {
-  const { subject, text, html } = formatSeoDigest(report, ga);
+  const { subject, text, html } = formatSeoDigest(report, ga, gsc);
   // Prefer explicit SEO_DIGEST_TO; otherwise sales@ only (never auto-CC founder).
   const to =
     process.env.SEO_DIGEST_TO?.trim() || site.email;
