@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/seo-daily",
       "schedule": "30 3 * * *"
+    },
+    {
+      "path": "/api/cron/social-daily",
+      "schedule": "0 4 * * *"
     }
   ]
 }

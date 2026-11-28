@@ -10,6 +10,7 @@ import { homeFaqJsonLd, homeServiceListJsonLd } from "@/lib/homeSeo";
 import { absoluteUrl } from "@/lib/seo";
 import { PRIMARY_META_KEYWORDS } from "@/lib/seoKeywords";
 import { site } from "@/lib/site";
+import { socialProfileUrls } from "@/lib/social";
 import { SOLUTION_PACKAGES } from "@/lib/solutions";
 import { TESTIMONIALS } from "@/lib/testimonials";
 import "./globals.css";
@@ -93,7 +94,11 @@ export default function RootLayout({
         telephone: site.phone,
         logo: absoluteUrl(site.logo),
         image: absoluteUrl(site.logo),
-        sameAs: [site.playStoreUrl, site.companyUrl],
+        sameAs: [
+          site.playStoreUrl,
+          site.companyUrl,
+          ...socialProfileUrls(),
+        ],
         address: {
           "@type": "PostalAddress",
           streetAddress: "No. 3/634, Kalvi Nagar North, Alampatti, Nagamalai Pudukottai",

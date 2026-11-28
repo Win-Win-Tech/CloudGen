@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ShareButtons } from "@/components/ShareButtons";
 import {
   SeoCtaBand,
   SeoHero,
@@ -105,6 +106,10 @@ export default async function BlogPostPage({ params }: Props) {
 
       <section className="shell max-w-3xl py-12">
         <SeoSections sections={post.sections} />
+
+        <div className="mt-10">
+          <ShareButtons url={pageUrl} title={post.title} />
+        </div>
 
         {related.length ? (
           <aside className="mt-12 rounded-xl border border-[var(--line)] bg-[#f7fafc] p-5">
