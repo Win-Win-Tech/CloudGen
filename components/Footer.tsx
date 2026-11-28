@@ -41,7 +41,7 @@ export function Footer() {
             <Link href="/">Home</Link>
             <Link href="/about">About Us</Link>
             <Link href="/solutions">Product</Link>
-            <Link href="/campaigns/visitor-management">Campaign</Link>
+            <Link href="/campaigns/face-biometric-attendance">Campaign</Link>
             <Link href="/industries">Industries</Link>
             <Link href="/testimonials">Testimonials</Link>
             <Link href="/pricing">Pricing</Link>
