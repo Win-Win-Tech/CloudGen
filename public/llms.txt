@@ -54,10 +54,20 @@ App: https://play.google.com/store/apps/details?id=com.guards.app
 - Ticket Complaints Tracking included on every package
 - Annual billing = 10× monthly (2 months free)
 
+## Guides (SEO)
+- /blog/best-guard-tour-app-india — Best guard tour app in India (2026 buyer guide)
+- /blog/security-guard-management-software-india — Security guard management software India
+- /blog/how-qr-checkpoint-patrol-works
+- /blog/visitor-management-for-apartments-india
+- /blog/face-biometric-attendance-for-security-guards
+- /blog/guard-tour-compliance-checklist-india
+- /blog/security-operations-software-madurai
+
 ## Primary SEO topics
-- guard tour system India / QR checkpoint patrol software
+- guard tour system India / QR checkpoint patrol software / best guard tour app India
 - face biometric attendance software India / geofence attendance
 - visitor management system India / society visitor management
 - vehicle entry exit software / gate vehicle tracking
+- security guard management software India / facility security software India
 - CCTV attendance / ANPR software India
 - security operations Madurai / guard management Tamil Nadu

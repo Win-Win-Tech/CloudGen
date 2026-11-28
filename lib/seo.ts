@@ -519,6 +519,106 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: "best-guard-tour-app-india",
+    title: "Best guard tour app in India: what to look for in 2026",
+    description:
+      "How to choose the best guard tour and QR checkpoint patrol software in India — features security agencies actually need, pricing signals, and how SmartPatrol compares.",
+    date: "2026-11-28",
+    readingMinutes: 7,
+    keywords: [
+      "best guard tour app India",
+      "guard tour system India",
+      "QR checkpoint patrol software",
+      "security guard management software India",
+      "patrol management software India",
+    ],
+    relatedSlugs: [
+      "qr-checkpoint-guard-tour",
+      "face-biometric-attendance",
+      "visitor-management-system",
+    ],
+    sections: [
+      {
+        heading: "What “best” means for a guard tour app",
+        body: [
+          "The best guard tour app in India is not the one with the longest feature list. It is the system your guards will actually use on night shifts — with clear checkpoint proof, low training time, and reports clients trust.",
+          "Prioritise QR or NFC checkpoint scans with timestamps, GPS/geofence context, offline-tolerant mobile use, and a supervisor view that shows missed rounds without exporting spreadsheets.",
+        ],
+      },
+      {
+        heading: "Must-have features for Indian security agencies",
+        body: [
+          "QR checkpoint guard tour with route history and exception alerts.",
+          "Face biometric or geofence attendance so proxy punching is harder.",
+          "Ticket / incident logging so complaints do not die in WhatsApp chats.",
+          "Visitor and vehicle modules when the same site also runs a gate.",
+          "Commercial packaging in INR-friendly checkout with clear monthly and annual options.",
+        ],
+      },
+      {
+        heading: "How SmartPatrol fits",
+        body: [
+          `${site.product} by ${site.company} combines guard tour checkpoints, attendance, visitor management and vehicle logs in one stack — with Ticket Complaints Tracking included on packages.`,
+          "Agencies can start with Checkpoint alone from USD 49/month, then add Attendance or Gate modules as sites grow. Book a demo to map your posts, or compare packages on Pricing.",
+        ],
+      },
+      {
+        heading: "Quick evaluation checklist",
+        body: [
+          "Can a new guard complete a round with under 15 minutes of training?",
+          "Can a client see yesterday’s missed checkpoints without calling you?",
+          "Does the vendor support India deployments and local onboarding?",
+          "Is pricing clear for one site vs multi-site agencies?",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "security-guard-management-software-india",
+    title: "Security guard management software in India: a practical buyer guide",
+    description:
+      "A practical guide to security guard management software in India — attendance, patrols, visitors, vehicles and what CloudGen SmartPatrol covers for agencies and facilities.",
+    date: "2026-11-28",
+    readingMinutes: 6,
+    keywords: [
+      "security guard management software India",
+      "workforce security app India",
+      "facility security software India",
+      "security operations software India",
+      "patrol management system for security agencies",
+    ],
+    relatedSlugs: [
+      "qr-checkpoint-guard-tour",
+      "visitor-management-system",
+      "vehicle-management-system",
+    ],
+    sections: [
+      {
+        heading: "Guard management is more than attendance",
+        body: [
+          "Security guard management software in India should cover the full shift: who reported for duty, which checkpoints were hit, which visitors entered, and which vehicles crossed the gate.",
+          "Paper registers and disconnected apps create gaps that clients notice during audits. A single operations platform reduces that risk.",
+        ],
+      },
+      {
+        heading: "Core modules buyers compare",
+        body: [
+          "Workforce: face biometric attendance and geofencing.",
+          "Patrol: QR checkpoint guard tour with live exceptions.",
+          "Gate: visitor passes and vehicle entry-exit logs.",
+          "Operations: tickets so incidents have owners and timelines.",
+        ],
+      },
+      {
+        heading: "Why teams evaluate SmartPatrol",
+        body: [
+          `${site.company} builds SmartPatrol for Indian security and facility teams, with deployments beyond Tamil Nadu and reference customers in manufacturing, agencies and international sites.`,
+          "Start from Product pages for each module, then use Pricing or a live demo to match package size to your headcount and site count.",
+        ],
+      },
+    ],
+  },
 ];
 
 export function getProductPillar(slug: string) {

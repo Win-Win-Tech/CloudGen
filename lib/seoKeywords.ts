@@ -140,12 +140,14 @@ export const SEO_KEYWORD_CLUSTERS: KeywordCluster[] = [
       "CCTV attendance vs mobile face attendance",
       "visitor management for apartments India",
       "face biometric attendance for security guards",
+      "best guard tour app India",
+      "security guard management software India",
     ],
   },
   {
     cluster: "Category / competitor-style",
     intent: "comparison",
-    primaryUrl: "/solutions",
+    primaryUrl: "/blog/security-guard-management-software-india",
     keywords: [
       "security guard management software India",
       "workforce security app India",

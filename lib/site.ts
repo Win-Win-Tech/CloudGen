@@ -5,7 +5,7 @@ export const site = {
   company: "CloudGen Technologies",
   tagline: "Smarter Solutions. Safer Communities.",
   description:
-    "SmartPatrol by CloudGen Technologies — guard tour system, QR checkpoint patrol, face biometric & geofence attendance, visitor & vehicle gate software, and CCTV Vision AI for security teams across India.",
+    "SmartPatrol by CloudGen Technologies — guard tour system and security operations software with QR checkpoint patrol, face biometric attendance, visitor management, vehicle gate control and CCTV Vision AI for teams across India and worldwide.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.cloudgentechnologies.com",
   /** Primary public contact + automated lead inbox (sales). */
   email: "sales@cloudgentechnologies.com",
