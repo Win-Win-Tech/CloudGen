@@ -47,7 +47,7 @@ export const site = {
 export const nav = [
   { href: "/about", label: "About Us" },
   { href: "/solutions", label: "Product" },
-  { href: "/campaigns/visitor-management", label: "Campaign" },
+  { href: "/campaigns/face-biometric-attendance", label: "Campaign" },
   { href: "/industries", label: "Industries" },
   { href: "/testimonials", label: "Testimonials" },
   { href: "/pricing", label: "Pricing" },

@@ -157,6 +157,42 @@ export default async function ProductPillarPage({ params }: Props) {
         </section>
       ) : null}
 
+      {pillar.slug === "face-biometric-attendance" ? (
+        <section className="shell pb-10">
+          <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--ink)] shadow-lg">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#d4af55]">
+                  Campaign video
+                </p>
+                <h2 className="mt-1 text-lg font-bold text-white">
+                  Face Biometric Attendance — SmartPatrol
+                </h2>
+              </div>
+              <Link
+                href="/campaigns/face-biometric-attendance"
+                className="text-sm font-semibold text-[var(--teal)] hover:underline"
+              >
+                Open campaign page
+              </Link>
+            </div>
+            <video
+              className="aspect-video w-full bg-black"
+              controls
+              playsInline
+              preload="metadata"
+              poster="/campaigns/face-biometric-attendance-campaign-poster.jpg"
+              aria-label="Face biometric attendance campaign video with presenter voice-over"
+            >
+              <source
+                src="/campaigns/face-biometric-attendance-campaign.mp4"
+                type="video/mp4"
+              />
+            </video>
+          </div>
+        </section>
+      ) : null}
+
       <section className="shell max-w-3xl pb-4">
         <SeoSections sections={pillar.sections} />
         <SeoFaq faqs={pillar.faqs} />
