@@ -12,10 +12,8 @@ export function ShareButtons({
   const shares = shareUrls(url, title);
 
   const items = [
-    { label: "LinkedIn", href: shares.linkedin },
     { label: "X", href: shares.x },
     { label: "Facebook", href: shares.facebook },
-    { label: "WhatsApp", href: shares.whatsapp },
   ] as const;
 
   return (

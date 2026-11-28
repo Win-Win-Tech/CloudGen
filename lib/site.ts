@@ -20,10 +20,6 @@ export const site = {
   supportEmail: "info@smartpatrol.asia",
   phone: "+91 82483 59796",
   phoneHref: "tel:+918248359796",
-  whatsappNumber: "918248359796",
-  whatsappUrl:
-    "https://wa.me/918248359796?text=" +
-    encodeURIComponent("Hi CloudGen, I would like to chat about SmartPatrol solutions."),
   /**
    * Tawk.to property/widget (override via env if needed).
    * For visitors outside Tamil Nadu / India to appear in Monitoring:

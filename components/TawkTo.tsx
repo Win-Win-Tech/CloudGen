@@ -127,7 +127,7 @@ export async function openTawkChat() {
     };
     tryMaximize();
   } catch {
-    // Ignore — WhatsApp remains available from Click to chat.
+    // Ignore — live chat / email remain available from Click to chat.
   }
 }
 

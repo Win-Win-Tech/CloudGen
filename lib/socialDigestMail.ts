@@ -26,10 +26,6 @@ export function formatSocialDigest(pack: DailySocialPack) {
     `Theme: ${pack.theme}`,
     `Page: ${pack.pageUrl}`,
     "",
-    "=== LinkedIn ===",
-    pack.linkedin,
-    `Compose/share: ${share.linkedin}`,
-    "",
     "=== X (Twitter) ===",
     pack.x,
     `Compose: ${share.x}`,
@@ -41,10 +37,6 @@ export function formatSocialDigest(pack: DailySocialPack) {
     "=== Instagram ===",
     pack.instagram,
     "(Paste into Instagram app / Meta Business Suite)",
-    "",
-    "=== WhatsApp Status / Broadcast ===",
-    pack.whatsapp,
-    `Quick send link: ${share.whatsapp}`,
     "",
     "=== YouTube (Shorts / video idea) ===",
     `Title: ${pack.youtube.title}`,
@@ -63,10 +55,6 @@ export function formatSocialDigest(pack: DailySocialPack) {
       <p style="margin:0 0 16px;color:#5c6b7a">Theme: <strong>${escapeHtml(pack.theme)}</strong><br/>
       Page: <a href="${escapeHtml(pack.pageUrl)}">${escapeHtml(pack.pageUrl)}</a></p>
 
-      <h3>LinkedIn</h3>
-      ${pre(pack.linkedin)}
-      <p><a href="${escapeHtml(share.linkedin)}">Open LinkedIn share</a></p>
-
       <h3>X</h3>
       ${pre(pack.x)}
       <p><a href="${escapeHtml(share.x)}">Open X compose</a></p>
@@ -78,10 +66,6 @@ export function formatSocialDigest(pack: DailySocialPack) {
       <h3>Instagram</h3>
       ${pre(pack.instagram)}
       <p style="color:#5c6b7a;font-size:13px">Paste into Instagram or Meta Business Suite (API auto-post needs Meta tokens).</p>
-
-      <h3>WhatsApp</h3>
-      ${pre(pack.whatsapp)}
-      <p><a href="${escapeHtml(share.whatsapp)}">Open WhatsApp share</a></p>
 
       <h3>YouTube</h3>
       <p><strong>Title</strong></p>

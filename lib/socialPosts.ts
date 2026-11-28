@@ -7,11 +7,9 @@ export type DailySocialPack = {
   theme: string;
   pageUrl: string;
   hashtags: string[];
-  linkedin: string;
   x: string;
   facebook: string;
   instagram: string;
-  whatsapp: string;
   youtube: {
     title: string;
     description: string;
@@ -113,16 +111,6 @@ export function getDailySocialPack(date = new Date()): DailySocialPack {
   const tags = hashtagsFor(pick.theme);
   const tagLine = tags.join(" ");
 
-  const linkedin = [
-    pick.hook,
-    "",
-    pick.body,
-    "",
-    pick.cta,
-    "",
-    tagLine,
-  ].join("\n");
-
   const xTags = tags.slice(0, 3).join(" ");
   const xShort = `${pick.hook}\n\n${pageUrl}\n\n${xTags}`;
   const xFull = `${pick.hook}\n\n${pick.body}\n\n${pageUrl}\n\n${xTags}`;
@@ -150,14 +138,6 @@ export function getDailySocialPack(date = new Date()): DailySocialPack {
     tagLine,
   ].join("\n");
 
-  const whatsapp = [
-    `*${site.product} — ${pick.hook}*`,
-    "",
-    pick.body,
-    "",
-    pick.cta,
-  ].join("\n");
-
   const youtube = {
     title: `${pick.hook} | ${site.product}`,
     description: [
@@ -167,7 +147,7 @@ export function getDailySocialPack(date = new Date()): DailySocialPack {
       "",
       `Company: ${site.company}`,
       `Web: ${site.url}`,
-      `WhatsApp: ${site.phone}`,
+      `Contact: ${site.phone}`,
       "",
       tagLine,
     ].join("\n"),
@@ -186,11 +166,9 @@ export function getDailySocialPack(date = new Date()): DailySocialPack {
     theme: pick.theme,
     pageUrl,
     hashtags: tags,
-    linkedin,
     x,
     facebook,
     instagram,
-    whatsapp,
     youtube,
   };
 }
