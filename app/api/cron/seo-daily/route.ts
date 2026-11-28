@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { fetchGaDailyReport, gaReportConfigured } from "@/lib/gaReport";
+import { fetchGscDailyReport, gscReportConfigured } from "@/lib/gscReport";
 import { mailConfigured } from "@/lib/mail";
 import { runSeoHealthCheck } from "@/lib/seoDaily";
 import { sendSeoDailyDigest } from "@/lib/seoDigestMail";
@@ -16,10 +17,11 @@ function authorized(req: Request) {
 }
 
 /**
- * Daily SEO + GA4 automation (Vercel Cron).
+ * Daily SEO + GA4 + Search Console automation (Vercel Cron).
  * - URL health check
+ * - Google Search Console keyword / click tables
  * - GA4 Data API traffic snapshot
- * - Email digest with keyword focus + GSC links
+ * - Email digest
  *
  * Schedule: vercel.json → 30 3 * * * (09:00 IST)
  */
@@ -28,10 +30,13 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const [report, ga] = await Promise.all([
+  const [report, ga, gsc] = await Promise.all([
     runSeoHealthCheck(),
     gaReportConfigured()
       ? fetchGaDailyReport()
+      : Promise.resolve(null),
+    gscReportConfigured()
+      ? fetchGscDailyReport()
       : Promise.resolve(null),
   ]);
 
@@ -41,11 +46,14 @@ export async function GET(req: Request) {
   };
 
   if (mailConfigured()) {
-    mail = await sendSeoDailyDigest(report, ga);
+    mail = await sendSeoDailyDigest(report, ga, gsc);
   }
 
   return NextResponse.json({
-    ok: report.failing.length === 0 && !(ga?.error && !ga.yesterday),
+    ok:
+      report.failing.length === 0 &&
+      !(ga?.error && !ga.yesterday) &&
+      !(gsc?.error && !gsc.totals),
     checkedAt: report.checkedAt,
     total: report.total,
     okCount: report.okCount,
@@ -59,6 +67,17 @@ export async function GET(req: Request) {
       primaryUrl: report.focus.primaryUrl,
       keywords: report.focus.keywords.slice(0, 8),
     },
+    searchConsole: gsc
+      ? {
+          configured: gsc.configured,
+          siteUrl: gsc.siteUrl,
+          startDate: gsc.startDate,
+          endDate: gsc.endDate,
+          error: gsc.error,
+          totals: gsc.totals,
+          topQueries: gsc.topQueries.slice(0, 10),
+        }
+      : { configured: false },
     analytics: ga
       ? {
           configured: ga.configured,
