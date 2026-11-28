@@ -40,16 +40,14 @@ export function getSocialLinks(): SocialLink[] {
     {
       id: "facebook",
       label: "Facebook",
-      href:
-        process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK?.trim() ||
-        "https://www.facebook.com/cloudgentechnologies",
+      // No default — old guess URLs pointed at unrelated pages.
+      href: process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK?.trim() || "",
     },
     {
       id: "instagram",
       label: "Instagram",
-      href:
-        process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM?.trim() ||
-        "https://www.instagram.com/smartpatrol/",
+      // No default — @smartpatrol was not CloudGen’s account.
+      href: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM?.trim() || "",
     },
     {
       id: "whatsapp",
