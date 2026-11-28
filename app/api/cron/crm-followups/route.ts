@@ -20,7 +20,8 @@ function authorized(req: Request) {
  * - Creates sales follow-up tasks when a sequence finishes
  * - Emails sales@ a short run summary when work was done
  *
- * Schedule: vercel.json every 2 hours (minute 0).
+ * Not registered as a separate Vercel Cron (Hobby limit / interval).
+ * Also invoked from /api/cron/seo-daily. Call this route manually anytime.
  */
 export async function GET(req: Request) {
   if (!authorized(req)) {
